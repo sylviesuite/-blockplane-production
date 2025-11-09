@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BreakdownTable from '../components/BreakdownTable';
 import AIAssistant from '../components/AIAssistant';
 import ComparisonChart from '../components/ComparisonChart';
+import MaterialTypeFilters, { filterMaterialsByType } from '../components/MaterialTypeFilters';
 import { useMaterials } from '../hooks/useMaterials';
 import { exportMaterialsToCSV } from '../utils/exportCSV';
 import { Download } from 'lucide-react';
@@ -10,10 +11,14 @@ import { Button } from '../components/ui/button';
 export default function Lifecycle() {
   const { materials, loading, error } = useMaterials();
   const [selectedMaterialIds, setSelectedMaterialIds] = useState<string[]>([]);
+  const [activeFilter, setActiveFilter] = useState<string>('all');
 
+  // Filter materials by type
+  const filteredMaterials = filterMaterialsByType(materials, activeFilter);
+  
   // Get selected materials for AI Assistant
-  const selectedMaterials = materials.filter(m => selectedMaterialIds.includes(m.id));
-  const materialsForAI = selectedMaterials.length > 0 ? selectedMaterials : materials;
+  const selectedMaterials = filteredMaterials.filter(m => selectedMaterialIds.includes(m.id));
+  const materialsForAI = selectedMaterials.length > 0 ? selectedMaterials : filteredMaterials;
 
   if (loading) {
     return (
@@ -70,6 +75,11 @@ export default function Lifecycle() {
         <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-emerald-800">
             ✅ Connected to Supabase • {materials.length} materials loaded
+            {activeFilter !== 'all' && (
+              <span className="ml-2">
+                • Filtered to {filteredMaterials.length} materials
+              </span>
+            )}
             {selectedMaterialIds.length > 0 && (
               <span className="ml-2 font-semibold">
                 • {selectedMaterialIds.length} selected for AI analysis
@@ -77,6 +87,16 @@ export default function Lifecycle() {
             )}
           </p>
         </div>
+
+        {/* Material Type Filters */}
+        <MaterialTypeFilters 
+          materials={materials}
+          activeFilter={activeFilter}
+          onFilterChange={(filter) => {
+            setActiveFilter(filter);
+            setSelectedMaterialIds([]); // Clear selection when filter changes
+          }}
+        />
 
         {/* AI Assistant */}
         <div className="mb-8">
@@ -127,7 +147,7 @@ export default function Lifecycle() {
             </Button>
           </div>
           <BreakdownTable 
-            materials={materials} 
+            materials={filteredMaterials} 
             selectedMaterials={selectedMaterialIds}
             onSelectionChange={setSelectedMaterialIds}
           />

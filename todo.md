@@ -125,3 +125,16 @@
 - [x] Include all lifecycle phases in export
 - [x] Generate proper CSV format with headers
 - [x] Dynamic filename with date
+
+
+## ✅ COMPLETED: Material Type Filter Tags
+
+- [x] Add filter state to Lifecycle page
+- [x] Create filter categories (Timber, Steel, Concrete, Earth, All)
+- [x] Build filter tag button component with icons
+- [x] Show material count for each category
+- [x] Add active state styling (emerald highlight)
+- [x] Filter table based on selected category
+- [x] Clear selection when filter changes
+- [x] Disable empty categories
+- [x] Show filtered count in status banner
