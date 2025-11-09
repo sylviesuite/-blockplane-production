@@ -10,7 +10,8 @@ import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { X } from 'lucide-react';
+import { X, Sparkles } from 'lucide-react';
+import { AIAssistantDialog } from './AIAssistantDialog';
 import type { Material } from '../types';
 
 interface MaterialComparisonProps {
@@ -20,6 +21,7 @@ interface MaterialComparisonProps {
 
 export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialComparisonProps) {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
 
   // Toggle material selection
   const toggleMaterial = (material: Material) => {
@@ -93,12 +95,28 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
   const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
   return (
+    <>
     <Card>
       <CardHeader>
-        <CardTitle>Material Comparison Tool</CardTitle>
-        <CardDescription>
-          Select up to {maxComparisons} materials to compare across sustainability dimensions
-        </CardDescription>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle>Material Comparison Tool</CardTitle>
+            <CardDescription>
+              Select up to {maxComparisons} materials to compare across sustainability dimensions
+            </CardDescription>
+          </div>
+          {selectedMaterials.length > 0 && (
+            <Button
+              onClick={() => setAiDialogOpen(true)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Ask AI
+            </Button>
+          )}
+        </div>
       </CardHeader>
       <CardContent>
         {/* Material Selection */}
@@ -227,5 +245,20 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
         )}
       </CardContent>
     </Card>
+
+    {/* AI Assistant Dialog */}
+    <AIAssistantDialog
+      open={aiDialogOpen}
+      onOpenChange={setAiDialogOpen}
+      context={selectedMaterials.length > 0 
+        ? `You are comparing ${selectedMaterials.length} materials: ${selectedMaterials.map(m => m.name).join(', ')}. Help the user understand the differences and make the best choice.`
+        : undefined
+      }
+      initialPrompt={selectedMaterials.length === 2
+        ? `Compare ${selectedMaterials[0].name} vs ${selectedMaterials[1].name}. Which is better for sustainability?`
+        : undefined
+      }
+    />
+    </>
   );
 }
