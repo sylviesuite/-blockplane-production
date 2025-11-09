@@ -138,3 +138,27 @@
 - [x] Clear selection when filter changes
 - [x] Disable empty categories
 - [x] Show filtered count in status banner
+
+
+## ✅ COMPLETED: Database Regeneration with Drizzle ORM
+
+- [x] Replace Supabase with Drizzle ORM + MySQL
+- [x] Create comprehensive database schema (6 tables)
+- [x] Fix steel functional units (now use m³, m² instead of "per kg")
+- [x] Expand database to 26 materials (8 Timber, 7 Steel, 6 Concrete, 5 Earth)
+- [x] Add complete RIS/LIS scores for all materials
+- [x] Add cost data for all materials
+- [x] Create seed script for database population
+- [x] Add tRPC procedures for type-safe data access
+- [x] Update useMaterials hook to use tRPC
+- [x] Verify all materials have realistic functional units
+
+
+## ✅ COMPLETED: Advanced Visualizations
+
+- [x] Quadrant Visualization - Scatter plot showing materials by RIS vs LIS
+- [x] MSI Calculator - Interactive calculator with adjustable weights
+- [x] Material Comparison Tool - Side-by-side cards with radar charts
+- [x] Create Analysis page with tabbed interface
+- [x] Add navigation from Home page
+- [x] Integrate all three tools

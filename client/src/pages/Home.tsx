@@ -1,4 +1,4 @@
-import { Link } from "wouter";
+import { Link } from 'wouter';
 
 export default function Home() {
   return (
@@ -13,7 +13,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Visualizations Card */}
           <Link href="/visuals">
             <a className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-400">
@@ -42,6 +42,22 @@ export default function Home() {
               </p>
               <div className="text-cyan-600 font-semibold">
                 View Breakdown →
+              </div>
+            </a>
+          </Link>
+
+          {/* Analysis Tools Card */}
+          <Link href="/analysis">
+            <a className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-purple-200 hover:border-purple-400">
+              <div className="text-4xl mb-4">🎯</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Analysis Tools
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Advanced visualization tools: Quadrant plots, MSI calculator, and multi-material comparison with radar charts
+              </p>
+              <div className="text-purple-600 font-semibold">
+                Explore Tools →
               </div>
             </a>
           </Link>

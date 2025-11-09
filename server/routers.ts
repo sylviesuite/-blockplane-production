@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { z } from "zod";
+import { getAllMaterials, getMaterialsByCategory, getMaterialById } from "./db";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -65,6 +66,28 @@ export const appRouter = router({
         return {
           answer: response.choices[0].message.content || 'I apologize, but I could not generate a response.',
         };
+      }),
+  }),
+
+  // Materials data access
+  materials: router({
+    // Get all materials
+    getAll: publicProcedure.query(async () => {
+      return await getAllMaterials();
+    }),
+
+    // Get materials by category
+    getByCategory: publicProcedure
+      .input(z.object({ category: z.enum(["Timber", "Steel", "Concrete", "Earth"]) }))
+      .query(async ({ input }) => {
+        return await getMaterialsByCategory(input.category);
+      }),
+
+    // Get single material by ID
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return await getMaterialById(input.id);
       }),
   }),
 });

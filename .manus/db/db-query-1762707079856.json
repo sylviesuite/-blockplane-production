@@ -1,0 +1,50 @@
+{
+  "query": "SELECT m.name, m.category, m.totalCarbon, r.risScore, r.lisScore, (r.risScore - r.lisScore) as netImpact FROM materials m JOIN risScores r ON m.id = r.materialId ORDER BY (r.risScore - r.lisScore) DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user wgwzK5B2q2uZMa2.53dd29e5856b --database Upj9NbDbemz8q4B3ryiPq7 --execute SELECT m.name, m.category, m.totalCarbon, r.risScore, r.lisScore, (r.risScore - r.lisScore) as netImpact FROM materials m JOIN risScores r ON m.id = r.materialId ORDER BY (r.risScore - r.lisScore) DESC LIMIT 5;",
+  "rows": [
+    {
+      "name": "Mycelium Composite Panels",
+      "category": "Earth",
+      "totalCarbon": "3.80",
+      "risScore": "98",
+      "lisScore": "5",
+      "netImpact": "93"
+    },
+    {
+      "name": "Straw Bale",
+      "category": "Earth",
+      "totalCarbon": "5.20",
+      "risScore": "95",
+      "lisScore": "8",
+      "netImpact": "87"
+    },
+    {
+      "name": "Hempcrete",
+      "category": "Concrete",
+      "totalCarbon": "26.40",
+      "risScore": "92",
+      "lisScore": "12",
+      "netImpact": "80"
+    },
+    {
+      "name": "Cork Panels",
+      "category": "Timber",
+      "totalCarbon": "8.20",
+      "risScore": "88",
+      "lisScore": "15",
+      "netImpact": "73"
+    },
+    {
+      "name": "Adobe Bricks",
+      "category": "Earth",
+      "totalCarbon": "9.50",
+      "risScore": "85",
+      "lisScore": "14",
+      "netImpact": "71"
+    }
+  ],
+  "messages": [],
+  "stdout": "name\tcategory\ttotalCarbon\trisScore\tlisScore\tnetImpact\nMycelium Composite Panels\tEarth\t3.80\t98\t5\t93\nStraw Bale\tEarth\t5.20\t95\t8\t87\nHempcrete\tConcrete\t26.40\t92\t12\t80\nCork Panels\tTimber\t8.20\t88\t15\t73\nAdobe Bricks\tEarth\t9.50\t85\t14\t71\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

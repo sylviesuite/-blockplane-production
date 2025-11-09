@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, materials, lifecycleValues, risScores, pricing, epdMetadata } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,60 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// ============================================================================
+// MATERIALS DATABASE QUERIES
+// ============================================================================
+
+/**
+ * Get all materials with their related data (lifecycle, RIS/LIS, pricing)
+ */
+export async function getAllMaterials() {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get materials: database not available");
+    return [];
+  }
+
+  // Get all materials
+  const allMaterials = await db.select().from(materials);
+
+  // Get all related data
+  const allLifecycle = await db.select().from(lifecycleValues);
+  const allRisScores = await db.select().from(risScores);
+  const allPricing = await db.select().from(pricing);
+  const allEpd = await db.select().from(epdMetadata);
+
+  // Combine data
+  return allMaterials.map(material => {
+    const lifecycle = allLifecycle.filter(lc => lc.materialId === material.id);
+    const ris = allRisScores.find(r => r.materialId === material.id);
+    const price = allPricing.find(p => p.materialId === material.id);
+    const epd = allEpd.filter(e => e.materialId === material.id);
+
+    return {
+      ...material,
+      lifecycle,
+      risScore: ris?.risScore || 0,
+      lisScore: ris?.lisScore || 0,
+      costPerUnit: price?.costPerUnit || "0",
+      currency: price?.currency || "USD",
+      epdMetadata: epd,
+    };
+  });
+}
+
+/**
+ * Get materials by category
+ */
+export async function getMaterialsByCategory(category: string) {
+  const allMaterials = await getAllMaterials();
+  return allMaterials.filter(m => m.category === category);
+}
+
+/**
+ * Get a single material by ID with all related data
+ */
+export async function getMaterialById(id: number) {
+  const allMaterials = await getAllMaterials();
+  return allMaterials.find(m => m.id === id);
+}

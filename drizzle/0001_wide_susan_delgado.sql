@@ -1,0 +1,1 @@
+ALTER TABLE `lifecycleValues` MODIFY COLUMN `phase` enum('A1-A3','A4','A5','B','C1-C4') NOT NULL;
