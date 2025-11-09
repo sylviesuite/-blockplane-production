@@ -16,7 +16,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Visualizations Card */}
           <Link href="/visuals">
-            <a className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-400">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-400 cursor-pointer">
               <div className="text-4xl mb-4">📊</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
                 Material Visualizations
@@ -27,12 +27,12 @@ export default function Home() {
               <div className="text-emerald-600 font-semibold">
                 View Charts →
               </div>
-            </a>
+            </div>
           </Link>
 
           {/* Lifecycle Breakdown Card */}
           <Link href="/lifecycle">
-            <a className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-cyan-200 hover:border-cyan-400">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-cyan-200 hover:border-cyan-400 cursor-pointer">
               <div className="text-4xl mb-4">🔄</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
                 Lifecycle Breakdown
@@ -43,12 +43,12 @@ export default function Home() {
               <div className="text-cyan-600 font-semibold">
                 View Breakdown →
               </div>
-            </a>
+            </div>
           </Link>
 
           {/* Analysis Tools Card */}
           <Link href="/analysis">
-            <a className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-purple-200 hover:border-purple-400">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-purple-200 hover:border-purple-400 cursor-pointer">
               <div className="text-4xl mb-4">🎯</div>
               <h2 className="text-2xl font-bold text-gray-900 mb-3">
                 Analysis Tools
@@ -59,7 +59,7 @@ export default function Home() {
               <div className="text-purple-600 font-semibold">
                 Explore Tools →
               </div>
-            </a>
+            </div>
           </Link>
         </div>
       </div>
