@@ -208,35 +208,37 @@
 - [ ] KPI dashboard UI
 
 
-## 🚧 IN PROGRESS: AI Upgrade Phase 2 - Frontend Integration
+## ✅ COMPLETED: AI Upgrade Phase 2 - Frontend Integration
 
 ### Ask AI Buttons Integration
 - [x] Add "Ask AI" button to Quadrant Visualization (click material points)
-- [ ] Add "Ask AI" button to Material Comparison tool
-- [ ] Add "Ask AI" button to MSI Calculator
-- [x] Wire up AIAssistantDialog to Quadrant Visualization
+- [x] Add "Ask AI" button to Material Comparison tool
+- [x] Add "Ask AI" button to MSI Calculator
+- [x] Wire up AIAssistantDialog to all components
+- [x] Context-aware prompts for each tool
 
 ### Proactive Suggestions Panel
-- [ ] Create MaterialSuggestionsPanel component
-- [ ] Auto-detect viewed materials and fetch recommendations
-- [ ] Display top 3 alternatives with carbon savings
-- [ ] Show "Why this is better" explanations
-- [ ] Add dismiss/close functionality
-- [ ] Integrate into Analysis page
+- [x] Create MaterialSuggestionsPanel component
+- [x] Auto-detect viewed materials and fetch recommendations
+- [x] Display top 3 alternatives with carbon savings
+- [x] Show "Why this is better" explanations
+- [x] Add dismiss/close functionality
+- [x] Analytics logging for suggestions shown/accepted
 
 ### KPI Dashboard
-- [ ] Create KPIDashboard page component
-- [ ] Fetch and display Material Substitution Rate
-- [ ] Show total Carbon Avoided metric
-- [ ] Display AI Engagement Rate
-- [ ] Add Recommendation Acceptance Rate chart
-- [ ] Show top performing alternatives list
-- [ ] Add route to navigation
+- [x] Create KPIDashboard page component
+- [x] Fetch and display Material Substitution Rate
+- [x] Show total Carbon Avoided metric
+- [x] Display AI Engagement Rate
+- [x] Add Recommendation Acceptance Rate chart
+- [x] Show top performing alternatives list
+- [x] Add route to navigation (/impact)
+- [x] Time range selector (7/30/90 days)
 
 ### Recommendation Cards
-- [ ] Create RecommendationCard component
-- [ ] Show carbon savings prominently
-- [ ] Display cost delta with context
-- [ ] List improvement reasons
-- [ ] Add "View Details" and "Compare" actions
-- [ ] Integrate into material detail views
+- [x] Create RecommendationCard component
+- [x] Show carbon savings prominently
+- [x] Display cost delta with context
+- [x] List improvement reasons
+- [x] Add "View Details" and "Compare" actions
+- [x] Confidence badges (High/Medium/Low)

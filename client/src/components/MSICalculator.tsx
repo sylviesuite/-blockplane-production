@@ -13,6 +13,9 @@ import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Slider } from './ui/slider';
 import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Sparkles } from 'lucide-react';
+import { AIAssistantDialog } from './AIAssistantDialog';
 import type { Material } from '../types';
 
 interface MSICalculatorProps {
@@ -31,6 +34,7 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
   const [impactWeight, setImpactWeight] = useState(50);
   const [carbonWeight, setCarbonWeight] = useState(30);
   const [costWeight, setCostWeight] = useState(20);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
 
   // Calculate MSI for all materials
   const rankedMaterials = useMemo(() => {
@@ -115,12 +119,26 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
   };
 
   return (
+    <>
     <Card>
       <CardHeader>
-        <CardTitle>Material Sustainability Index (MSI) Calculator</CardTitle>
-        <CardDescription>
-          Adjust weights to rank materials based on your priorities. Higher MSI = better sustainability match.
-        </CardDescription>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle>Material Sustainability Index (MSI) Calculator</CardTitle>
+            <CardDescription>
+              Adjust weights to rank materials based on your priorities. Higher MSI = better sustainability match.
+            </CardDescription>
+          </div>
+          <Button
+            onClick={() => setAiDialogOpen(true)}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            Ask AI
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         {/* Weight Controls */}
@@ -251,5 +269,14 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
         </div>
       </CardContent>
     </Card>
+
+    {/* AI Assistant Dialog */}
+    <AIAssistantDialog
+      open={aiDialogOpen}
+      onOpenChange={setAiDialogOpen}
+      context={`You are viewing the MSI Calculator with weights: Impact ${impactWeight}%, Carbon ${carbonWeight}%, Cost ${costWeight}%. Top ranked material is ${rankedMaterials[0]?.name} with MSI ${rankedMaterials[0]?.msi.toFixed(1)}.`}
+      initialPrompt={`Why is ${rankedMaterials[0]?.name} ranked #1 with these weight settings?`}
+    />
+    </>
   );
 }
