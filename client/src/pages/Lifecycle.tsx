@@ -1,58 +1,50 @@
-import { useState } from 'react';
 import BreakdownTable from '../components/BreakdownTable';
-import { Material } from '../types';
-
-// Mock data for testing
-const MOCK_MATERIALS: Material[] = [
-  {
-    id: '1',
-    name: 'Cross-Laminated Timber (CLT)',
-    materialType: 'Wood',
-    sourceRegion: 'Pacific Northwest',
-    phases: {
-      pointOfOrigin: 145.2,
-      production: 0,
-      transport: 12.8,
-      construction: 8.5,
-      disposal: 3.2,
-    },
-    total: 169.7,
-    meta: { unit: 'kg CO₂e per m³' },
-  },
-  {
-    id: '2',
-    name: 'Rammed Earth',
-    materialType: 'Earth',
-    sourceRegion: 'Local',
-    phases: {
-      pointOfOrigin: 25.4,
-      production: 0,
-      transport: 5.2,
-      construction: 15.8,
-      disposal: 1.1,
-    },
-    total: 47.5,
-    meta: { unit: 'kg CO₂e per m³' },
-  },
-  {
-    id: '3',
-    name: 'Recycled Steel',
-    materialType: 'Metal',
-    sourceRegion: 'Regional',
-    phases: {
-      pointOfOrigin: 450.0,
-      production: 0,
-      transport: 35.0,
-      construction: 12.0,
-      disposal: 8.5,
-    },
-    total: 505.5,
-    meta: { unit: 'kg CO₂e per tonne' },
-  },
-];
+import { useMaterials } from '../hooks/useMaterials';
 
 export default function Lifecycle() {
-  const [materials] = useState<Material[]>(MOCK_MATERIALS);
+  const { materials, loading, error } = useMaterials();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900 mb-4"></div>
+          <p className="text-slate-600">Loading materials from database...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-4">
+            <h2 className="text-xl font-bold text-red-900 mb-2">Error Loading Data</h2>
+            <p className="text-red-700 text-sm">{error.message}</p>
+          </div>
+          <p className="text-slate-600 text-sm">
+            Please check your Supabase connection and try again.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!materials || materials.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-4">
+            <h2 className="text-xl font-bold text-yellow-900 mb-2">No Materials Found</h2>
+            <p className="text-yellow-700 text-sm">
+              Your database doesn't have any materials yet. Add some materials to see them here.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -64,6 +56,9 @@ export default function Lifecycle() {
           </h1>
           <p className="text-lg text-slate-600">
             Detailed phase-by-phase carbon analysis with sortable columns and intensity ratings
+          </p>
+          <p className="text-sm text-emerald-600 mt-2">
+            ✅ Connected to Supabase • {materials.length} materials loaded
           </p>
         </div>
 
@@ -85,7 +80,7 @@ export default function Lifecycle() {
               Point of Origin
             </h3>
             <p className="text-sm text-gray-600">
-              Emissions from raw material extraction and initial processing
+              Emissions from raw material extraction and initial processing (A1-A3)
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
@@ -93,7 +88,7 @@ export default function Lifecycle() {
               Transport
             </h3>
             <p className="text-sm text-gray-600">
-              Carbon footprint from moving materials to construction site
+              Carbon footprint from moving materials to construction site (A4)
             </p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
@@ -101,9 +96,16 @@ export default function Lifecycle() {
               Construction
             </h3>
             <p className="text-sm text-gray-600">
-              Emissions during installation and assembly on-site
+              Emissions during installation and assembly on-site (A5)
             </p>
           </div>
+        </div>
+
+        {/* Data Source Info */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-slate-500">
+            Data sourced from Supabase • Real-time updates • {materials.length} materials in database
+          </p>
         </div>
       </div>
     </div>
