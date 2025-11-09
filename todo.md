@@ -93,3 +93,15 @@
 - [x] Add loading states and error handling
 - [x] Integrate into Lifecycle Breakdown page
 - [x] Ready for testing with real material data
+
+
+## ✅ COMPLETED: Material Selection for AI Analysis
+
+- [x] Add selection state to Lifecycle page
+- [x] Add checkboxes to BreakdownTable rows
+- [x] Add "Select All" checkbox in table header
+- [x] Show selection count indicator
+- [x] Pass selected materials to AI Assistant
+- [x] Update AI Assistant to use selected materials when available
+- [x] Add visual feedback for selected rows (emerald highlight)
+- [x] Ready for testing with AI prompts
