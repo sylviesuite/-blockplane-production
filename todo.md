@@ -206,3 +206,37 @@
 - [x] Top performing alternatives tracking
 - [ ] Time to Decision metrics (frontend needed)
 - [ ] KPI dashboard UI
+
+
+## 🚧 IN PROGRESS: AI Upgrade Phase 2 - Frontend Integration
+
+### Ask AI Buttons Integration
+- [x] Add "Ask AI" button to Quadrant Visualization (click material points)
+- [ ] Add "Ask AI" button to Material Comparison tool
+- [ ] Add "Ask AI" button to MSI Calculator
+- [x] Wire up AIAssistantDialog to Quadrant Visualization
+
+### Proactive Suggestions Panel
+- [ ] Create MaterialSuggestionsPanel component
+- [ ] Auto-detect viewed materials and fetch recommendations
+- [ ] Display top 3 alternatives with carbon savings
+- [ ] Show "Why this is better" explanations
+- [ ] Add dismiss/close functionality
+- [ ] Integrate into Analysis page
+
+### KPI Dashboard
+- [ ] Create KPIDashboard page component
+- [ ] Fetch and display Material Substitution Rate
+- [ ] Show total Carbon Avoided metric
+- [ ] Display AI Engagement Rate
+- [ ] Add Recommendation Acceptance Rate chart
+- [ ] Show top performing alternatives list
+- [ ] Add route to navigation
+
+### Recommendation Cards
+- [ ] Create RecommendationCard component
+- [ ] Show carbon savings prominently
+- [ ] Display cost delta with context
+- [ ] List improvement reasons
+- [ ] Add "View Details" and "Compare" actions
+- [ ] Integrate into material detail views

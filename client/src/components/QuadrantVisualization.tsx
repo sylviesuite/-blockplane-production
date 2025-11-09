@@ -5,8 +5,12 @@
  * with color-coded quadrants for sustainability classification
  */
 
+import { useState } from 'react';
 import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, ReferenceLine, Label } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Sparkles } from 'lucide-react';
+import { AIAssistantDialog } from './AIAssistantDialog';
 import type { Material } from '../types';
 
 interface QuadrantVisualizationProps {
@@ -15,6 +19,14 @@ interface QuadrantVisualizationProps {
 }
 
 export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVisualizationProps) {
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState<Material | undefined>();
+
+  const handleMaterialClick = (material: Material) => {
+    setSelectedMaterial(material);
+    setAiDialogOpen(true);
+    onMaterialClick?.(material);
+  };
   // Transform materials for scatter plot
   const scatterData = materials.map(m => ({
     x: m.lis, // Life Impact Score (x-axis)
@@ -62,6 +74,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
   };
 
   return (
+    <>
     <Card>
       <CardHeader>
         <CardTitle>Material Sustainability Quadrants</CardTitle>
@@ -127,7 +140,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
             {/* Scatter points */}
             <Scatter
               data={scatterData}
-              onClick={(data) => onMaterialClick && onMaterialClick(data.material)}
+              onClick={(data) => handleMaterialClick(data.material)}
               style={{ cursor: 'pointer' }}
             >
               {scatterData.map((entry, index) => (
@@ -181,5 +194,14 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
         </div>
       </CardContent>
     </Card>
+
+    {/* AI Assistant Dialog */}
+    <AIAssistantDialog
+      open={aiDialogOpen}
+      onOpenChange={setAiDialogOpen}
+      material={selectedMaterial}
+      context="You are viewing the Quadrant Visualization showing materials by RIS vs LIS scores."
+    />
+    </>
   );
 }
