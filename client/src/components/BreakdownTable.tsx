@@ -4,6 +4,8 @@ import { ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
 
 interface BreakdownTableProps {
   materials: Material[];
+  selectedMaterials?: string[];
+  onSelectionChange?: (selectedIds: string[]) => void;
 }
 
 type SortField = 'name' | 'materialType' | 'total' | 'pointOfOrigin' | 'transport' | 'construction' | 'production' | 'disposal';
@@ -16,7 +18,7 @@ function getIntensityRating(value: number): { label: string; color: string } {
   return { label: 'High', color: 'text-red-600 bg-red-50' };
 }
 
-export default function BreakdownTable({ materials }: BreakdownTableProps) {
+export default function BreakdownTable({ materials, selectedMaterials = [], onSelectionChange }: BreakdownTableProps) {
   const [sortField, setSortField] = useState<SortField>('total');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
 
@@ -26,6 +28,30 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
     } else {
       setSortField(field);
       setSortDirection('desc');
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (!onSelectionChange) return;
+    
+    if (selectedMaterials.length === materials.length) {
+      // Deselect all
+      onSelectionChange([]);
+    } else {
+      // Select all
+      onSelectionChange(materials.map(m => m.id));
+    }
+  };
+
+  const handleSelectMaterial = (materialId: string) => {
+    if (!onSelectionChange) return;
+    
+    if (selectedMaterials.includes(materialId)) {
+      // Deselect
+      onSelectionChange(selectedMaterials.filter(id => id !== materialId));
+    } else {
+      // Select
+      onSelectionChange([...selectedMaterials, materialId]);
     }
   };
 
@@ -67,12 +93,12 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
         bValue = b.phases.disposal;
         break;
       default:
-        aValue = 0;
-        bValue = 0;
+        aValue = a.total;
+        bValue = b.total;
     }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
-      return sortDirection === 'asc' 
+      return sortDirection === 'asc'
         ? aValue.localeCompare(bValue)
         : bValue.localeCompare(aValue);
     }
@@ -83,27 +109,35 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
   });
 
   const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return <ArrowUpDown className="w-4 h-4 ml-1 opacity-30" />;
+    if (sortField !== field) return <ArrowUpDown className="w-4 h-4 ml-1 opacity-40" />;
     return sortDirection === 'asc' 
       ? <ArrowUp className="w-4 h-4 ml-1" />
       : <ArrowDown className="w-4 h-4 ml-1" />;
   };
 
-  if (!materials || materials.length === 0) {
-    return (
-      <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-        <p className="text-gray-500">No materials data available</p>
-      </div>
-    );
-  }
+  const allSelected = materials.length > 0 && selectedMaterials.length === materials.length;
+  const someSelected = selectedMaterials.length > 0 && selectedMaterials.length < materials.length;
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 shadow-sm bg-white">
-      <table className="w-full text-sm">
-        <thead className="bg-gray-50 border-b border-gray-200">
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead className="bg-gray-50">
           <tr>
+            {onSelectionChange && (
+              <th className="px-4 py-3 text-left">
+                <input
+                  type="checkbox"
+                  checked={allSelected}
+                  ref={input => {
+                    if (input) input.indeterminate = someSelected;
+                  }}
+                  onChange={handleSelectAll}
+                  className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                />
+              </th>
+            )}
             <th 
-              className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('name')}
             >
               <div className="flex items-center">
@@ -112,7 +146,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-left font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('materialType')}
             >
               <div className="flex items-center">
@@ -121,7 +155,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('pointOfOrigin')}
             >
               <div className="flex items-center justify-end">
@@ -130,7 +164,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('transport')}
             >
               <div className="flex items-center justify-end">
@@ -139,7 +173,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('construction')}
             >
               <div className="flex items-center justify-end">
@@ -148,7 +182,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('production')}
             >
               <div className="flex items-center justify-end">
@@ -157,7 +191,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('disposal')}
             >
               <div className="flex items-center justify-end">
@@ -166,7 +200,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
               </div>
             </th>
             <th 
-              className="px-4 py-3 text-right font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
+              className="px-4 py-3 text-right text-xs font-medium text-gray-700 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
               onClick={() => handleSort('total')}
             >
               <div className="flex items-center justify-end">
@@ -174,7 +208,7 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
                 <SortIcon field="total" />
               </div>
             </th>
-            <th className="px-4 py-3 text-center font-semibold text-gray-700">
+            <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
               Intensity
             </th>
           </tr>
@@ -182,30 +216,33 @@ export default function BreakdownTable({ materials }: BreakdownTableProps) {
         <tbody className="divide-y divide-gray-200">
           {sortedMaterials.map((material) => {
             const intensity = getIntensityRating(material.total);
+            const isSelected = selectedMaterials.includes(material.id);
+            
             return (
-              <tr key={material.id} className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-3 font-medium text-gray-900">{material.name}</td>
-                <td className="px-4 py-3 text-gray-600">{material.materialType}</td>
-                <td className="px-4 py-3 text-right text-gray-900">
-                  {material.phases.pointOfOrigin.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-right text-gray-900">
-                  {material.phases.transport.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-right text-gray-900">
-                  {material.phases.construction.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-right text-gray-900">
-                  {material.phases.production.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-right text-gray-900">
-                  {material.phases.disposal.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-right font-semibold text-gray-900">
-                  {material.total.toFixed(1)}
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${intensity.color}`}>
+              <tr 
+                key={material.id} 
+                className={`hover:bg-gray-50 transition-colors ${isSelected ? 'bg-emerald-50' : ''}`}
+              >
+                {onSelectionChange && (
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => handleSelectMaterial(material.id)}
+                      className="w-4 h-4 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    />
+                  </td>
+                )}
+                <td className="px-4 py-3 text-sm font-medium text-gray-900">{material.name}</td>
+                <td className="px-4 py-3 text-sm text-gray-600 capitalize">{material.materialType}</td>
+                <td className="px-4 py-3 text-sm text-gray-900 text-right">{material.phases.pointOfOrigin.toFixed(1)}</td>
+                <td className="px-4 py-3 text-sm text-gray-900 text-right">{material.phases.transport.toFixed(1)}</td>
+                <td className="px-4 py-3 text-sm text-gray-900 text-right">{material.phases.construction.toFixed(1)}</td>
+                <td className="px-4 py-3 text-sm text-gray-900 text-right">{material.phases.production.toFixed(1)}</td>
+                <td className="px-4 py-3 text-sm text-gray-900 text-right">{material.phases.disposal.toFixed(1)}</td>
+                <td className="px-4 py-3 text-sm font-semibold text-gray-900 text-right">{material.total.toFixed(1)}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${intensity.color}`}>
                     {intensity.label}
                   </span>
                 </td>
