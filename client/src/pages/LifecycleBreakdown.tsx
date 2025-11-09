@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import BreakdownTable from "../components/BreakdownTable";
+import { StackedHorizontalBarChart } from "../components/StackedHorizontalBarChart";
 import { useMaterials } from "../hooks/useMaterials";
 
 /* ===========================
@@ -283,6 +284,16 @@ export default function LifecycleBreakdown() {
           );
         })}
       </div>
+
+      {/* Stacked Horizontal Bar Chart */}
+      {realMaterials && realMaterials.length > 0 && (
+        <div className="mt-8">
+          <StackedHorizontalBarChart 
+            materials={realMaterials} 
+            maxMaterials={8}
+          />
+        </div>
+      )}
 
       {/* Detailed Breakdown Table */}
       <div className="mt-8">
