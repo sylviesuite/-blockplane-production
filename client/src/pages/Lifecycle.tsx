@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import BreakdownTable from '../components/BreakdownTable';
 import AIAssistant from '../components/AIAssistant';
+import ComparisonChart from '../components/ComparisonChart';
 import { useMaterials } from '../hooks/useMaterials';
+import { exportMaterialsToCSV } from '../utils/exportCSV';
+import { Download } from 'lucide-react';
+import { Button } from '../components/ui/button';
 
 export default function Lifecycle() {
   const { materials, loading, error } = useMaterials();
@@ -90,14 +94,38 @@ export default function Lifecycle() {
           )}
         </div>
 
+        {/* Comparison Chart */}
+        {selectedMaterialIds.length >= 2 && (
+          <div className="mb-8">
+            <ComparisonChart materials={selectedMaterials} />
+          </div>
+        )}
+
         {/* Breakdown Table */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">
-            Material Comparison Table
-          </h2>
-          <p className="text-sm text-slate-600 mb-4">
-            Select materials to focus AI analysis. Click column headers to sort. Intensity ratings: Low (&lt;50), Medium (50-150), High (&gt;150)
-          </p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-slate-900">
+                Material Comparison Table
+              </h2>
+              <p className="text-sm text-slate-600 mt-1">
+                Select materials to focus AI analysis. Click column headers to sort. Intensity ratings: Low (&lt;50), Medium (50-150), High (&gt;150)
+              </p>
+            </div>
+            <Button
+              onClick={() => {
+                const materialsToExport = selectedMaterialIds.length > 0 ? selectedMaterials : materials;
+                const filename = selectedMaterialIds.length > 0 
+                  ? `selected-materials-${new Date().toISOString().split('T')[0]}.csv`
+                  : `all-materials-${new Date().toISOString().split('T')[0]}.csv`;
+                exportMaterialsToCSV(materialsToExport, filename);
+              }}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Export {selectedMaterialIds.length > 0 ? `Selected (${selectedMaterialIds.length})` : 'All'} to CSV
+            </Button>
+          </div>
           <BreakdownTable 
             materials={materials} 
             selectedMaterials={selectedMaterialIds}
