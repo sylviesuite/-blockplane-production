@@ -1,4 +1,5 @@
 import BreakdownTable from '../components/BreakdownTable';
+import AIAssistant from '../components/AIAssistant';
 import { useMaterials } from '../hooks/useMaterials';
 
 export default function Lifecycle() {
@@ -60,6 +61,11 @@ export default function Lifecycle() {
           <p className="text-sm text-emerald-600 mt-2">
             ✅ Connected to Supabase • {materials.length} materials loaded
           </p>
+        </div>
+
+        {/* AI Assistant */}
+        <div className="mb-8">
+          <AIAssistant materials={materials} />
         </div>
 
         {/* Breakdown Table */}

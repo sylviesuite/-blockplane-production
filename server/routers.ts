@@ -2,6 +2,8 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { invokeLLM } from "./_core/llm";
+import { z } from "zod";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -17,12 +19,54 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  // AI Assistant for material analysis
+  ai: router({
+    chat: publicProcedure
+      .input(z.object({
+        question: z.string(),
+        materials: z.array(z.object({
+          name: z.string(),
+          total: z.number(),
+          phases: z.object({
+            pointOfOrigin: z.number(),
+            transport: z.number(),
+            construction: z.number(),
+            production: z.number(),
+            disposal: z.number(),
+          }),
+        })).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { question, materials } = input;
+        
+        // Build context from materials data
+        let context = '';
+        if (materials && materials.length > 0) {
+          context = `\n\nCurrent materials in view:\n`;
+          materials.forEach(m => {
+            context += `- ${m.name}: ${m.total} kg CO₂e total\n`;
+            context += `  Point of Origin: ${m.phases.pointOfOrigin}, Transport: ${m.phases.transport}, Construction: ${m.phases.construction}, Production: ${m.phases.production}, Disposal: ${m.phases.disposal}\n`;
+          });
+        }
+        
+        const response = await invokeLLM({
+          messages: [
+            {
+              role: 'system',
+              content: `You are an expert in sustainable building materials and lifecycle carbon analysis. You help users understand embodied carbon, lifecycle phases (A1-A3 production, A4 transport, A5 construction, B maintenance, C1-C4 disposal), and material sustainability. Provide clear, concise answers focused on actionable insights.${context}`,
+            },
+            {
+              role: 'user',
+              content: question,
+            },
+          ],
+        });
+        
+        return {
+          answer: response.choices[0].message.content || 'I apologize, but I could not generate a response.',
+        };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

@@ -80,3 +80,16 @@
 - [x] Lifecycle Breakdown page with basic charts
 - [x] Supabase integration (in old project)
 - [x] Core types and calculations
+
+
+## ✅ COMPLETED: AI Assistant Feature
+
+- [x] Create tRPC procedure for AI chat
+- [x] Build AI Assistant panel component
+- [x] Add 4 quick prompt buttons (Compare, Summarize, Explain, Suggest)
+- [x] Add custom question input field
+- [x] Integrate LLM using built-in template helper
+- [x] Add chat history display
+- [x] Add loading states and error handling
+- [x] Integrate into Lifecycle Breakdown page
+- [x] Ready for testing with real material data
