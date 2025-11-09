@@ -4,7 +4,9 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { z } from "zod";
-import { getAllMaterials, getMaterialsByCategory, getMaterialById } from "./db";
+import { getAllMaterials, getMaterialsByCategory, getMaterialById } from './db';
+import { logAnalyticsEvent, getKPIMetrics, getTopAlternatives } from './analytics-db';
+import { findAlternatives, getRecommendationSummary } from './recommendations';
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -88,6 +90,84 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
         return await getMaterialById(input.id);
+      }),
+  }),
+
+  // Analytics tracking
+  analytics: router({
+    // Log an event
+    logEvent: publicProcedure
+      .input(z.object({
+        eventType: z.enum([
+          'ai_suggestion_shown',
+          'ai_recommendation_accepted',
+          'material_substitution',
+          'ai_conversation',
+          'material_viewed'
+        ]),
+        sessionId: z.string(),
+        userId: z.string().optional(),
+        materialId: z.string().optional(),
+        materialName: z.string().optional(),
+        alternativeMaterialId: z.string().optional(),
+        alternativeMaterialName: z.string().optional(),
+        carbonSaved: z.number().optional(),
+        costDelta: z.number().optional(),
+        risDelta: z.number().optional(),
+        context: z.string().optional(),
+        source: z.string().optional(),
+        metadata: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        await logAnalyticsEvent(input);
+        return { success: true };
+      }),
+
+    // Get KPI metrics
+    getKPIs: publicProcedure
+      .input(z.object({ daysAgo: z.number().default(30) }))
+      .query(async ({ input }) => {
+        return await getKPIMetrics(input.daysAgo);
+      }),
+
+    // Get top performing alternatives
+    getTopAlternatives: publicProcedure
+      .input(z.object({ limit: z.number().default(10) }))
+      .query(async ({ input }) => {
+        return await getTopAlternatives(input.limit);
+      }),
+  }),
+
+  // Material recommendations
+  recommendations: router({
+    // Get alternatives for a material
+    getAlternatives: publicProcedure
+      .input(z.object({
+        materialId: z.number(),
+        maxResults: z.number().default(5),
+        prioritizeCarbon: z.boolean().default(true),
+        prioritizeCost: z.boolean().default(false),
+        prioritizeRIS: z.boolean().default(true),
+      }))
+      .query(async ({ input }) => {
+        const allMaterials = await getAllMaterials();
+        const currentMaterial = allMaterials.find(m => m.id === input.materialId);
+        
+        if (!currentMaterial) {
+          throw new Error('Material not found');
+        }
+
+        const recommendations = findAlternatives(currentMaterial, allMaterials, {
+          maxResults: input.maxResults,
+          prioritizeCarbon: input.prioritizeCarbon,
+          prioritizeCost: input.prioritizeCost,
+          prioritizeRIS: input.prioritizeRIS,
+        });
+
+        return recommendations.map(rec => ({
+          ...rec,
+          summary: getRecommendationSummary(rec),
+        }));
       }),
   }),
 });

@@ -162,3 +162,47 @@
 - [x] Create Analysis page with tabbed interface
 - [x] Add navigation from Home page
 - [x] Integrate all three tools
+
+
+## ✅ COMPLETED: AI Upgrade - Backend & Analytics (Phase 1)
+
+### Analytics Tracking System
+- [x] Create analytics event logging system
+- [x] Track AI suggestion shown events
+- [x] Track AI recommendation accepted events
+- [x] Track material substitution events
+- [x] Calculate carbon savings metrics
+- [x] Add KPI dashboard endpoint
+- [x] Create analytics database schema
+- [x] Add analytics tRPC procedures
+
+### AI-Powered Recommendations Engine
+- [x] Create material alternatives algorithm
+- [x] Build recommendation scoring system (RIS, carbon, cost)
+- [x] Add "Find Alternatives" tRPC procedure
+- [x] Generate carbon savings calculations
+- [x] Create recommendation confidence scores
+- [x] Add "why this is better" explanation generator
+
+### Prominent AI Integration (Partial)
+- [x] Create reusable AI dialog component
+- [x] Add material context to AI prompts
+- [ ] Add "Ask AI" button to Quadrant Visualization
+- [ ] Add "Ask AI" button to Material Comparison
+- [ ] Add "Ask AI" button to MSI Calculator
+
+### Proactive Suggestions Panel (Not Started)
+- [ ] Create smart suggestions sidebar widget
+- [ ] Auto-suggest alternatives based on viewed materials
+- [ ] Show carbon savings potential
+- [ ] Add "Why this is better" explanations
+- [ ] Make suggestions dismissible/closeable
+
+### KPI Tracking (Backend Complete)
+- [x] Material Substitution Rate calculation
+- [x] Carbon Avoided (Aggregate) calculation
+- [x] AI Engagement Rate calculation
+- [x] Recommendation Acceptance Rate calculation
+- [x] Top performing alternatives tracking
+- [ ] Time to Decision metrics (frontend needed)
+- [ ] KPI dashboard UI
