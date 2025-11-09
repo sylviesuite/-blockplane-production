@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Visuals from "./pages/Visuals";
 import LifecycleBreakdown from "./pages/LifecycleBreakdown";
 import Lifecycle from "./pages/Lifecycle";
+import Analysis from "./pages/Analysis";
 
 function Router() {
   return (
@@ -16,6 +17,7 @@ function Router() {
       <Route path={"/visuals"} component={Visuals} />
       <Route path={"/lifecycle"} component={Lifecycle} />
       <Route path={"/breakdown"} component={LifecycleBreakdown} />
+      <Route path={"/analysis"} component={Analysis} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
