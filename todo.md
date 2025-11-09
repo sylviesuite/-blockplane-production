@@ -105,3 +105,23 @@
 - [x] Update AI Assistant to use selected materials when available
 - [x] Add visual feedback for selected rows (emerald highlight)
 - [x] Ready for testing with AI prompts
+
+
+## ✅ COMPLETED: Comparison Chart & CSV Export
+
+### Comparison Chart
+- [x] Create ComparisonChart component
+- [x] Use Recharts for visualization
+- [x] Show phase-by-phase breakdown for selected materials
+- [x] Color-code by lifecycle phase (5 colors)
+- [x] Show only when 2+ materials selected
+- [x] Integrate into Lifecycle page
+- [x] Add summary stats below chart
+
+### CSV Export
+- [x] Create CSV export utility function
+- [x] Add download button to Lifecycle page
+- [x] Export selected materials (or all if none selected)
+- [x] Include all lifecycle phases in export
+- [x] Generate proper CSV format with headers
+- [x] Dynamic filename with date
