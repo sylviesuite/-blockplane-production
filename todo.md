@@ -254,3 +254,16 @@
 - [x] Integrate into LifecycleBreakdown page
 - [x] Support material comparison (multiple materials)
 - [x] Add summary stats showing average per phase
+
+
+## ✅ COMPLETED: Material Comparison in Stacked Bar Chart
+
+- [x] Add click handlers to bar chart for material selection
+- [x] Track selected materials (max 2)
+- [x] Highlight selected materials in chart with indigo border
+- [x] Create side-by-side comparison panel
+- [x] Show phase-by-phase differences with progress bars
+- [x] Calculate and display carbon savings
+- [x] Calculate cost difference
+- [x] Add "Clear Selection" button
+- [x] Show selection status in tooltips
