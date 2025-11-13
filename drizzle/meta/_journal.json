@@ -22,6 +22,13 @@
       "when": 1762712754132,
       "tag": "0002_great_master_chief",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1763073221125,
+      "tag": "0003_wonderful_scorpion",
+      "breakpoints": true
     }
   ]
 }

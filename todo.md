@@ -275,3 +275,65 @@
 - [x] Remove nested <a> tags from wouter Link components
 - [x] Restart dev server
 - [x] Verify server runs without errors
+
+
+## 🚧 IN PROGRESS: Complete Platform Build
+
+### 1. Material Detail Pages
+- [ ] Create MaterialDetail page component with dynamic routing
+- [ ] Full lifecycle breakdown chart
+- [ ] EPD source references display
+- [ ] Usage recommendations section
+- [ ] Case studies/examples
+- [ ] Similar materials suggestions
+- [ ] "Find Alternatives" button with AI recommendations
+- [ ] Add route to App.tsx
+
+### 2. Export & Sharing
+- [ ] PDF export for material comparisons
+- [ ] PNG export for charts (Quadrant, Radar, Stacked Bar)
+- [ ] CSV export of filtered materials
+- [ ] Shareable URLs with query parameters
+- [ ] Custom MSI weight presets in URLs
+- [ ] Email report functionality
+
+### 3. Advanced Filtering
+- [ ] Create FilterPanel component
+- [ ] Search by material name/description
+- [ ] Category multi-select (Timber, Steel, Concrete, Earth)
+- [ ] RIS range slider (0-100)
+- [ ] LIS range slider (0-100)
+- [ ] Carbon threshold filter
+- [ ] Cost range filter
+- [ ] "Regenerative only" toggle
+- [ ] Apply filters to all material lists
+
+### 4. Project-Level Analysis
+- [ ] Create ProjectAnalysis page
+- [ ] CSV/Excel BOM upload component
+- [ ] Parse uploaded BOM files
+- [ ] Project carbon calculator (sum all materials)
+- [ ] Bulk AI recommendations for project
+- [ ] "Current vs Optimized" comparison view
+- [ ] Project-level carbon savings calculation
+- [ ] Export project report (PDF)
+- [ ] Save project to database
+
+### 5. User Accounts & Saved Projects
+- [ ] Extend user schema with preferences
+- [ ] Create user profile page
+- [ ] Save material selections per user
+- [ ] Save custom MSI weight presets
+- [ ] Project history view
+- [ ] Favorites/bookmarks system
+- [ ] User dashboard with saved items
+
+### 6. Admin Dashboard
+- [ ] Create admin-only routes (check user.role)
+- [ ] Material management page (CRUD)
+- [ ] Add new material form
+- [ ] Edit existing material form
+- [ ] Delete material with confirmation
+- [ ] Bulk import from CSV
+- [ ] View usage analytics
+- [ ] User management (if needed)

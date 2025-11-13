@@ -167,6 +167,62 @@ export type EpdMetadata = typeof epdMetadata.$inferSelect;
 export type InsertEpdMetadata = typeof epdMetadata.$inferInsert;
 
 // ============================================================================
+// USER ACCOUNTS & SAVED DATA SCHEMA
+// ============================================================================
+
+/**
+ * Saved projects table
+ * Stores user projects with BOM data and analysis results
+ */
+export const savedProjects = mysqlTable("savedProjects", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  bomData: text("bomData").notNull(), // JSON string of BOM items
+  totalCarbon: decimal("totalCarbon", { precision: 10, scale: 2 }),
+  totalCost: decimal("totalCost", { precision: 10, scale: 2 }),
+  avgRIS: decimal("avgRIS", { precision: 5, scale: 2 }),
+  avgLIS: decimal("avgLIS", { precision: 5, scale: 2 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SavedProject = typeof savedProjects.$inferSelect;
+export type InsertSavedProject = typeof savedProjects.$inferInsert;
+
+/**
+ * Favorite materials table
+ * Stores user's favorite materials for quick access
+ */
+export const favoriteMaterials = mysqlTable("favoriteMaterials", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  materialId: int("materialId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FavoriteMaterial = typeof favoriteMaterials.$inferSelect;
+export type InsertFavoriteMaterial = typeof favoriteMaterials.$inferInsert;
+
+/**
+ * Saved MSI presets table
+ * Stores user's custom MSI weight configurations
+ */
+export const msiPresets = mysqlTable("msiPresets", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  impactWeight: int("impactWeight").notNull(), // 0-100
+  carbonWeight: int("carbonWeight").notNull(), // 0-100
+  costWeight: int("costWeight").notNull(), // 0-100
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type MsiPreset = typeof msiPresets.$inferSelect;
+export type InsertMsiPreset = typeof msiPresets.$inferInsert;
+
+// ============================================================================
 // RELATIONS
 // ============================================================================
 
@@ -208,5 +264,36 @@ export const epdMetadataRelations = relations(epdMetadata, ({ one }) => ({
   material: one(materials, {
     fields: [epdMetadata.materialId],
     references: [materials.id],
+  }),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  savedProjects: many(savedProjects),
+  favoriteMaterials: many(favoriteMaterials),
+  msiPresets: many(msiPresets),
+}));
+
+export const savedProjectsRelations = relations(savedProjects, ({ one }) => ({
+  user: one(users, {
+    fields: [savedProjects.userId],
+    references: [users.id],
+  }),
+}));
+
+export const favoriteMaterialsRelations = relations(favoriteMaterials, ({ one }) => ({
+  user: one(users, {
+    fields: [favoriteMaterials.userId],
+    references: [users.id],
+  }),
+  material: one(materials, {
+    fields: [favoriteMaterials.materialId],
+    references: [materials.id],
+  }),
+}));
+
+export const msiPresetsRelations = relations(msiPresets, ({ one }) => ({
+  user: one(users, {
+    fields: [msiPresets.userId],
+    references: [users.id],
   }),
 }));
