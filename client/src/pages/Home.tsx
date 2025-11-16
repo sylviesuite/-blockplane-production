@@ -13,7 +13,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
           {/* Visualizations Card */}
           <Link href="/visuals">
             <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-400 cursor-pointer">
@@ -58,6 +58,54 @@ export default function Home() {
               </p>
               <div className="text-purple-600 font-semibold">
                 Explore Tools →
+              </div>
+            </div>
+          </Link>
+
+          {/* Project Analysis Card */}
+          <Link href="/projects">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-blue-200 hover:border-blue-400 cursor-pointer">
+              <div className="text-4xl mb-4">📁</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Project Analysis
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Upload your Bill of Materials to analyze project-level carbon footprint and get optimization recommendations
+              </p>
+              <div className="text-blue-600 font-semibold">
+                Analyze Project →
+              </div>
+            </div>
+          </Link>
+
+          {/* KPI Dashboard Card */}
+          <Link href="/impact">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-green-200 hover:border-green-400 cursor-pointer">
+              <div className="text-4xl mb-4">📈</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Impact Dashboard
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Track platform KPIs: material substitutions, carbon avoided, AI engagement, and recommendation acceptance rates
+              </p>
+              <div className="text-green-600 font-semibold">
+                View Impact →
+              </div>
+            </div>
+          </Link>
+
+          {/* Admin Dashboard Card */}
+          <Link href="/admin">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-red-200 hover:border-red-400 cursor-pointer">
+              <div className="text-4xl mb-4">🛠️</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Admin Dashboard
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Manage materials, view analytics, perform bulk imports, and monitor platform usage (Admin only)
+              </p>
+              <div className="text-red-600 font-semibold">
+                Admin Panel →
               </div>
             </div>
           </Link>
