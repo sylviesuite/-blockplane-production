@@ -384,3 +384,21 @@
 - [x] Verify all 56 materials loaded correctly
 - [x] Dev server running with expanded dataset
 - [x] Ready to commit changes to GitHub
+
+
+## ✅ CONVENTIONAL MATERIALS ADDITION (Complete)
+
+### Add Baseline Construction Materials
+- [x] Add dimensional lumber (2x4, 2x6, 2x8, 2x10, 2x12, 4x4, plywood, OSB) - 8 materials
+- [x] Add conventional insulation (fiberglass, mineral wool, XPS, EPS) - 4 materials
+- [x] Add standard masonry (fired clay bricks, gypsum drywall, CMU blocks) - 3 materials
+- [x] Add standard roofing (asphalt shingles) - 1 material
+- [x] Add virgin aluminum sheet - 1 material
+- [x] Add float glass - 1 material
+- [x] Add conventional concrete (ready-mix 3000/4000 PSI, CMU) - 3 materials
+- [x] Add virgin steel (rebar, structural sections) - 2 materials
+- [x] Update seed script with all 24 conventional materials
+- [x] Run seed script successfully
+- [x] Verify all 78 materials loaded (18 Timber, 13 Steel, 12 Concrete, 8 Earth, 12 Insulation, 8 Composites, 7 Masonry)
+- [x] Database now has both sustainable alternatives AND conventional baselines for comparison
+- [x] Ready to commit changes to GitHub

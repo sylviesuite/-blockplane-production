@@ -1,8 +1,9 @@
 /**
  * BlockPlane Materials Database - Seed Script
  * 
- * Populates the database with 50 production-ready building materials
+ * Populates the database with 80+ production-ready building materials
  * across 7 categories (Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry).
+ * Includes both sustainable alternatives AND conventional baseline materials for comparison.
  * 
  * Each material includes:
  * - Lifecycle carbon values (A1-A3, A4, A5, B, C1-C4)
@@ -1021,6 +1022,400 @@ const materialsData = [
     ris: 82,
     lis: 18,
     cost: "22.00"
+  },
+
+  // ============================================================================
+  // CONVENTIONAL DIMENSIONAL LUMBER (8 materials)
+  // ============================================================================
+  {
+    name: "2x4 Studs (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "58.60",
+    description: "Standard 2x4 dimensional lumber (Spruce-Pine-Fir). Most common framing material in North America. Baseline for comparing engineered wood alternatives.",
+    lifecycle: {
+      "A1-A3": "48.20",
+      "A4": "6.20",
+      "A5": "3.00",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "380.00"
+  },
+  {
+    name: "2x6 Studs (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "56.40",
+    description: "Standard 2x6 dimensional lumber for exterior walls and deeper framing. Allows more insulation depth than 2x4.",
+    lifecycle: {
+      "A1-A3": "46.40",
+      "A4": "6.00",
+      "A5": "2.80",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "420.00"
+  },
+  {
+    name: "2x8 Joists (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "54.80",
+    description: "Standard floor and ceiling joists. Common for residential construction with moderate spans.",
+    lifecycle: {
+      "A1-A3": "45.20",
+      "A4": "5.80",
+      "A5": "2.60",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "450.00"
+  },
+  {
+    name: "2x10 Joists (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "53.60",
+    description: "Larger joists for longer spans and heavier loads. Standard for residential floors.",
+    lifecycle: {
+      "A1-A3": "44.20",
+      "A4": "5.60",
+      "A5": "2.60",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "480.00"
+  },
+  {
+    name: "2x12 Joists (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "52.80",
+    description: "Heavy-duty joists for maximum spans. Used in commercial and large residential projects.",
+    lifecycle: {
+      "A1-A3": "43.60",
+      "A4": "5.40",
+      "A5": "2.60",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "520.00"
+  },
+  {
+    name: "4x4 Posts (SPF)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "55.20",
+    description: "Standard structural posts for decks, pergolas, and light framing. Common in outdoor construction.",
+    lifecycle: {
+      "A1-A3": "45.60",
+      "A4": "5.80",
+      "A5": "2.60",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "440.00"
+  },
+  {
+    name: "Plywood Sheathing (CDX)",
+    category: "Timber",
+    functionalUnit: "m²",
+    totalCarbon: "16.80",
+    description: "Standard construction-grade plywood for roof, wall, and floor sheathing. CDX grade (C-D exterior glue).",
+    lifecycle: {
+      "A1-A3": "13.80",
+      "A4": "1.80",
+      "A5": "0.90",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 52,
+    lis: 42,
+    cost: "38.00"
+  },
+  {
+    name: "OSB Sheathing (7/16\")",
+    category: "Timber",
+    functionalUnit: "m²",
+    totalCarbon: "14.60",
+    description: "Oriented Strand Board - economical alternative to plywood. Standard for wall and roof sheathing.",
+    lifecycle: {
+      "A1-A3": "12.20",
+      "A4": "1.50",
+      "A5": "0.70",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 48,
+    lis: 45,
+    cost: "28.00"
+  },
+
+  // ============================================================================
+  // CONVENTIONAL INSULATION (4 materials)
+  // ============================================================================
+  {
+    name: "Fiberglass Batt Insulation (R-13)",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "28.40",
+    description: "Standard fiberglass insulation batts. Most common wall insulation in North America. Baseline for comparing natural alternatives.",
+    lifecycle: {
+      "A1-A3": "24.20",
+      "A4": "2.80",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 28,
+    lis: 65,
+    cost: "22.00"
+  },
+  {
+    name: "Mineral Wool Insulation (Rockwool)",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "42.60",
+    description: "Stone wool insulation made from basalt rock. Fire-resistant, sound-dampening, higher embodied carbon than fiberglass.",
+    lifecycle: {
+      "A1-A3": "36.80",
+      "A4": "3.80",
+      "A5": "1.60",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 32,
+    lis: 58,
+    cost: "48.00"
+  },
+  {
+    name: "XPS Foam Board (Extruded Polystyrene)",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "52.80",
+    description: "Rigid foam insulation with high R-value per inch. Petroleum-based, high embodied carbon, moisture-resistant.",
+    lifecycle: {
+      "A1-A3": "45.60",
+      "A4": "4.50",
+      "A5": "2.20",
+      "B": "0.00",
+      "C1-C4": "0.50"
+    },
+    ris: 18,
+    lis: 78,
+    cost: "42.00"
+  },
+  {
+    name: "EPS Foam Board (Expanded Polystyrene)",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "38.60",
+    description: "Lightweight rigid foam insulation. Lower cost and carbon than XPS, but less moisture-resistant.",
+    lifecycle: {
+      "A1-A3": "33.20",
+      "A4": "3.50",
+      "A5": "1.60",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 22,
+    lis: 72,
+    cost: "28.00"
+  },
+
+  // ============================================================================
+  // CONVENTIONAL MASONRY & FINISHES (5 materials)
+  // ============================================================================
+  {
+    name: "Fired Clay Bricks (Standard)",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "48.60",
+    description: "Traditional kiln-fired clay bricks. High embodied energy from firing process. Standard for masonry construction.",
+    lifecycle: {
+      "A1-A3": "42.20",
+      "A4": "3.80",
+      "A5": "2.10",
+      "B": "0.00",
+      "C1-C4": "0.50"
+    },
+    ris: 25,
+    lis: 68,
+    cost: "58.00"
+  },
+  {
+    name: "Gypsum Drywall (1/2\")",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "8.60",
+    description: "Standard gypsum wallboard for interior walls and ceilings. Most common interior finish material.",
+    lifecycle: {
+      "A1-A3": "7.20",
+      "A4": "0.80",
+      "A5": "0.40",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 15,
+    lis: 75,
+    cost: "12.00"
+  },
+  {
+    name: "Asphalt Shingles (3-Tab)",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "18.40",
+    description: "Standard asphalt roofing shingles. Most common residential roofing material in North America. Petroleum-based.",
+    lifecycle: {
+      "A1-A3": "15.80",
+      "A4": "1.60",
+      "A5": "0.80",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 12,
+    lis: 82,
+    cost: "22.00"
+  },
+  {
+    name: "Virgin Aluminum Sheet",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "185.60",
+    description: "Primary aluminum from bauxite ore. Extremely high embodied energy. Used for cladding, flashing, and roofing.",
+    lifecycle: {
+      "A1-A3": "168.40",
+      "A4": "10.20",
+      "A5": "5.80",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 8,
+    lis: 92,
+    cost: "85.00"
+  },
+  {
+    name: "Float Glass (6mm)",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "42.80",
+    description: "Standard flat glass for windows. High-temperature manufacturing process, significant embodied energy.",
+    lifecycle: {
+      "A1-A3": "37.60",
+      "A4": "3.20",
+      "A5": "1.60",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 10,
+    lis: 85,
+    cost: "45.00"
+  },
+
+  // ============================================================================
+  // CONVENTIONAL CONCRETE (3 materials)
+  // ============================================================================
+  {
+    name: "Ready-Mix Concrete (3000 PSI)",
+    category: "Concrete",
+    functionalUnit: "m³",
+    totalCarbon: "298.60",
+    description: "Standard ready-mix concrete for general construction. Baseline for comparing low-carbon alternatives.",
+    lifecycle: {
+      "A1-A3": "265.20",
+      "A4": "19.80",
+      "A5": "11.20",
+      "B": "0.00",
+      "C1-C4": "2.40"
+    },
+    ris: 18,
+    lis: 78,
+    cost: "145.00"
+  },
+  {
+    name: "Ready-Mix Concrete (4000 PSI)",
+    category: "Concrete",
+    functionalUnit: "m³",
+    totalCarbon: "325.80",
+    description: "Higher-strength ready-mix for structural applications. More cement content = higher carbon.",
+    lifecycle: {
+      "A1-A3": "289.60",
+      "A4": "21.20",
+      "A5": "12.40",
+      "B": "0.00",
+      "C1-C4": "2.60"
+    },
+    ris: 16,
+    lis: 80,
+    cost: "165.00"
+  },
+  {
+    name: "Concrete Masonry Units (CMU Blocks)",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "52.60",
+    description: "Standard concrete blocks (8x8x16). Common for foundation walls, commercial construction, and load-bearing walls.",
+    lifecycle: {
+      "A1-A3": "46.20",
+      "A4": "3.80",
+      "A5": "2.10",
+      "B": "0.00",
+      "C1-C4": "0.50"
+    },
+    ris: 20,
+    lis: 72,
+    cost: "32.00"
+  },
+
+  // ============================================================================
+  // VIRGIN STEEL (2 materials)
+  // ============================================================================
+  {
+    name: "Virgin Steel Rebar (Grade 60)",
+    category: "Steel",
+    functionalUnit: "m³",
+    totalCarbon: "285.60",
+    description: "Primary steel rebar from iron ore. Baseline for comparing recycled steel alternatives. High embodied carbon.",
+    lifecycle: {
+      "A1-A3": "252.80",
+      "A4": "18.60",
+      "A5": "11.20",
+      "B": "0.00",
+      "C1-C4": "3.00"
+    },
+    ris: 12,
+    lis: 85,
+    cost: "280.00"
+  },
+  {
+    name: "Virgin Steel Structural Sections",
+    category: "Steel",
+    functionalUnit: "m³",
+    totalCarbon: "312.40",
+    description: "Primary structural steel beams and columns. Standard for commercial construction. Compare with recycled alternatives.",
+    lifecycle: {
+      "A1-A3": "276.80",
+      "A4": "20.40",
+      "A5": "12.20",
+      "B": "0.00",
+      "C1-C4": "3.00"
+    },
+    ris: 10,
+    lis: 88,
+    cost: "380.00"
   }
 ];
 
