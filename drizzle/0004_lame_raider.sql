@@ -1,0 +1,1 @@
+ALTER TABLE `materials` MODIFY COLUMN `category` enum('Timber','Steel','Concrete','Earth','Insulation','Composites','Masonry') NOT NULL;

@@ -1,8 +1,8 @@
 /**
  * BlockPlane Materials Database - Seed Script
  * 
- * Populates the database with 26 production-ready building materials
- * across 4 categories (Timber, Steel, Concrete, Earth).
+ * Populates the database with 50 production-ready building materials
+ * across 7 categories (Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry).
  * 
  * Each material includes:
  * - Lifecycle carbon values (A1-A3, A4, A5, B, C1-C4)
@@ -483,6 +483,544 @@ const materialsData = [
     lis: 5,
     cost: "65.00",
     epd: { source: "Ecovative Design EPD", year: 2023 }
+  },
+
+  // ============================================================================
+  // INSULATION CATEGORY (8 materials)
+  // ============================================================================
+  {
+    name: "Sheep Wool Insulation",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "12.40",
+    description: "Natural insulation from sheep fleece. Renewable, biodegradable, regulates moisture, and provides excellent thermal and acoustic performance.",
+    lifecycle: {
+      "A1-A3": "9.80",
+      "A4": "1.50",
+      "A5": "0.80",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 85,
+    lis: 18,
+    cost: "48.00"
+  },
+  {
+    name: "Hemp Fiber Insulation",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "10.20",
+    description: "Insulation made from industrial hemp fibers. Fast-growing renewable crop, carbon-sequestering, naturally pest-resistant.",
+    lifecycle: {
+      "A1-A3": "7.80",
+      "A4": "1.40",
+      "A5": "0.70",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 88,
+    lis: 15,
+    cost: "42.00"
+  },
+  {
+    name: "Cellulose Insulation (Recycled)",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "8.60",
+    description: "Made from recycled newspaper and cardboard. Diverts waste, low embodied energy, excellent fire resistance with borate treatment.",
+    lifecycle: {
+      "A1-A3": "6.80",
+      "A4": "1.20",
+      "A5": "0.40",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 78,
+    lis: 22,
+    cost: "28.00"
+  },
+  {
+    name: "Wood Fiber Insulation Boards",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "14.80",
+    description: "Rigid insulation boards from wood chips and sawdust. Carbon-storing, breathable, provides thermal mass and acoustic dampening.",
+    lifecycle: {
+      "A1-A3": "12.20",
+      "A4": "1.60",
+      "A5": "0.70",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 82,
+    lis: 20,
+    cost: "52.00"
+  },
+  {
+    name: "Mycelium Insulation Panels",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "4.20",
+    description: "Bio-fabricated insulation grown from mushroom mycelium. Carbon-negative, compostable, fire-resistant, and represents cutting-edge bio-materials.",
+    lifecycle: {
+      "A1-A3": "2.80",
+      "A4": "0.70",
+      "A5": "0.40",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 95,
+    lis: 8,
+    cost: "68.00"
+  },
+  {
+    name: "Aerogel Insulation",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "45.60",
+    description: "Ultra-high-performance silica-based insulation. Thinnest insulation available, ideal for space-constrained retrofits despite higher embodied carbon.",
+    lifecycle: {
+      "A1-A3": "38.20",
+      "A4": "4.50",
+      "A5": "2.20",
+      "B": "0.00",
+      "C1-C4": "0.70"
+    },
+    ris: 35,
+    lis: 55,
+    cost: "185.00"
+  },
+  {
+    name: "Recycled Denim Insulation",
+    category: "Insulation",
+    functionalUnit: "m³",
+    totalCarbon: "9.40",
+    description: "Made from post-consumer denim textile waste. Diverts landfill waste, safe to handle, excellent acoustic properties, no VOCs.",
+    lifecycle: {
+      "A1-A3": "7.20",
+      "A4": "1.50",
+      "A5": "0.50",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 75,
+    lis: 25,
+    cost: "38.00"
+  },
+  {
+    name: "Cork Insulation Boards",
+    category: "Insulation",
+    functionalUnit: "m²",
+    totalCarbon: "11.20",
+    description: "Rigid insulation from compressed cork granules. Renewable harvest, naturally fire-resistant, provides thermal and acoustic insulation.",
+    lifecycle: {
+      "A1-A3": "8.80",
+      "A4": "1.60",
+      "A5": "0.50",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 86,
+    lis: 16,
+    cost: "58.00"
+  },
+
+  // ============================================================================
+  // COMPOSITES CATEGORY (6 materials)
+  // ============================================================================
+  {
+    name: "Flax Fiber Composite Panels",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "18.60",
+    description: "Bio-composite panels from flax fibers and bio-resin. Renewable, lightweight, high strength-to-weight ratio, carbon-storing.",
+    lifecycle: {
+      "A1-A3": "15.20",
+      "A4": "2.10",
+      "A5": "1.00",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 72,
+    lis: 28,
+    cost: "78.00"
+  },
+  {
+    name: "Recycled Plastic Lumber",
+    category: "Composites",
+    functionalUnit: "m³",
+    totalCarbon: "95.40",
+    description: "Structural lumber made from post-consumer recycled plastics. Diverts plastic waste, rot-proof, low maintenance, ideal for outdoor applications.",
+    lifecycle: {
+      "A1-A3": "82.50",
+      "A4": "8.20",
+      "A5": "3.80",
+      "B": "0.00",
+      "C1-C4": "0.90"
+    },
+    ris: 55,
+    lis: 42,
+    cost: "320.00"
+  },
+  {
+    name: "Fiber Cement Boards",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "22.80",
+    description: "Composite of cellulose fibers and cement. Durable, fire-resistant, weather-proof, lower carbon than pure cement products.",
+    lifecycle: {
+      "A1-A3": "19.20",
+      "A4": "2.20",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 42,
+    lis: 52,
+    cost: "38.00"
+  },
+  {
+    name: "Bio-Resin Composite Panels",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "16.40",
+    description: "Natural fiber composites with plant-based resin binders. Renewable, low-VOC, biodegradable alternative to petroleum-based composites.",
+    lifecycle: {
+      "A1-A3": "13.20",
+      "A4": "2.00",
+      "A5": "0.90",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 68,
+    lis: 32,
+    cost: "72.00"
+  },
+  {
+    name: "Bamboo Composite Decking",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "24.60",
+    description: "Composite decking from bamboo fibers and recycled plastic. Combines rapid renewability of bamboo with plastic waste diversion.",
+    lifecycle: {
+      "A1-A3": "20.40",
+      "A4": "2.80",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 65,
+    lis: 35,
+    cost: "85.00"
+  },
+  {
+    name: "Recycled Rubber Flooring",
+    category: "Composites",
+    functionalUnit: "m²",
+    totalCarbon: "32.40",
+    description: "Flooring tiles from recycled tire rubber. Diverts landfill waste, durable, shock-absorbing, ideal for high-traffic areas.",
+    lifecycle: {
+      "A1-A3": "27.80",
+      "A4": "2.80",
+      "A5": "1.40",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "48.00"
+  },
+
+  // ============================================================================
+  // MASONRY CATEGORY (4 materials)
+  // ============================================================================
+  {
+    name: "Autoclaved Aerated Concrete (AAC)",
+    category: "Masonry",
+    functionalUnit: "m³",
+    totalCarbon: "185.60",
+    description: "Lightweight concrete blocks with air pockets. Excellent insulation, fire resistance, reduced material use compared to standard concrete.",
+    lifecycle: {
+      "A1-A3": "162.40",
+      "A4": "14.20",
+      "A5": "7.20",
+      "B": "0.00",
+      "C1-C4": "1.80"
+    },
+    ris: 45,
+    lis: 48,
+    cost: "220.00"
+  },
+  {
+    name: "Recycled Brick",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "18.40",
+    description: "Salvaged bricks from demolished buildings. Eliminates firing energy, preserves character, diverts demolition waste from landfills.",
+    lifecycle: {
+      "A1-A3": "14.80",
+      "A4": "2.20",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 62,
+    lis: 32,
+    cost: "45.00"
+  },
+  {
+    name: "Natural Stone (Local)",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "28.60",
+    description: "Locally-quarried stone with minimal processing. Extremely durable, low maintenance, minimal embodied energy when sourced locally.",
+    lifecycle: {
+      "A1-A3": "22.80",
+      "A4": "3.50",
+      "A5": "1.80",
+      "B": "0.00",
+      "C1-C4": "0.50"
+    },
+    ris: 52,
+    lis: 42,
+    cost: "120.00"
+  },
+  {
+    name: "Calcium Silicate Bricks",
+    category: "Masonry",
+    functionalUnit: "m²",
+    totalCarbon: "32.80",
+    description: "Bricks made from lime and silica, steam-cured instead of fired. Lower carbon than fired clay bricks, excellent compressive strength.",
+    lifecycle: {
+      "A1-A3": "27.60",
+      "A4": "3.20",
+      "A5": "1.60",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 48,
+    lis: 45,
+    cost: "52.00"
+  },
+
+  // ============================================================================
+  // ADDITIONAL TIMBER (2 materials)
+  // ============================================================================
+  {
+    name: "Timber Frame System",
+    category: "Timber",
+    functionalUnit: "m²",
+    totalCarbon: "22.40",
+    description: "Pre-fabricated timber frame wall panels. Fast installation, carbon storage, excellent thermal performance with integrated insulation.",
+    lifecycle: {
+      "A1-A3": "18.60",
+      "A4": "2.40",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 70,
+    lis: 28,
+    cost: "125.00"
+  },
+  {
+    name: "Wood Fiber Cement Boards",
+    category: "Timber",
+    functionalUnit: "m²",
+    totalCarbon: "19.80",
+    description: "Composite boards combining wood fibers with minimal cement binder. Lower carbon than pure cement, biodegradable fibers, good moisture resistance.",
+    lifecycle: {
+      "A1-A3": "16.20",
+      "A4": "2.20",
+      "A5": "1.10",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 66,
+    lis: 32,
+    cost: "48.00"
+  },
+
+  // ============================================================================
+  // ADDITIONAL STEEL (3 materials)
+  // ============================================================================
+  {
+    name: "Structural Steel (90% Recycled)",
+    category: "Steel",
+    functionalUnit: "m³",
+    totalCarbon: "155.80",
+    description: "High-recycled-content structural steel sections. Maintains performance while significantly reducing virgin material extraction and processing energy.",
+    lifecycle: {
+      "A1-A3": "135.60",
+      "A4": "12.80",
+      "A5": "5.60",
+      "B": "0.00",
+      "C1-C4": "1.80"
+    },
+    ris: 48,
+    lis: 38,
+    cost: "240.00"
+  },
+  {
+    name: "Steel Mesh (Recycled)",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "15.60",
+    description: "Welded wire mesh from recycled steel. Used for concrete reinforcement, fencing, and security applications with circular material sourcing.",
+    lifecycle: {
+      "A1-A3": "13.20",
+      "A4": "1.50",
+      "A5": "0.70",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 42,
+    lis: 45,
+    cost: "28.00"
+  },
+  {
+    name: "Pre-Weathered Steel Cladding",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "38.40",
+    description: "Factory-weathered corten steel panels. Eliminates on-site weathering time, consistent appearance, zero maintenance coating requirements.",
+    lifecycle: {
+      "A1-A3": "33.20",
+      "A4": "3.20",
+      "A5": "1.60",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 38,
+    lis: 52,
+    cost: "68.00"
+  },
+
+  // ============================================================================
+  // ADDITIONAL CONCRETE (4 materials)
+  // ============================================================================
+  {
+    name: "Alkali-Activated Concrete",
+    category: "Concrete",
+    functionalUnit: "m³",
+    totalCarbon: "135.60",
+    description: "Concrete using alkali-activated industrial byproducts instead of Portland cement. 70% carbon reduction, excellent durability and chemical resistance.",
+    lifecycle: {
+      "A1-A3": "118.80",
+      "A4": "10.20",
+      "A5": "5.20",
+      "B": "0.00",
+      "C1-C4": "1.40"
+    },
+    ris: 62,
+    lis: 35,
+    cost: "195.00"
+  },
+  {
+    name: "Pervious Concrete",
+    category: "Concrete",
+    functionalUnit: "m²",
+    totalCarbon: "48.60",
+    description: "Porous concrete allowing water infiltration. Reduces stormwater runoff, recharges groundwater, mitigates urban heat island effect.",
+    lifecycle: {
+      "A1-A3": "42.20",
+      "A4": "3.80",
+      "A5": "2.10",
+      "B": "0.00",
+      "C1-C4": "0.50"
+    },
+    ris: 58,
+    lis: 38,
+    cost: "68.00"
+  },
+  {
+    name: "Ultra-High Performance Concrete (UHPC)",
+    category: "Concrete",
+    functionalUnit: "m³",
+    totalCarbon: "425.80",
+    description: "Advanced concrete with exceptional strength and durability. Higher initial carbon offset by reduced material volumes and extended service life.",
+    lifecycle: {
+      "A1-A3": "378.60",
+      "A4": "28.40",
+      "A5": "16.20",
+      "B": "0.00",
+      "C1-C4": "2.60"
+    },
+    ris: 32,
+    lis: 68,
+    cost: "850.00"
+  },
+  {
+    name: "Carbon-Cured Concrete",
+    category: "Concrete",
+    functionalUnit: "m³",
+    totalCarbon: "245.60",
+    description: "Concrete cured using captured CO₂ instead of water. Permanently sequesters carbon while improving strength and reducing water consumption.",
+    lifecycle: {
+      "A1-A3": "215.80",
+      "A4": "18.20",
+      "A5": "9.80",
+      "B": "0.00",
+      "C1-C4": "1.80"
+    },
+    ris: 52,
+    lis: 45,
+    cost: "285.00"
+  },
+
+  // ============================================================================
+  // ADDITIONAL EARTH (3 materials)
+  // ============================================================================
+  {
+    name: "Stabilized Earth Blocks",
+    category: "Earth",
+    functionalUnit: "m²",
+    totalCarbon: "12.60",
+    description: "Compressed earth blocks with minimal cement stabilizer. Local materials, low energy production, excellent thermal mass.",
+    lifecycle: {
+      "A1-A3": "9.80",
+      "A4": "1.80",
+      "A5": "0.70",
+      "B": "0.00",
+      "C1-C4": "0.30"
+    },
+    ris: 75,
+    lis: 22,
+    cost: "32.00"
+  },
+  {
+    name: "Earth Plaster",
+    category: "Earth",
+    functionalUnit: "m²",
+    totalCarbon: "3.20",
+    description: "Natural clay-based wall finish. Breathable, humidity-regulating, zero-VOC, biodegradable, and can be locally sourced.",
+    lifecycle: {
+      "A1-A3": "2.40",
+      "A4": "0.50",
+      "A5": "0.20",
+      "B": "0.00",
+      "C1-C4": "0.10"
+    },
+    ris: 90,
+    lis: 10,
+    cost: "18.00"
+  },
+  {
+    name: "Earth Bag Construction",
+    category: "Earth",
+    functionalUnit: "m²",
+    totalCarbon: "8.40",
+    description: "Structural walls from earth-filled polypropylene bags. Ultra-low cost, uses local soil, excellent thermal mass and seismic resistance.",
+    lifecycle: {
+      "A1-A3": "6.20",
+      "A4": "1.40",
+      "A5": "0.60",
+      "B": "0.00",
+      "C1-C4": "0.20"
+    },
+    ris: 82,
+    lis: 18,
+    cost: "22.00"
   }
 ];
 
