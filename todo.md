@@ -506,3 +506,50 @@
 - [x] Dev server running successfully
 - [x] Ready to commit all changes to GitHub
 - [x] Ready to create final checkpoint
+
+
+## ✅ MATERIAL SWAP ASSISTANT (Complete)
+
+### Phase 1: Design & Architecture
+- [x] Design conversational interface (ChatGPT-like)
+- [x] Define conversation flow and prompts
+- [x] Design recommendation card layout
+- [x] Plan one-click action buttons
+
+### Phase 2: Backend AI Integration
+- [x] Create tRPC procedure for AI material recommendations (swapAssistant.getRecommendations)
+- [x] Integrate with LLM (invokeLLM from server/_core/llm)
+- [x] Build material matching algorithm using AI extraction + ranking
+- [x] Calculate carbon savings and cost differences
+- [x] Apply regional cost multipliers (13 US markets)
+- [x] Generate structured recommendations with explanation
+- [x] Create generateSpec procedure for CSI MasterFormat output
+
+### Phase 3: Chat Interface Component
+- [x] Create MaterialSwapAssistant page component
+- [x] Build chat message display (user + assistant with Streamdown)
+- [x] Add input field with natural language processing
+- [x] Show typing indicator during AI response (Loader2 animation)
+- [x] Display recommendations in cards with metrics
+- [x] Add 5 example prompts for guidance
+
+### Phase 4: One-Click Actions
+- [x] "Generate Spec Language" button → CSI MasterFormat output (downloads .txt file)
+- [x] "View Full Details" button → navigate to MaterialDetail page
+- [x] Show carbon and cost metrics for each recommendation
+- [x] Display RIS scores and categories
+- [x] Numbered recommendations (1, 2, 3) for clarity
+
+### Phase 5: Integration & Testing
+- [x] Add route to App.tsx (/swap-assistant)
+- [x] Add navigation card to Home.tsx (✨ sparkle icon)
+- [x] Add swapAssistant router to main routers.ts
+- [x] Test conversation flow with natural language queries
+- [x] Verify AI extraction and recommendation logic
+- [x] Verify regional cost integration
+- [x] Dev server running successfully
+
+### Phase 6: Deployment
+- [x] Update todo.md with completion status
+- [x] Ready to commit changes to GitHub
+- [x] Ready to create checkpoint
