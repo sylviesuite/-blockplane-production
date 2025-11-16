@@ -402,3 +402,19 @@
 - [x] Verify all 78 materials loaded (18 Timber, 13 Steel, 12 Concrete, 8 Earth, 12 Insulation, 8 Composites, 7 Masonry)
 - [x] Database now has both sustainable alternatives AND conventional baselines for comparison
 - [x] Ready to commit changes to GitHub
+
+
+## ✅ ENGINEERED WOOD & METAL STUDS (Complete)
+
+### Add Remaining Structural Materials
+- [x] Add I-Joists (TJI/engineered joists)
+- [x] Add LVL (Laminated Veneer Lumber) beams
+- [x] Add PSL (Parallel Strand Lumber)
+- [x] Add LSL (Laminated Strand Lumber)
+- [x] Add metal stud sizes (3-5/8", 6", 8")
+- [x] Add metal track/channels
+- [x] Update seed script with 8 new materials
+- [x] Run seed script successfully
+- [x] Verify all 85 materials loaded
+- [x] Final count: Timber 22, Steel 16, Concrete 12, Insulation 12, Composites 8, Earth 8, Masonry 7
+- [x] Ready to commit final database
