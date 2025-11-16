@@ -12,6 +12,7 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { X, Sparkles } from 'lucide-react';
 import { AIAssistantDialog } from './AIAssistantDialog';
+import { ExportMenu } from './ExportMenu';
 import type { Material } from '../types';
 
 interface MaterialComparisonProps {
@@ -106,15 +107,25 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
             </CardDescription>
           </div>
           {selectedMaterials.length > 0 && (
-            <Button
-              onClick={() => setAiDialogOpen(true)}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4" />
-              Ask AI
-            </Button>
+            <div className="flex gap-2">
+              <ExportMenu
+                materials={selectedMaterials}
+                chartElementId="comparison-radar-chart"
+                filename="material-comparison"
+                shareParams={{
+                  materials: selectedMaterials.map(m => m.id),
+                }}
+              />
+              <Button
+                onClick={() => setAiDialogOpen(true)}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                Ask AI
+              </Button>
+            </div>
           )}
         </div>
       </CardHeader>
@@ -186,7 +197,7 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
 
         {/* Radar Chart */}
         {selectedMaterials.length > 0 ? (
-          <div>
+          <div id="comparison-radar-chart">
             <h3 className="text-sm font-semibold mb-3">Performance Radar:</h3>
             <ResponsiveContainer width="100%" height={400}>
               <RadarChart data={radarData}>

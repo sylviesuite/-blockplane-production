@@ -16,6 +16,7 @@ import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Sparkles } from 'lucide-react';
 import { AIAssistantDialog } from './AIAssistantDialog';
+import { ExportMenu } from './ExportMenu';
 import type { Material } from '../types';
 
 interface MSICalculatorProps {
@@ -129,15 +130,26 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
               Adjust weights to rank materials based on your priorities. Higher MSI = better sustainability match.
             </CardDescription>
           </div>
-          <Button
-            onClick={() => setAiDialogOpen(true)}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <Sparkles className="w-4 h-4" />
-            Ask AI
-          </Button>
+          <div className="flex gap-2">
+            <ExportMenu
+              materials={rankedMaterials}
+              filename="msi-calculator-results"
+              shareParams={{
+                impactWeight,
+                carbonWeight,
+                costWeight,
+              }}
+            />
+            <Button
+              onClick={() => setAiDialogOpen(true)}
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Sparkles className="w-4 h-4" />
+              Ask AI
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

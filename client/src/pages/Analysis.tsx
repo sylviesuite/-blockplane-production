@@ -7,15 +7,20 @@
  * - Material Comparison (side-by-side radar charts)
  */
 
+import { useState } from 'react';
 import { useMaterials } from '../hooks/useMaterials';
 import { QuadrantVisualization } from '../components/QuadrantVisualization';
 import { MSICalculator } from '../components/MSICalculator';
 import { MaterialComparison } from '../components/MaterialComparison';
+import { FilterPanel, applyFilters, DEFAULT_FILTERS, type FilterState } from '../components/FilterPanel';
 import { Loader2, TrendingUp, Calculator, GitCompare } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 
 export default function Analysis() {
   const { materials, loading, error } = useMaterials();
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  
+  const filteredMaterials = materials ? applyFilters(materials, filters) : [];
 
   if (loading) {
     return (
@@ -55,6 +60,18 @@ export default function Analysis() {
 
       {/* Main Content */}
       <div className="container py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Filter Sidebar */}
+          <div className="lg:col-span-1">
+            <FilterPanel
+              filters={filters}
+              onFiltersChange={setFilters}
+              onReset={() => setFilters(DEFAULT_FILTERS)}
+            />
+          </div>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-3">
         <Tabs defaultValue="quadrant" className="space-y-6">
           <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid">
             <TabsTrigger value="quadrant" className="flex items-center gap-2">
@@ -73,7 +90,7 @@ export default function Analysis() {
 
           <TabsContent value="quadrant" className="space-y-6">
             <QuadrantVisualization 
-              materials={materials}
+              materials={filteredMaterials}
               onMaterialClick={(material) => {
                 console.log('Material clicked:', material);
                 // Could open a modal or navigate to detail page
@@ -82,13 +99,15 @@ export default function Analysis() {
           </TabsContent>
 
           <TabsContent value="msi" className="space-y-6">
-            <MSICalculator materials={materials} />
+            <MSICalculator materials={filteredMaterials} />
           </TabsContent>
 
           <TabsContent value="comparison" className="space-y-6">
-            <MaterialComparison materials={materials} maxComparisons={4} />
+            <MaterialComparison materials={filteredMaterials} maxComparisons={4} />
           </TabsContent>
         </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );

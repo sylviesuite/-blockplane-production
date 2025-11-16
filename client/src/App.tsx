@@ -11,6 +11,8 @@ import Lifecycle from "./pages/Lifecycle";
 import Analysis from "./pages/Analysis";
 import KPIDashboard from "./pages/KPIDashboard";
 import MaterialDetail from "./pages/MaterialDetail";
+import ProjectAnalysis from "./pages/ProjectAnalysis";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function Router() {
   return (
@@ -22,6 +24,8 @@ function Router() {
       <Route path={"/analysis"} component={Analysis} />
       <Route path={"/impact"} component={KPIDashboard} />
       <Route path="/material/:id" component={MaterialDetail} />
+      <Route path="/projects" component={ProjectAnalysis} />
+      <Route path="/admin" component={AdminDashboard} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

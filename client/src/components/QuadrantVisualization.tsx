@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Button } from './ui/button';
 import { Sparkles } from 'lucide-react';
 import { AIAssistantDialog } from './AIAssistantDialog';
+import { ExportMenu } from './ExportMenu';
 import type { Material } from '../types';
 
 interface QuadrantVisualizationProps {
@@ -77,11 +78,20 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
     <>
     <Card>
       <CardHeader>
-        <CardTitle>Material Sustainability Quadrants</CardTitle>
-        <CardDescription>
-          Materials plotted by Regenerative Impact (RIS) vs Life Impact (LIS). 
-          Click any point to see details.
-        </CardDescription>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle>Material Sustainability Quadrants</CardTitle>
+            <CardDescription>
+              Materials plotted by Regenerative Impact (RIS) vs Life Impact (LIS). 
+              Click any point to see details.
+            </CardDescription>
+          </div>
+          <ExportMenu
+            materials={materials}
+            chartElementId="quadrant-chart"
+            filename="quadrant-visualization"
+          />
+        </div>
       </CardHeader>
       <CardContent>
         {/* Legend */}
@@ -101,6 +111,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
         </div>
 
         {/* Scatter Plot */}
+        <div id="quadrant-chart">
         <ResponsiveContainer width="100%" height={500}>
           <ScatterChart margin={{ top: 20, right: 20, bottom: 60, left: 60 }}>
             {/* Background quadrants */}
@@ -153,6 +164,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
             </Scatter>
           </ScatterChart>
         </ResponsiveContainer>
+        </div>
 
         {/* Quadrant descriptions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
