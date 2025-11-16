@@ -94,6 +94,22 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* Material Swap Assistant Card */}
+          <Link href="/swap-assistant">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-purple-200 hover:border-purple-400 cursor-pointer">
+              <div className="text-4xl mb-4">✨</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Material Swap Assistant
+              </h2>
+              <p className="text-gray-600 mb-4">
+                AI-powered conversational interface for instant material recommendations with carbon savings and cost analysis
+              </p>
+              <div className="text-purple-600 font-semibold">
+                Ask AI →
+              </div>
+            </div>
+          </Link>
+
           {/* Budget Optimizer Card */}
           <Link href="/budget-optimizer">
             <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-amber-200 hover:border-amber-400 cursor-pointer">
