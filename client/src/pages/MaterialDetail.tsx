@@ -10,12 +10,18 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { useState } from 'react';
 import { AIAssistantDialog } from '@/components/AIAssistantDialog';
 import { RecommendationCard } from '@/components/RecommendationCard';
+import { BreakEvenAnalysis } from '@/components/BreakEvenAnalysis';
+import { IncentiveFinder } from '@/components/IncentiveFinder';
+import { RegionSelector } from '@/components/RegionSelector';
+import { applyRegionalCost } from '@/lib/regionalCost';
+import { FindBetterAlternative } from '@/components/FindBetterAlternative';
 
 export default function MaterialDetail() {
   const [, params] = useRoute('/material/:id');
   const materialId = params?.id ? parseInt(params.id) : null;
   
   const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [selectedRegion, setSelectedRegion] = useState('national');
   
   const { data: material, isLoading } = trpc.materials.getById.useQuery(
     { id: materialId! },
@@ -26,6 +32,8 @@ export default function MaterialDetail() {
     { materialId: materialId! },
     { enabled: !!materialId }
   );
+
+  const { data: allMaterials } = trpc.materials.list.useQuery();
 
   if (isLoading) {
     return (
@@ -160,9 +168,17 @@ export default function MaterialDetail() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-600">
-                ${material.pricing?.costPerUnit.toFixed(2) || 'N/A'}
+                ${applyRegionalCost(material.pricing?.costPerUnit || 0, selectedRegion).toFixed(2)}
               </div>
               <p className="text-xs text-gray-500 mt-1">per {material.functionalUnit}</p>
+              <div className="mt-2">
+                <RegionSelector 
+                  value={selectedRegion} 
+                  onChange={setSelectedRegion}
+                  label=""
+                  showDescription={false}
+                />
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -171,10 +187,79 @@ export default function MaterialDetail() {
         <Tabs defaultValue="lifecycle" className="space-y-6">
           <TabsList>
             <TabsTrigger value="lifecycle">Lifecycle Breakdown</TabsTrigger>
+            <TabsTrigger value="cost">Cost Analysis</TabsTrigger>
             <TabsTrigger value="alternatives">Better Alternatives</TabsTrigger>
             <TabsTrigger value="usage">Usage & Recommendations</TabsTrigger>
             <TabsTrigger value="sources">Data Sources</TabsTrigger>
           </TabsList>
+
+          {/* Cost Analysis Tab */}
+          <TabsContent value="cost">
+            <div className="space-y-6">
+              {/* Regional Cost Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Regional Cost Adjustment</CardTitle>
+                  <CardDescription>
+                    Material costs vary by location due to labor rates, transportation, and local market conditions
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <RegionSelector 
+                      value={selectedRegion} 
+                      onChange={setSelectedRegion}
+                      showDescription={true}
+                    />
+                    <div className="grid grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
+                      <div>
+                        <div className="text-sm text-muted-foreground">Base Cost (National Avg)</div>
+                        <div className="text-2xl font-bold">${material.pricing?.costPerUnit.toFixed(2)}</div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-muted-foreground">Adjusted Cost ({selectedRegion})</div>
+                        <div className="text-2xl font-bold text-blue-600">
+                          ${applyRegionalCost(material.pricing?.costPerUnit || 0, selectedRegion).toFixed(2)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Break-Even Analysis - Compare with conventional alternative */}
+              {recommendations && recommendations.length > 0 && (
+                <BreakEvenAnalysis
+                  sustainableMaterial={{
+                    id: material.id,
+                    name: material.name,
+                    category: material.category,
+                    totalCarbon: parseFloat(material.totalCarbon),
+                    cost: applyRegionalCost(material.pricing?.costPerUnit || 0, selectedRegion),
+                    functionalUnit: material.functionalUnit,
+                    risScore: material.risScores?.ris,
+                    lisScore: material.risScores?.lis,
+                  }}
+                  conventionalMaterial={{
+                    id: recommendations[0].alternative.id,
+                    name: recommendations[0].alternative.name,
+                    category: recommendations[0].alternative.category,
+                    totalCarbon: parseFloat(recommendations[0].alternative.totalCarbon),
+                    cost: applyRegionalCost(recommendations[0].alternative.pricing?.costPerUnit || 0, selectedRegion),
+                    functionalUnit: recommendations[0].alternative.functionalUnit,
+                    risScore: recommendations[0].alternative.risScores?.ris,
+                    lisScore: recommendations[0].alternative.risScores?.lis,
+                  }}
+                />
+              )}
+
+              {/* Incentive Finder */}
+              <IncentiveFinder 
+                category={material.category}
+                projectArea={1000}
+              />
+            </div>
+          </TabsContent>
 
           {/* Lifecycle Tab */}
           <TabsContent value="lifecycle">
@@ -212,11 +297,38 @@ export default function MaterialDetail() {
           {/* Alternatives Tab */}
           <TabsContent value="alternatives">
             <div className="space-y-4">
+              {/* Find Better Alternative with Trade-off Slider */}
+              {allMaterials && material && (
+                <FindBetterAlternative
+                  currentMaterial={{
+                    id: material.id,
+                    name: material.name,
+                    category: material.category,
+                    totalCarbon: parseFloat(material.totalCarbon),
+                    cost: applyRegionalCost(material.pricing?.costPerUnit || 0, selectedRegion),
+                    functionalUnit: material.functionalUnit,
+                    risScore: material.risScores?.ris,
+                    lisScore: material.risScores?.lis,
+                  }}
+                  allMaterials={allMaterials.map(m => ({
+                    id: m.id,
+                    name: m.name,
+                    category: m.category,
+                    totalCarbon: parseFloat(m.totalCarbon),
+                    cost: applyRegionalCost(m.pricing?.costPerUnit || 0, selectedRegion),
+                    functionalUnit: m.functionalUnit,
+                    risScore: m.risScores?.ris,
+                    lisScore: m.risScores?.lis,
+                  }))}
+                  category={material.category}
+                />
+              )}
+
               <Card>
                 <CardHeader>
-                  <CardTitle>Better Alternatives</CardTitle>
+                  <CardTitle>AI-Recommended Alternatives</CardTitle>
                   <CardDescription>
-                    AI-recommended materials with lower carbon footprint and better sustainability scores
+                    Materials with lower carbon footprint and better sustainability scores
                   </CardDescription>
                 </CardHeader>
               </Card>

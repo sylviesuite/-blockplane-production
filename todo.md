@@ -459,3 +459,50 @@
 - [x] Update todo.md with completion status
 - [x] Ready to commit changes to GitHub
 - [x] Ready to create checkpoint
+
+
+## ✅ REGIONAL COST & INCENTIVES (Complete)
+
+### Phase 1: Regional Cost Adjustments
+- [x] Create regional cost adjustment utilities (lib/regionalCost.ts)
+- [x] Add 13 US market locations with cost multipliers (NYC +45%, SF +38%, Rural -22%)
+- [x] Create RegionSelector component with dropdown
+- [x] Add location selector to MaterialDetail cost card
+- [x] Update cost displays to show regional pricing
+- [x] Apply regional adjustments throughout cost calculations
+
+### Phase 2: Incentive Finder
+- [x] Create incentives database (lib/incentives.ts)
+- [x] Populate with 14 green building incentives:
+  - Federal tax credits (179D, 45L, 48C)
+  - LEED credits (recycled content, regional materials, bio-based)
+  - State programs (CA SGIP, NY Green Jobs, MA Mass Save)
+  - Utility rebates (insulation, cool roof)
+  - Certifications (Living Building, Passive House, PACE)
+- [x] Build incentive matching algorithm by category
+- [x] Create IncentiveFinder component with value estimation
+- [x] Show available incentives on MaterialDetail Cost Analysis tab
+
+### Phase 3: Break-Even Integration
+- [x] Read MaterialDetail page structure
+- [x] Integrate BreakEvenAnalysis component in Cost Analysis tab
+- [x] Add automatic comparison with conventional alternatives
+- [x] Show cost premium, carbon savings, and carbon value
+- [x] Apply regional cost adjustments to break-even calculations
+
+### Phase 4: Find Better Alternative
+- [x] Create FindBetterAlternative component
+- [x] Integrate CostCarbonSlider for preference selection (0-100 scale)
+- [x] Show top 3 alternative recommendations with cost/carbon comparison
+- [x] Add "View Details" links to recommended materials
+- [x] Add to MaterialDetail Alternatives tab
+- [x] Filter recommendations by category
+
+### Phase 5: Testing & Deployment
+- [x] Test regional cost adjustments (13 markets working)
+- [x] Test incentive finder (14 programs loaded)
+- [x] Test break-even analysis integration (showing in Cost Analysis tab)
+- [x] Test find better alternative feature (trade-off slider working)
+- [x] Dev server running successfully
+- [x] Ready to commit all changes to GitHub
+- [x] Ready to create final checkpoint
