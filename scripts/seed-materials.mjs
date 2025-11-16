@@ -218,11 +218,11 @@ const materialsData = [
     cost: "280.00"
   },
   {
-    name: "Cold-Formed Steel Studs",
+    name: "Cold-Formed Steel Studs (3-5/8\")",
     category: "Steel",
     functionalUnit: "m²",
     totalCarbon: "28.40",
-    description: "Light-gauge steel framing members formed at room temperature. Lightweight, dimensionally stable, and commonly made with recycled content.",
+    description: "Light-gauge steel framing studs, 3-5/8\" depth. Standard for interior non-load-bearing walls. Lightweight, dimensionally stable, recycled content.",
     lifecycle: {
       "A1-A3": "24.50",
       "A4": "2.20",
@@ -233,6 +233,57 @@ const materialsData = [
     ris: 38,
     lis: 45,
     cost: "32.00"
+  },
+  {
+    name: "Cold-Formed Steel Studs (6\")",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "32.60",
+    description: "Light-gauge steel framing studs, 6\" depth. Used for exterior walls and load-bearing applications. Allows more insulation depth.",
+    lifecycle: {
+      "A1-A3": "28.20",
+      "A4": "2.50",
+      "A5": "1.50",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 38,
+    lis: 45,
+    cost: "38.00"
+  },
+  {
+    name: "Cold-Formed Steel Studs (8\")",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "38.80",
+    description: "Heavy-duty light-gauge steel studs, 8\" depth. For commercial applications and maximum insulation cavity depth.",
+    lifecycle: {
+      "A1-A3": "33.60",
+      "A4": "2.90",
+      "A5": "1.90",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 38,
+    lis: 45,
+    cost: "45.00"
+  },
+  {
+    name: "Metal Track & Channels",
+    category: "Steel",
+    functionalUnit: "m²",
+    totalCarbon: "26.20",
+    description: "Cold-formed steel track for top and bottom plates. Complements metal stud framing systems. Recycled content.",
+    lifecycle: {
+      "A1-A3": "22.60",
+      "A4": "2.00",
+      "A5": "1.20",
+      "B": "0.00",
+      "C1-C4": "0.40"
+    },
+    ris: 38,
+    lis: 45,
+    cost: "28.00"
   },
   {
     name: "Stainless Steel (Recycled)",
@@ -1162,6 +1213,78 @@ const materialsData = [
     ris: 48,
     lis: 45,
     cost: "28.00"
+  },
+
+  // ============================================================================
+  // ENGINEERED WOOD PRODUCTS (4 materials)
+  // ============================================================================
+  {
+    name: "I-Joists (Engineered Wood Joists)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "78.40",
+    description: "Engineered I-beam joists with OSB web and solid wood flanges. Lightweight, consistent quality, longer spans than dimensional lumber.",
+    lifecycle: {
+      "A1-A3": "65.80",
+      "A4": "7.60",
+      "A5": "3.80",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 68,
+    lis: 32,
+    cost: "520.00"
+  },
+  {
+    name: "LVL Beams (Laminated Veneer Lumber)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "82.60",
+    description: "Structural beams made from thin wood veneers laminated together. High strength, dimensional stability, ideal for headers and beams.",
+    lifecycle: {
+      "A1-A3": "69.20",
+      "A4": "7.80",
+      "A5": "4.20",
+      "B": "0.00",
+      "C1-C4": "1.40"
+    },
+    ris: 70,
+    lis: 30,
+    cost: "680.00"
+  },
+  {
+    name: "PSL Beams (Parallel Strand Lumber)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "88.40",
+    description: "Engineered lumber from long wood strands bonded with adhesive. Excellent for columns and beams, very high strength.",
+    lifecycle: {
+      "A1-A3": "74.20",
+      "A4": "8.20",
+      "A5": "4.60",
+      "B": "0.00",
+      "C1-C4": "1.40"
+    },
+    ris: 66,
+    lis: 34,
+    cost: "720.00"
+  },
+  {
+    name: "LSL Studs (Laminated Strand Lumber)",
+    category: "Timber",
+    functionalUnit: "m³",
+    totalCarbon: "76.80",
+    description: "Engineered lumber from short wood strands. Consistent quality, no warping, ideal for studs and rim boards.",
+    lifecycle: {
+      "A1-A3": "64.60",
+      "A4": "7.40",
+      "A5": "3.60",
+      "B": "0.00",
+      "C1-C4": "1.20"
+    },
+    ris: 64,
+    lis: 36,
+    cost: "580.00"
   },
 
   // ============================================================================
