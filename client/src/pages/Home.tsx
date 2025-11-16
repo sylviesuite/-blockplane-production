@@ -94,6 +94,22 @@ export default function Home() {
             </div>
           </Link>
 
+          {/* Budget Optimizer Card */}
+          <Link href="/budget-optimizer">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-amber-200 hover:border-amber-400 cursor-pointer">
+              <div className="text-4xl mb-4">💰</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Budget Optimizer
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Maximize carbon reduction within your budget. Find the most cost-effective sustainable materials for your project
+              </p>
+              <div className="text-amber-600 font-semibold">
+                Optimize Budget →
+              </div>
+            </div>
+          </Link>
+
           {/* Admin Dashboard Card */}
           <Link href="/admin">
             <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-red-200 hover:border-red-400 cursor-pointer">

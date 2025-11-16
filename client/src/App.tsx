@@ -13,6 +13,7 @@ import KPIDashboard from "./pages/KPIDashboard";
 import MaterialDetail from "./pages/MaterialDetail";
 import ProjectAnalysis from "./pages/ProjectAnalysis";
 import AdminDashboard from "./pages/AdminDashboard";
+import BudgetOptimizer from "./pages/BudgetOptimizer";
 
 function Router() {
   return (
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/material/:id" component={MaterialDetail} />
       <Route path="/projects" component={ProjectAnalysis} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/budget-optimizer" component={BudgetOptimizer} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
