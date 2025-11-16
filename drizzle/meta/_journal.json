@@ -29,6 +29,13 @@
       "when": 1763073221125,
       "tag": "0003_wonderful_scorpion",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1763306131319,
+      "tag": "0004_lame_raider",
+      "breakpoints": true
     }
   ]
 }

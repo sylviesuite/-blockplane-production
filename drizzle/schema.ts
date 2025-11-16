@@ -86,7 +86,7 @@ export type InsertAnalyticsEvent = typeof analyticsEvents.$inferInsert;
 export const materials = mysqlTable("materials", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull().unique(),
-  category: mysqlEnum("category", ["Timber", "Steel", "Concrete", "Earth"]).notNull(),
+  category: mysqlEnum("category", ["Timber", "Steel", "Concrete", "Earth", "Insulation", "Composites", "Masonry"]).notNull(),
   functionalUnit: varchar("functionalUnit", { length: 50 }).notNull(), // e.g., "m³", "m²", "linear meter"
   totalCarbon: decimal("totalCarbon", { precision: 10, scale: 2 }).notNull(), // kg CO₂e
   description: text("description"),
