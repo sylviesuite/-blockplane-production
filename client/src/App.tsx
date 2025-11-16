@@ -15,6 +15,7 @@ import ProjectAnalysis from "./pages/ProjectAnalysis";
 import AdminDashboard from "./pages/AdminDashboard";
 import BudgetOptimizer from "./pages/BudgetOptimizer";
 import MaterialSwapAssistant from "./pages/MaterialSwapAssistant";
+import GlobalImpactDashboard from "./pages/GlobalImpactDashboard";
 
 function Router() {
   return (
@@ -30,6 +31,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/budget-optimizer" component={BudgetOptimizer} />
       <Route path="/swap-assistant" component={MaterialSwapAssistant} />
+      <Route path="/global-impact" component={GlobalImpactDashboard} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

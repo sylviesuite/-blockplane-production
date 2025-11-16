@@ -297,3 +297,136 @@ export const msiPresetsRelations = relations(msiPresets, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+
+// ============================================================================
+// CONVERSATION HISTORY SCHEMA
+// ============================================================================
+
+/**
+ * Conversation history table
+ * Stores AI Swap Assistant conversations for users
+ */
+export const conversations = mysqlTable("conversations", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  title: text("title"), // Auto-generated from first query
+  query: text("query").notNull(), // Original user query
+  region: varchar("region", { length: 64 }).default("national"),
+  projectArea: int("projectArea").default(1000),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Conversation = typeof conversations.$inferSelect;
+export type InsertConversation = typeof conversations.$inferInsert;
+
+/**
+ * Conversation recommendations table
+ * Stores the materials recommended in each conversation
+ */
+export const conversationRecommendations = mysqlTable("conversationRecommendations", {
+  id: int("id").autoincrement().primaryKey(),
+  conversationId: int("conversationId").notNull(),
+  materialId: int("materialId").notNull(),
+  rank: int("rank").notNull(), // 1, 2, 3 for top 3 recommendations
+  carbonSavings: decimal("carbonSavings", { precision: 10, scale: 2 }),
+  costDifference: decimal("costDifference", { precision: 10, scale: 2 }),
+  explanation: text("explanation"), // AI-generated explanation
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ConversationRecommendation = typeof conversationRecommendations.$inferSelect;
+export type InsertConversationRecommendation = typeof conversationRecommendations.$inferInsert;
+
+// Relations
+export const conversationsRelations = relations(conversations, ({ one, many }) => ({
+  user: one(users, {
+    fields: [conversations.userId],
+    references: [users.id],
+  }),
+  recommendations: many(conversationRecommendations),
+}));
+
+export const conversationRecommendationsRelations = relations(conversationRecommendations, ({ one }) => ({
+  conversation: one(conversations, {
+    fields: [conversationRecommendations.conversationId],
+    references: [conversations.id],
+  }),
+  material: one(materials, {
+    fields: [conversationRecommendations.materialId],
+    references: [materials.id],
+  }),
+}));
+
+// Update users relations to include conversations
+export const usersRelationsExtended = relations(users, ({ many }) => ({
+  savedProjects: many(savedProjects),
+  favoriteMaterials: many(favoriteMaterials),
+  msiPresets: many(msiPresets),
+  conversations: many(conversations),
+}));
+
+
+// ============================================================================
+// GLOBAL IMPACT TRACKING SCHEMA
+// ============================================================================
+
+/**
+ * Global impact metrics table
+ * Aggregates platform-wide carbon savings and material substitutions
+ */
+export const globalImpact = mysqlTable("globalImpact", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Tracking period
+  date: timestamp("date").notNull(), // Daily aggregation
+  
+  // Aggregate metrics
+  totalCarbonSaved: decimal("totalCarbonSaved", { precision: 12, scale: 2 }).default("0"), // kg CO₂e
+  totalSubstitutions: int("totalSubstitutions").default(0),
+  totalProjectsOptimized: int("totalProjectsOptimized").default(0),
+  totalAIRecommendations: int("totalAIRecommendations").default(0),
+  totalAIAcceptances: int("totalAIAcceptances").default(0),
+  
+  // Material performance
+  topMaterialId: int("topMaterialId"), // Most recommended material
+  topMaterialCount: int("topMaterialCount").default(0),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type GlobalImpact = typeof globalImpact.$inferSelect;
+export type InsertGlobalImpact = typeof globalImpact.$inferInsert;
+
+/**
+ * User impact tracking table
+ * Tracks individual user contributions to carbon savings
+ */
+export const userImpact = mysqlTable("userImpact", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  
+  // User metrics
+  totalCarbonSaved: decimal("totalCarbonSaved", { precision: 12, scale: 2 }).default("0"),
+  totalSubstitutions: int("totalSubstitutions").default(0),
+  totalProjectsOptimized: int("totalProjectsOptimized").default(0),
+  
+  // Engagement
+  lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserImpact = typeof userImpact.$inferSelect;
+export type InsertUserImpact = typeof userImpact.$inferInsert;
+
+// Relations
+export const userImpactRelations = relations(userImpact, ({ one }) => ({
+  user: one(users, {
+    fields: [userImpact.userId],
+    references: [users.id],
+  }),
+}));

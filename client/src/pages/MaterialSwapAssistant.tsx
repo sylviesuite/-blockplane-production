@@ -5,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { 
   Sparkles, Send, Loader2, ArrowRight, DollarSign, Leaf, 
-  TrendingDown, FileText, Plus, Mail, ArrowLeft 
+  TrendingDown, FileText, Plus, Mail, ArrowLeft, GitCompare 
 } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
+import QuickComparison from "@/components/QuickComparison";
 
 interface Message {
   role: "user" | "assistant";
@@ -37,6 +38,8 @@ export default function MaterialSwapAssistant() {
   ]);
   const [input, setInput] = useState("");
   const [region, setRegion] = useState("national");
+  const [showComparison, setShowComparison] = useState(false);
+  const [comparisonMaterials, setComparisonMaterials] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const recommendationsMutation = trpc.swapAssistant.getRecommendations.useMutation({
@@ -164,6 +167,21 @@ export default function MaterialSwapAssistant() {
                     {/* Recommendations */}
                     {message.recommendations && message.recommendations.length > 0 && (
                       <div className="mt-4 space-y-3">
+                        {/* Compare These 3 Button */}
+                        {message.recommendations.length === 3 && (
+                          <Button
+                            onClick={() => {
+                              setComparisonMaterials(message.recommendations!);
+                              setShowComparison(true);
+                            }}
+                            variant="default"
+                            size="sm"
+                            className="w-full mb-3"
+                          >
+                            <GitCompare className="w-4 h-4 mr-2" />
+                            Compare These 3 Side-by-Side
+                          </Button>
+                        )}
                         {message.recommendations.map((rec, recIndex) => (
                           <div
                             key={recIndex}
@@ -268,6 +286,14 @@ export default function MaterialSwapAssistant() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Quick Comparison Modal */}
+        {showComparison && comparisonMaterials.length === 3 && (
+          <QuickComparison
+            materials={comparisonMaterials}
+            onClose={() => setShowComparison(false)}
+          />
+        )}
 
         {/* Example Queries */}
         {messages.length === 1 && (

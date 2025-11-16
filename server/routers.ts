@@ -10,6 +10,9 @@ import { findAlternatives, getRecommendationSummary } from './recommendations';
 import { userAccountsRouter } from './routers/userAccounts';
 import { adminRouter } from './routers/admin';
 import { swapAssistantRouter } from './routers/swapAssistant';
+import { impactRouter } from './routers/impact';
+import { publicAPIRouter } from './routers/publicAPI';
+import { supplierRouter } from './routers/supplier';
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -147,6 +150,15 @@ export const appRouter = router({
 
   // Admin dashboard
   admin: adminRouter,
+
+  // Impact tracking & case studies
+  impact: impactRouter,
+
+  // Public REST API for external integrations
+  publicAPI: publicAPIRouter,
+
+  // Supplier integration for real-time quotes
+  supplier: supplierRouter,
 
   // Material recommendations
   recommendations: router({

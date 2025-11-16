@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { protectedProcedure, router } from '../_core/trpc';
 import { getDb } from '../db';
-import { savedProjects, favoriteMaterials, msiPresets } from '../../drizzle/schema';
+import { savedProjects, favoriteMaterials, msiPresets, conversations, conversationRecommendations } from '../../drizzle/schema';
 import { eq, and, desc } from 'drizzle-orm';
 
 export const userAccountsRouter = router({
@@ -238,6 +238,130 @@ export const userAccountsRouter = router({
           and(
             eq(msiPresets.id, input.id),
             eq(msiPresets.userId, ctx.user.id)
+          )
+        );
+
+      return { success: true };
+    }),
+
+  // ============================================================================
+  // CONVERSATION HISTORY
+  // ============================================================================
+
+  saveConversation: protectedProcedure
+    .input(z.object({
+      query: z.string(),
+      title: z.string().optional(),
+      region: z.string().default('national'),
+      projectArea: z.number().default(1000),
+      recommendations: z.array(z.object({
+        materialId: z.number(),
+        rank: z.number(),
+        carbonSavings: z.number().optional(),
+        costDifference: z.number().optional(),
+        explanation: z.string().optional(),
+      })),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      // Generate title from query if not provided
+      const title = input.title || input.query.substring(0, 100);
+
+      // Insert conversation
+      const [conversation] = await db.insert(conversations).values({
+        userId: ctx.user.id,
+        query: input.query,
+        title,
+        region: input.region,
+        projectArea: input.projectArea,
+      });
+
+      const conversationId = conversation.insertId;
+
+      // Insert recommendations
+      if (input.recommendations.length > 0) {
+        await db.insert(conversationRecommendations).values(
+          input.recommendations.map(rec => ({
+            conversationId,
+            materialId: rec.materialId,
+            rank: rec.rank,
+            carbonSavings: rec.carbonSavings?.toString(),
+            costDifference: rec.costDifference?.toString(),
+            explanation: rec.explanation,
+          }))
+        );
+      }
+
+      return { success: true, conversationId };
+    }),
+
+  getConversations: protectedProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return [];
+
+      const userConversations = await db
+        .select()
+        .from(conversations)
+        .where(eq(conversations.userId, ctx.user.id))
+        .orderBy(desc(conversations.updatedAt))
+        .limit(50); // Last 50 conversations
+
+      return userConversations;
+    }),
+
+  getConversationDetails: protectedProcedure
+    .input(z.object({ conversationId: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) return null;
+
+      // Get conversation
+      const [conversation] = await db
+        .select()
+        .from(conversations)
+        .where(
+          and(
+            eq(conversations.id, input.conversationId),
+            eq(conversations.userId, ctx.user.id)
+          )
+        );
+
+      if (!conversation) return null;
+
+      // Get recommendations
+      const recommendations = await db
+        .select()
+        .from(conversationRecommendations)
+        .where(eq(conversationRecommendations.conversationId, input.conversationId))
+        .orderBy(conversationRecommendations.rank);
+
+      return {
+        ...conversation,
+        recommendations,
+      };
+    }),
+
+  deleteConversation: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const db = await getDb();
+      if (!db) throw new Error('Database not available');
+
+      // Delete recommendations first (foreign key)
+      await db
+        .delete(conversationRecommendations)
+        .where(eq(conversationRecommendations.conversationId, input.id));
+
+      // Delete conversation
+      await db
+        .delete(conversations)
+        .where(
+          and(
+            eq(conversations.id, input.id),
+            eq(conversations.userId, ctx.user.id)
           )
         );
 
