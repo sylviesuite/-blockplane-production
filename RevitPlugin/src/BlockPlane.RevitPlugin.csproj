@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>BlockPlane.RevitPlugin</AssemblyName>
+    <RootNamespace>BlockPlane.RevitPlugin</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>false</UseWindowsForms>
+    <OutputPath>..\..\bin\$(Configuration)\</OutputPath>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <!-- Revit API References (2024 as primary target) -->
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>C:\Program Files\Autodesk\Revit 2024\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>C:\Program Files\Autodesk\Revit 2024\AdWindows.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- NuGet Package Dependencies -->
+  <ItemGroup>
+    <PackageReference Include="RestSharp" Version="110.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="Polly" Version="8.2.0" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
+  </ItemGroup>
+
+  <!-- Project Resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\resources\**\*" />
+  </ItemGroup>
+
+  <!-- Post-build: Copy to Revit Addins folder -->
+  <Target Name="CopyToRevitAddins" AfterTargets="Build">
+    <PropertyGroup>
+      <RevitAddinsPath>$(AppData)\Autodesk\Revit\Addins\2024\BlockPlane</RevitAddinsPath>
+    </PropertyGroup>
+    <MakeDir Directories="$(RevitAddinsPath)" Condition="!Exists('$(RevitAddinsPath)')" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(RevitAddinsPath)" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).pdb" DestinationFolder="$(RevitAddinsPath)" Condition="Exists('$(OutputPath)$(AssemblyName).pdb')" />
+    <Copy SourceFiles="..\BlockPlane.addin" DestinationFolder="$(AppData)\Autodesk\Revit\Addins\2024" />
+  </Target>
+
+</Project>

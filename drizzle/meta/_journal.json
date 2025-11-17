@@ -50,6 +50,13 @@
       "when": 1763321603387,
       "tag": "0006_tearful_owl",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1763353169069,
+      "tag": "0007_cloudy_caretaker",
+      "breakpoints": true
     }
   ]
 }

@@ -90,6 +90,14 @@ export const materials = mysqlTable("materials", {
   functionalUnit: varchar("functionalUnit", { length: 50 }).notNull(), // e.g., "m³", "m²", "linear meter"
   totalCarbon: decimal("totalCarbon", { precision: 10, scale: 2 }).notNull(), // kg CO₂e
   description: text("description"),
+  
+  // Data quality and transparency fields for "radical honesty"
+  confidenceLevel: mysqlEnum("confidenceLevel", ["High", "Medium", "Low", "None"]).default("Medium").notNull(),
+  dataQuality: text("dataQuality"), // JSON string with quality metadata
+  lastVerified: timestamp("lastVerified"), // When data was last verified
+  verificationNotes: text("verificationNotes"), // Notes about verification status
+  isRegenerative: int("isRegenerative").default(0).notNull(), // 1 = regenerative, 0 = not
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -160,6 +168,14 @@ export const epdMetadata = mysqlTable("epdMetadata", {
   materialId: int("materialId").notNull(),
   source: varchar("source", { length: 255 }).notNull(), // e.g., "ICE Database v3.0"
   referenceYear: int("referenceYear"), // e.g., 2019
+  
+  // Additional EPD transparency fields
+  epdUrl: varchar("epdUrl", { length: 512 }), // Link to original EPD document
+  epdDate: timestamp("epdDate"), // Publication date of EPD
+  manufacturer: varchar("manufacturer", { length: 255 }), // Manufacturer name
+  region: varchar("region", { length: 100 }), // Geographic region (e.g., "North America")
+  standard: varchar("standard", { length: 100 }), // e.g., "EN 15804", "ISO 14025"
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 

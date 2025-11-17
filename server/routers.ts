@@ -13,6 +13,7 @@ import { swapAssistantRouter } from './routers/swapAssistant';
 import { impactRouter } from './routers/impact';
 import { publicAPIRouter } from './routers/publicAPI';
 import { supplierRouter } from './routers/supplier';
+import { materialAPIRouter } from './routers/materialAPI';
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -159,6 +160,9 @@ export const appRouter = router({
 
   // Supplier integration for real-time quotes
   supplier: supplierRouter,
+
+  // Material API for Revit plugin integration
+  materialAPI: materialAPIRouter,
 
   // Material recommendations
   recommendations: router({

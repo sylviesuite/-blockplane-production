@@ -14,6 +14,22 @@ export default function Home() {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
+          {/* Material Browser Card */}
+          <Link href="/materials">
+            <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-indigo-200 hover:border-indigo-400 cursor-pointer">
+              <div className="text-4xl mb-4">🔍</div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Material Database
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Browse our comprehensive database of sustainable building materials with transparent carbon data and confidence ratings
+              </p>
+              <div className="text-indigo-600 font-semibold">
+                Browse Materials →
+              </div>
+            </div>
+          </Link>
+
           {/* Visualizations Card */}
           <Link href="/visuals">
             <div className="block p-8 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow border-2 border-emerald-200 hover:border-emerald-400 cursor-pointer">

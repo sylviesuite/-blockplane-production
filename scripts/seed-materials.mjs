@@ -40,7 +40,17 @@ const materialsData = [
     ris: 75,
     lis: 25,
     cost: "850.00",
-    epd: { source: "ICE Database v3.0", year: 2019 }
+    confidenceLevel: "High",
+    isRegenerative: 1,
+    lastVerified: "2024-01-15",
+    epd: { 
+      source: "ICE Database v3.0", 
+      year: 2019,
+      url: "https://circularecology.com/ice-database.html",
+      manufacturer: "Various CLT Manufacturers",
+      region: "Europe",
+      standard: "EN 15804"
+    }
   },
   {
     name: "Glulam (Glued Laminated Timber)",
@@ -1566,7 +1576,10 @@ async function seed() {
         category: materialData.category,
         functionalUnit: materialData.functionalUnit,
         totalCarbon: materialData.totalCarbon,
-        description: materialData.description
+        description: materialData.description,
+        confidenceLevel: materialData.confidenceLevel || "Medium",
+        isRegenerative: materialData.isRegenerative || 0,
+        lastVerified: materialData.lastVerified ? new Date(materialData.lastVerified) : new Date()
       });
 
       const materialId = material.insertId;
@@ -1600,7 +1613,11 @@ async function seed() {
         await db.insert(epdMetadata).values({
           materialId,
           source: materialData.epd.source,
-          referenceYear: materialData.epd.year
+          referenceYear: materialData.epd.year,
+          epdUrl: materialData.epd.url || null,
+          manufacturer: materialData.epd.manufacturer || null,
+          region: materialData.epd.region || null,
+          standard: materialData.epd.standard || null
         });
       }
 
