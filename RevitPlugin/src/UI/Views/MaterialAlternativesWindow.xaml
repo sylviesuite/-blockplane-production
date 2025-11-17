@@ -1,0 +1,183 @@
+<Window x:Class="BlockPlane.RevitPlugin.UI.Views.MaterialAlternativesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Material Alternatives"
+        Height="700" Width="1100"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterOwner"
+        Background="#F5F5F5">
+    
+    <Window.Resources>
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="#2563EB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1D4ED8"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#9CA3AF"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+            <Setter Property="Background" Value="#6B7280"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4B5563"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F3F4F6"/>
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#EFF6FF"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#DBEAFE"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="White" Padding="24,20" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+            <StackPanel>
+                <TextBlock Text="Material Alternatives" FontSize="24" FontWeight="Bold" Foreground="#111827"/>
+                <TextBlock x:Name="CurrentMaterialText" FontSize="14" Foreground="#6B7280" Margin="0,4,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Current Material Summary -->
+        <Border Grid.Row="1" Background="#FEF3C7" Padding="20,16" BorderBrush="#FDE68A" BorderThickness="0,0,0,1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Current Material:" FontWeight="SemiBold" Foreground="#92400E" VerticalAlignment="Center"/>
+                
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0">
+                    <TextBlock x:Name="CurrentNameText" FontWeight="Medium" Foreground="#78350F" VerticalAlignment="Center"/>
+                    <TextBlock Text=" • " Foreground="#92400E" Margin="8,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CurrentCarbonText" Foreground="#78350F" VerticalAlignment="Center"/>
+                    <TextBlock Text=" • " Foreground="#92400E" Margin="8,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CurrentCostText" Foreground="#78350F" VerticalAlignment="Center"/>
+                    <TextBlock Text=" • " Foreground="#92400E" Margin="8,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="CurrentRISText" Foreground="#78350F" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Alternatives Grid -->
+        <DataGrid x:Name="AlternativesDataGrid" Grid.Row="2" Margin="24,16"
+                  SelectionChanged="AlternativesDataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*" FontWeight="Medium"/>
+                <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="*"/>
+                <DataGridTextColumn Header="RIS" Binding="{Binding RisScore}" Width="60"/>
+                <DataGridTextColumn Header="Total Carbon" Width="120">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="TotalCarbon" StringFormat="{}{0:F1} kg CO₂"/>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Carbon Savings" Width="130">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="CarbonSavings" StringFormat="{}{0:F1} kg CO₂"/>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Cost" Width="100">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="CostPerUnit" StringFormat="{}${0:F2}"/>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Cost Difference" Width="120">
+                    <DataGridTextColumn.Binding>
+                        <Binding Path="CostDifference" StringFormat="{}${0:F2}"/>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Match Score" Binding="{Binding MatchScore}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Action Buttons -->
+        <Border Grid.Row="3" Background="White" Padding="24,16" BorderBrush="#E5E7EB" BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock x:Name="StatusTextBlock" Text="Select an alternative to view details or swap" VerticalAlignment="Center" Foreground="#6B7280"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="View Details" Style="{StaticResource SecondaryButton}" 
+                            Click="ViewDetailsButton_Click"
+                            IsEnabled="{Binding HasSelectedAlternative}"/>
+                    <Button Content="Select for Swap" Style="{StaticResource PrimaryButton}" 
+                            Click="SelectForSwapButton_Click" Margin="12,0,0,0"
+                            IsEnabled="{Binding HasSelectedAlternative}"/>
+                    <Button Content="Close" Style="{StaticResource SecondaryButton}" 
+                            Click="CloseButton_Click" Margin="12,0,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

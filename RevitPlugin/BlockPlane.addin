@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>BlockPlane Materials Explorer</Name>
+    <Assembly>BlockPlane\BlockPlane.RevitPlugin.dll</Assembly>
+    <AddInId>8F3C4D2E-1A5B-4C7D-9E8F-2A3B4C5D6E7F</AddInId>
+    <FullClassName>BlockPlane.RevitPlugin.Application</FullClassName>
+    <VendorId>BLKP</VendorId>
+    <VendorDescription>BlockPlane, https://blockplane.io</VendorDescription>
+    <Text>BlockPlane</Text>
+    <Description>Sustainable materials database and carbon calculator for Revit</Description>
+    <VisibilityMode>AlwaysVisible</VisibilityMode>
+    <Discipline>Any</Discipline>
+    <LanguageType>Unknown</LanguageType>
+  </AddIn>
+</RevitAddIns>
