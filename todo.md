@@ -925,3 +925,20 @@
 - [x] Verify materials appear in Material Browser
 - [x] Test material detail pages with populated data
 - [x] Test API endpoints return correct data
+
+
+### Standalone Deployment (Remove Manus Dependencies)
+- [x] Remove Manus OAuth authentication system
+- [x] Make app publicly accessible (no login required)
+- [ ] Switch from Manus MySQL to Supabase PostgreSQL
+- [ ] Update Drizzle schema for PostgreSQL compatibility
+- [ ] Create Supabase project and get connection string
+- [ ] Update environment variables for standalone deployment
+- [ ] Create vercel.json configuration file
+- [ ] Test database connection with Supabase
+- [ ] Run database migrations on Supabase
+- [ ] Seed Supabase database with materials
+- [ ] Test app locally with new configuration
+- [ ] Commit changes to GitHub
+- [ ] Deploy to Vercel
+- [ ] Verify deployment works correctly
