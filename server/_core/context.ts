@@ -1,6 +1,5 @@
 import type { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import type { User } from "../../drizzle/schema";
-import { sdk } from "./sdk";
 
 export type TrpcContext = {
   req: CreateExpressContextOptions["req"];
@@ -8,21 +7,14 @@ export type TrpcContext = {
   user: User | null;
 };
 
+// Standalone deployment: No authentication required
+// All users have public access to the material database
 export async function createContext(
   opts: CreateExpressContextOptions
 ): Promise<TrpcContext> {
-  let user: User | null = null;
-
-  try {
-    user = await sdk.authenticateRequest(opts.req);
-  } catch (error) {
-    // Authentication is optional for public procedures.
-    user = null;
-  }
-
   return {
     req: opts.req,
     res: opts.res,
-    user,
+    user: null, // No authentication in standalone mode
   };
 }
