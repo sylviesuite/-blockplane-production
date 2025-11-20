@@ -994,8 +994,10 @@
 
 ## 🐛 CRITICAL: Dark Mode Not Working (In Progress)
 
-- [ ] FIX: Tailwind 4 @apply bg-background not compiling to actual CSS
-- [ ] FIX: Body element has no background-color style applied
+- [x] FIX: Tailwind 4 @apply bg-background not compiling to actual CSS (FIXED: using direct CSS)
+- [x] FIX: Body element has no background-color style applied (FIXED: rgb(2, 8, 23) showing in console)
+- [ ] FIX: localStorage 'theme' = 'light' overriding default dark mode
+- [ ] FIX: ThemeProvider reading saved preference instead of forcing dark
 - [ ] FIX: Environment variables not being replaced (%VITE_APP_TITLE%, %VITE_APP_LOGO%)
-- [ ] Test: Verify dark mode works on Railway production
+- [ ] Test: Verify dark mode works on Railway production for all users
 - [ ] Test: Verify theme toggle works correctly
