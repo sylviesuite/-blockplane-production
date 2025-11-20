@@ -988,3 +988,5 @@
 - [ ] Upgrade material cards with ImpactCard design
 - [ ] Add phase breakdown visualizations
 - [ ] Update button styles with gradients
+
+- [ ] Fix Header title to show "BlockPlane Materials Explorer" instead of "App"

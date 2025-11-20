@@ -4,7 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import { useEffect } from "react";
+
 import Home from "./pages/Home";
 import Visuals from "./pages/Visuals";
 import LifecycleBreakdown from "./pages/LifecycleBreakdown";
@@ -50,15 +50,6 @@ function Router() {
 // - Theme preference is saved in localStorage after user manually toggles
 
 function App() {
-  // Force clear any old light mode preference on first load
-  useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "light") {
-      localStorage.removeItem("theme");
-      window.location.reload();
-    }
-  }, []);
-
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark" switchable>
