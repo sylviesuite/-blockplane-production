@@ -950,12 +950,41 @@
 - [x] Add header navigation bar with logo and links
 - [x] Test navigation flow on all pages
 
-## 🎯 Progressive Unlock System (Upcoming)
+## 🎨 Lovable UI Transformation (In Progress)
+- [ ] Install framer-motion and vaul dependencies
+- [ ] Update Tailwind config with Lovable colors (cyan/orange)
+- [ ] Update global CSS with dark theme as default
+- [ ] Add theme toggle to header (dark/light)
+- [ ] Create FloatingParticles component
+- [ ] Add formatCO2eValue utility
+- [ ] Apply glassmorphism to cards
+- [ ] Add gradient orbs to backgrounds
+- [ ] Upgrade material cards with ImpactCard design
+- [ ] Add phase breakdown visualizations
+- [ ] Update button styles with gradients
+
+## 🎯 Quick Start Wizard & Progressive Unlock (Upcoming)
+- [ ] Build Quick Start Wizard with LifecycleFlow pattern
+- [ ] Implement 4-step onboarding flow
+- [ ] Add spring animations and progress bar
 - [ ] Design unlock system architecture
-- [ ] Build Quick Start Wizard (4 steps)
 - [ ] Implement 4-stage unlock progression
 - [ ] Add educational tooltips
 - [ ] Add human-impact translations
 - [ ] Set up analytics tracking
-- [ ] Implement role-based access control
 - [ ] Test and polish before launch
+
+
+## 🎨 Lovable UI Transformation (In Progress)
+- [x] Install framer-motion and vaul dependencies
+- [x] Update Tailwind config with Lovable colors (cyan/orange)
+- [x] Update global CSS with dark theme as default
+- [x] Add theme toggle to header (dark/light)
+- [x] Create FloatingParticles component
+- [x] Add formatCO2eValue utility
+- [ ] Force dark mode as default (ignore localStorage)
+- [ ] Apply glassmorphism to cards
+- [ ] Add gradient orbs to backgrounds
+- [ ] Upgrade material cards with ImpactCard design
+- [ ] Add phase breakdown visualizations
+- [ ] Update button styles with gradients

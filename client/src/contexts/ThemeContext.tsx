@@ -22,10 +22,8 @@ export function ThemeProvider({
   switchable = false,
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(() => {
-    if (switchable) {
-      const stored = localStorage.getItem("theme");
-      return (stored as Theme) || defaultTheme;
-    }
+    // Always use defaultTheme first (ignore localStorage for initial load)
+    // This ensures dark mode is the default
     return defaultTheme;
   });
 

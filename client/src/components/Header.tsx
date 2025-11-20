@@ -1,11 +1,13 @@
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Home, Database, FileText, BarChart3 } from 'lucide-react';
+import { Home, Database, FileText, BarChart3, Moon, Sun } from 'lucide-react';
 import { APP_TITLE } from '@/const';
+import { useTheme } from '@/contexts/ThemeContext';
 
 export function Header() {
+  const { theme, toggleTheme } = useTheme();
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/">
           <Button variant="ghost" className="mr-6 flex items-center space-x-2 px-2">
@@ -13,7 +15,7 @@ export function Header() {
           </Button>
         </Link>
 
-        <nav className="flex items-center space-x-1 text-sm font-medium">
+        <nav className="flex flex-1 items-center space-x-1 text-sm font-medium">
           <Link href="/">
             <Button variant="ghost" size="sm" className="gap-2">
               <Home className="h-4 w-4" />
@@ -42,6 +44,15 @@ export function Header() {
             </Button>
           </Link>
         </nav>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => toggleTheme()}
+          className="ml-auto"
+        >
+          {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+        </Button>
       </div>
     </header>
   );
