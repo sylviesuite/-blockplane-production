@@ -990,3 +990,12 @@
 - [ ] Update button styles with gradients
 
 - [ ] Fix Header title to show "BlockPlane Materials Explorer" instead of "App"
+
+
+## 🐛 CRITICAL: Dark Mode Not Working (In Progress)
+
+- [ ] FIX: Tailwind 4 @apply bg-background not compiling to actual CSS
+- [ ] FIX: Body element has no background-color style applied
+- [ ] FIX: Environment variables not being replaced (%VITE_APP_TITLE%, %VITE_APP_LOGO%)
+- [ ] Test: Verify dark mode works on Railway production
+- [ ] Test: Verify theme toggle works correctly
