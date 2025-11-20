@@ -31,6 +31,8 @@ import {
   DollarSign
 } from "lucide-react";
 import { Link } from "wouter";
+import { Header } from "@/components/Header";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
@@ -120,15 +122,17 @@ export default function MaterialDetailEnhanced() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      <Header />
       <div className="container py-8">
+        {/* Breadcrumb */}
+        <Breadcrumb items={[
+          { label: "Home", href: "/" },
+          { label: "Materials", href: "/materials" },
+          { label: material.name }
+        ]} />
+        
         {/* Header */}
         <div className="mb-6">
-          <Link href="/materials">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Material Browser
-            </Button>
-          </Link>
 
           <div className="flex items-start justify-between">
             <div>

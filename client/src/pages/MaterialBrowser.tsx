@@ -36,6 +36,7 @@ import {
   Info
 } from "lucide-react";
 import { Link } from "wouter";
+import { Header } from "@/components/Header";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
@@ -113,6 +114,7 @@ export default function MaterialBrowser() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
+      <Header />
       {/* Header */}
       <div className="bg-white border-b">
         <div className="container py-8">

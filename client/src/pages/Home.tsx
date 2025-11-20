@@ -1,8 +1,10 @@
 import { Link } from 'wouter';
+import { Header } from '@/components/Header';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+      <Header />
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
