@@ -1004,3 +1004,4 @@
 - [x] Add subtle glow and scale transformation to feature cards on hover
 - [x] Implement staggered entrance animations for feature cards
 - [x] Add footer section with documentation, social media, and contact links
+- [x] Fix header showing "App" instead of proper application title
