@@ -1007,3 +1007,4 @@
 - [x] Fix header showing "App" instead of proper application title
 - [x] Implement full Lifecycle Flow landing page (animated background, hero section, gradient effects)
 - [x] Combine hero section with feature tiles grid and add "Choose Your Path to Clarity" title
+- [x] Split into two pages: hero-only home and features tiles page with /features route
