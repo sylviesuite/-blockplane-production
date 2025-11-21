@@ -19,7 +19,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
           {/* Material Browser Card */}
           <Link href="/materials">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-indigo-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">🔍</div>
                 <CardTitle>Material Database</CardTitle>
@@ -37,7 +37,7 @@ export default function Home() {
 
           {/* Visualizations Card */}
           <Link href="/visuals">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-emerald-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-emerald-500/20 hover:border-emerald-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">📊</div>
                 <CardTitle>Material Visualizations</CardTitle>
@@ -55,7 +55,7 @@ export default function Home() {
 
           {/* Lifecycle Breakdown Card */}
           <Link href="/lifecycle">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-cyan-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/20 hover:border-cyan-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">🔄</div>
                 <CardTitle>Lifecycle Breakdown</CardTitle>
@@ -73,7 +73,7 @@ export default function Home() {
 
           {/* Analysis Tools Card */}
           <Link href="/analysis">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-purple-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">🎯</div>
                 <CardTitle>Analysis Tools</CardTitle>
@@ -91,7 +91,7 @@ export default function Home() {
 
           {/* Project Analysis Card */}
           <Link href="/projects">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-blue-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-blue-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">📁</div>
                 <CardTitle>Project Analysis</CardTitle>
@@ -109,7 +109,7 @@ export default function Home() {
 
           {/* KPI Dashboard Card */}
           <Link href="/impact">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-green-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-green-500/20 hover:border-green-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">📈</div>
                 <CardTitle>Impact Dashboard</CardTitle>
@@ -127,7 +127,7 @@ export default function Home() {
 
           {/* Material Swap Assistant Card */}
           <Link href="/swap-assistant">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-purple-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 hover:border-purple-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">✨</div>
                 <CardTitle>Material Swap Assistant</CardTitle>
@@ -145,7 +145,7 @@ export default function Home() {
 
           {/* Budget Optimizer Card */}
           <Link href="/budget-optimizer">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-amber-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-amber-500/20 hover:border-amber-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">💰</div>
                 <CardTitle>Budget Optimizer</CardTitle>
@@ -163,7 +163,7 @@ export default function Home() {
 
           {/* Admin Dashboard Card */}
           <Link href="/admin">
-            <Card className="cursor-pointer transition-all hover:shadow-xl hover:border-red-500/50">
+            <Card className="cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-red-500/20 hover:border-red-500/50">
               <CardHeader>
                 <div className="text-4xl mb-4">🛠️</div>
                 <CardTitle>Admin Dashboard</CardTitle>

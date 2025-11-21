@@ -1001,3 +1001,4 @@
 - [ ] FIX: Environment variables not being replaced (%VITE_APP_TITLE%, %VITE_APP_LOGO%)
 - [ ] Test: Verify dark mode works on Railway production for all users
 - [ ] Test: Verify theme toggle works correctly
+- [x] Add subtle glow and scale transformation to feature cards on hover
