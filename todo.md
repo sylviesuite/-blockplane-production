@@ -1011,3 +1011,9 @@
 - [x] Create minimal footer for home page (copyright + essential links only)
 - [x] Update homepage with finalized professional copy (hero title, sub-headline, CTA, section header)
 - [x] Remove navigation header from landing page to maximize above-the-fold impact
+- [x] Redesign landing page with architect-first messaging
+- [x] Add problem-focused headline: "Stop Second-Guessing Material Choices"
+- [x] Add How It Works section (3-step visual)
+- [x] Add social proof section (85+ materials, categories covered)
+- [x] Add multiple CTAs (primary + secondary)
+- [x] Add final conversion section
