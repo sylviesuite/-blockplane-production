@@ -1009,3 +1009,5 @@
 - [x] Combine hero section with feature tiles grid and add "Choose Your Path to Clarity" title
 - [x] Split into two pages: hero-only home and features tiles page with /features route
 - [x] Create minimal footer for home page (copyright + essential links only)
+- [x] Update homepage with finalized professional copy (hero title, sub-headline, CTA, section header)
+- [x] Remove navigation header from landing page to maximize above-the-fold impact
