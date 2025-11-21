@@ -1,6 +1,6 @@
 import { Link } from 'wouter';
 import { Header } from '@/components/Header';
-import { Footer } from '@/components/Footer';
+import MinimalFooter from '@/components/MinimalFooter';
 import { FloatingParticles } from '@/components/FloatingParticles';
 import { Button } from '@/components/ui/button';
 
@@ -44,7 +44,7 @@ export default function Home() {
         </div>
       </section>
       
-      <Footer />
+      <MinimalFooter />
     </div>
   );
 }
