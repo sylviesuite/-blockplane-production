@@ -1,5 +1,6 @@
 import { Link } from 'wouter';
 import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 
 const featureCards = [
@@ -79,46 +80,49 @@ const featureCards = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
-      <div className="container mx-auto px-4 py-16">
-        {/* Hero Section */}
-        <div className="text-center mb-16 animate-in fade-in duration-700">
-          <h1 className="text-5xl font-bold text-foreground mb-4">
-            BlockPlane Materials Explorer
-          </h1>
-          <p className="text-xl text-muted-foreground">
-            Sustainable Materials Platform - Crafting a Sustainable Future
-          </p>
-        </div>
+      <main className="flex-1">
+        <div className="container mx-auto px-4 py-16">
+          {/* Hero Section */}
+          <div className="text-center mb-16 animate-in fade-in duration-700">
+            <h1 className="text-5xl font-bold text-foreground mb-4">
+              BlockPlane Materials Explorer
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              Sustainable Materials Platform - Crafting a Sustainable Future
+            </p>
+          </div>
 
-        {/* Feature Cards Grid */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
-          {featureCards.map((card, index) => (
-            <Link key={card.href} href={card.href}>
-              <Card
-                className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-${card.color}-500/20 hover:border-${card.color}-500/50 animate-in fade-in slide-in-from-bottom-4`}
-                style={{
-                  animationDelay: `${index * 100}ms`,
-                  animationDuration: '600ms',
-                  animationFillMode: 'backwards',
-                }}
-              >
-                <CardHeader>
-                  <div className="text-4xl mb-4">{card.icon}</div>
-                  <CardTitle>{card.title}</CardTitle>
-                  <CardDescription>{card.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className={`text-${card.color}-400 font-semibold`}>
-                    {card.link}
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+          {/* Feature Cards Grid */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-8">
+            {featureCards.map((card, index) => (
+              <Link key={card.href} href={card.href}>
+                <Card
+                  className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-${card.color}-500/20 hover:border-${card.color}-500/50 animate-in fade-in slide-in-from-bottom-4`}
+                  style={{
+                    animationDelay: `${index * 100}ms`,
+                    animationDuration: '600ms',
+                    animationFillMode: 'backwards',
+                  }}
+                >
+                  <CardHeader>
+                    <div className="text-4xl mb-4">{card.icon}</div>
+                    <CardTitle>{card.title}</CardTitle>
+                    <CardDescription>{card.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className={`text-${card.color}-400 font-semibold`}>
+                      {card.link}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 }
