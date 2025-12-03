@@ -9,6 +9,7 @@ import {
   classifyQuadrant,
   computeParisAlignment,
   buildInsightScores,
+  buildStaticInsightText,
   toRISChartData,
   MaterialCost,
   RISComponents,
@@ -222,6 +223,24 @@ describe("all-score composition", () => {
     expect(scores.ris).toBe(calculateRIS(sampleComponents));
     expect(scores.cpi).toBeCloseTo(calculateCPI(120, sampleCost, 30, 0.03), 2);
     expect(scores.quadrant).toBeDefined();
+  });
+});
+
+describe("buildStaticInsightText", () => {
+  it("returns a static insight with source 'static'", () => {
+    const scores = buildInsightScores({
+      lis: 60,
+      ris: 70,
+      cpi: 25,
+      quadrant: "Transitional",
+      risComponents: sampleComponents,
+      parisAlignment: 88,
+    });
+
+    const insight = buildStaticInsightText(scores);
+    expect(insight.short).toBeTruthy();
+    expect(insight.details).toContain("LIS");
+    expect(insight.source).toBe("static");
   });
 });
 

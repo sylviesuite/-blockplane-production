@@ -188,6 +188,41 @@ export function buildInsightScores(args: {
   };
 }
 
+export type InsightSource = "static" | "ai";
+
+export interface InsightText {
+  short: string;
+  details?: string;
+  source: InsightSource;
+  model?: string;
+}
+
+export function buildStaticInsightText(scores: InsightScores): InsightText {
+  const short = (() => {
+    if (scores.quadrant === "Regenerative") {
+      return "Strong impact profile with regenerative upside.";
+    }
+    if (scores.quadrant === "Transitional") {
+      return "Balanced option—good impact, keep refining.";
+    }
+    if (scores.quadrant === "Costly") {
+      return "Impact is decent but cost per impact is elevated.";
+    }
+    return "High-impact material; consider lower-impact alternatives.";
+  })();
+
+  const details = [
+    `LIS ${scores.lis.toFixed(0)} • RIS ${scores.ris.toFixed(0)} • CPI ${scores.cpi.toFixed(2)} (${scores.cpiBand}).`,
+    `Paris alignment meets ${scores.parisAlignment.toFixed(0)}% of the budget for this scope.`,
+  ].join(" ");
+
+  return {
+    short,
+    details,
+    source: "static",
+  };
+}
+
 export interface RISChartDatum {
   key: keyof RISComponents;
   label: string;

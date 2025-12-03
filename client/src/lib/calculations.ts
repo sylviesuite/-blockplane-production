@@ -1,3 +1,182 @@
+// TODO: `shared/scoring.ts` is the new canonical source of truth for all LIS/RIS/CPI calculations.
+// TODO: `shared/scoring.ts` is now the canonical source of truth.
+// This file only re-exports LIS/RIS/CPI scoring utilities and types.
+
+export type {
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISComponents,
+  RISTier,
+} from "@shared/scoring";
+
+export {
+  calculateAllScores,
+  calculateCPI,
+  calculateLIS,
+  calculateNPV,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+} from "@shared/scoring";
+// TODO: `shared/scoring.ts` is the new canonical source of truth for all LIS/RIS/CPI calculations.
+import type {
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISComponents,
+  RISTier,
+} from "@shared/scoring";
+import {
+  calculateAllScores,
+  calculateCPI,
+  calculateLIS,
+  calculateNPV,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+} from "@shared/scoring";
+
+export {
+  calculateLIS,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  calculateCPI,
+  calculateNPV,
+  calculateAllScores,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+};
+
+export type {
+  RISComponents,
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISTier,
+};
+// TODO: `shared/scoring.ts` is the new canonical source of truth for all LIS/RIS/CPI calculations.
+import type {
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISComponents,
+  RISTier,
+} from "@shared/scoring";
+import {
+  calculateAllScores,
+  calculateCPI,
+  calculateLIS,
+  calculateNPV,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+} from "@shared/scoring";
+
+export {
+  calculateLIS,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  calculateCPI,
+  calculateNPV,
+  calculateAllScores,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+};
+
+export type {
+  RISComponents,
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISTier,
+};
+// TODO: `shared/scoring.ts` is the new canonical source of truth for all LIS/RIS/CPI calculations.
+import type {
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISComponents,
+  RISTier,
+} from "@shared/scoring";
+import {
+  calculateAllScores,
+  calculateCPI,
+  calculateLIS,
+  calculateNPV,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+} from "@shared/scoring";
+
+export {
+  calculateLIS,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  calculateCPI,
+  calculateNPV,
+  calculateAllScores,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+};
+
+export type {
+  RISComponents,
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISTier,
+};
+// TODO: `shared/scoring.ts` is the new canonical source of truth for all LIS/RIS/CPI calculations.
+import type {
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISComponents,
+  RISTier,
+} from "@shared/scoring";
+import {
+  calculateAllScores,
+  calculateCPI,
+  calculateLIS,
+  calculateNPV,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+} from "@shared/scoring";
+
+export {
+  calculateLIS,
+  calculateRIS,
+  classifyQuadrant,
+  getRISTier,
+  calculateCPI,
+  calculateNPV,
+  calculateAllScores,
+  LIS_BENCHMARK,
+  RIS_WEIGHTS,
+};
+
+export type {
+  RISComponents,
+  MaterialCost,
+  MaterialScores,
+  Quadrant,
+  RISTier,
+};
 import { RISComponents, RISTier, MaterialCost } from "../types";
 
 /**
