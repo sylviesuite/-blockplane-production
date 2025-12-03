@@ -1,8 +1,12 @@
-import { InsightScores } from "@shared/scoring";
+import { useEffect, useState } from "react";
+import type { InsightScores, InsightText } from "@shared/scoring";
 
 export interface InsightBoxProps {
   scores: InsightScores;
-  insightText?: string;
+  insightText?: InsightText | null;
+  materialName?: string;
+  category?: string;
+  contextNote?: string;
 }
 
 const cpiBandCopy: Record<InsightScores["cpiBand"], string> = {
@@ -12,7 +16,75 @@ const cpiBandCopy: Record<InsightScores["cpiBand"], string> = {
   extreme: "Extreme",
 };
 
-export function InsightBox({ scores, insightText }: InsightBoxProps) {
+export function InsightBox({
+  scores,
+  insightText,
+  materialName,
+  category,
+  contextNote,
+}: InsightBoxProps) {
+  const [mode, setMode] = useState<"static" | "ai">("static");
+  const [aiInsight, setAiInsight] = useState<InsightText | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const effectiveInsight =
+    mode === "ai"
+      ? aiInsight ?? insightText
+      : insightText ?? aiInsight;
+
+  useEffect(() => {
+    if (mode !== "ai" || aiInsight || loading) return;
+
+    const controller = new AbortController();
+    const fetchInsight = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await fetch("/api/insight", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            lis: scores.lis,
+            ris: scores.ris,
+            cpi: scores.cpi,
+            quadrant: scores.quadrant,
+            risComponents: scores.risComponents,
+            parisAlignment: scores.parisAlignment,
+            materialName,
+            category,
+            contextNote,
+            useAI: true,
+          }),
+        });
+        if (!res.ok) {
+          throw new Error("Insight API failed");
+        }
+        const payload = await res.json();
+        setAiInsight(payload.insightText ?? null);
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") {
+          setError("AI insight unavailable right now.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInsight();
+
+    return () => controller.abort();
+  }, [
+    mode,
+    aiInsight,
+    loading,
+    scores,
+    materialName,
+    category,
+    contextNote,
+  ]);
+
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -32,6 +104,27 @@ export function InsightBox({ scores, insightText }: InsightBoxProps) {
             {scores.quadrant}
           </p>
         </div>
+      </div>
+
+      <div className="mt-4 flex items-center gap-2">
+        <button
+          type="button"
+          className={`text-xs uppercase tracking-[0.2em] ${
+            mode === "static" ? "text-emerald-600" : "text-slate-400"
+          }`}
+          onClick={() => setMode("static")}
+        >
+          Static
+        </button>
+        <button
+          type="button"
+          className={`text-xs uppercase tracking-[0.2em] ${
+            mode === "ai" ? "text-emerald-600" : "text-slate-400"
+          }`}
+          onClick={() => setMode("ai")}
+        >
+          AI
+        </button>
       </div>
 
       <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -71,8 +164,13 @@ export function InsightBox({ scores, insightText }: InsightBoxProps) {
         </div>
       </div>
 
-      {insightText && (
-        <p className="mt-5 text-sm text-slate-700 dark:text-slate-300">{insightText}</p>
+      {loading && <p className="mt-5 text-sm text-slate-500">Loading AI…</p>}
+      {error && <p className="mt-5 text-sm text-destructive-500">{error}</p>}
+      {effectiveInsight && (
+        <div className="mt-5 text-sm text-slate-700 dark:text-slate-300">
+          <p className="font-semibold">{effectiveInsight.short}</p>
+          {effectiveInsight.details && <p>{effectiveInsight.details}</p>}
+        </div>
       )}
     </div>
   );
