@@ -25,7 +25,17 @@ export default function MaterialDetail() {
   const params = useMaterialParams();
   const materialId = params?.id;
 
-  const material = localMaterials.find((item) => item.id === materialId);
+  const FALLBACK_MATERIAL = {
+    id: "rammed-earth",
+    name: "Rammed Earth",
+    category: "Earth Materials",
+    description: "Stabilized rammed earth walls with low embodied carbon.",
+    lis: 18,
+    ris: 82,
+    cpi: 42,
+  };
+  const foundMaterial = localMaterials.find((item) => item.id === materialId);
+  const material = foundMaterial ?? FALLBACK_MATERIAL;
   const [showScoreDetails, setShowScoreDetails] = useState(false);
 
   const takeaways: string[] = [];
@@ -126,9 +136,9 @@ export default function MaterialDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-10">
-      <div className="container py-12">
-        <header className="mb-10 space-y-4">
+    <div className="min-h-screen bg-slate-50 pb-12">
+      <div className="container mx-auto space-y-10 py-12">
+        <header className="space-y-3">
           <div className="flex items-center gap-3">
             <Link href="/materials">
               <Button variant="ghost" className="px-3 py-1">
@@ -139,86 +149,101 @@ export default function MaterialDetail() {
               Catalog
             </span>
           </div>
-
-          <div className="space-y-2">
-            <h1 className="text-4xl font-semibold text-slate-900">
-              {material.name}
-            </h1>
-            <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600">
-              {material.category}
-            </p>
-            <p className="text-base text-slate-700 max-w-3xl">
-              {material.description}
-            </p>
-
-            {hasAlternatives && (
-              <a
-                href="#better-alternatives"
-                className="inline-block text-sm text-emerald-700 hover:underline"
-              >
-                Compare →
-              </a>
-            )}
-          </div>
+          <h1 className="text-4xl font-semibold text-slate-900">{material.name}</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.4em] text-emerald-600">
+            {material.category}
+          </p>
+          <p className="text-base leading-relaxed text-slate-700 max-w-3xl">
+            {material.description}
+          </p>
         </header>
 
-        <section className="mb-10 rounded-3xl border border-slate-200 bg-white/70 p-6">
-          <div className="mt-4 grid gap-6 md:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>LIS</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-orange-600">
-                  {material.lis}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>RIS</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-emerald-600">
-                  {material.ris}
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>CPI</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-3xl font-bold text-blue-600">
-                  {material.cpi}
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {hasAlternatives && (
-            <section
-              id="better-alternatives"
-              className="mt-6 space-y-3 scroll-mt-24"
+        <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                Score overview
+              </p>
+              <h2 className="text-2xl font-semibold text-slate-900">LIS / RIS / CPI</h2>
+            </div>
+            <button
+              type="button"
+              className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500 hover:text-slate-700"
+              onClick={() => setShowScoreDetails((prev) => !prev)}
             >
-              <h2 className="text-lg font-semibold">Better Alternatives</h2>
+              {showScoreDetails ? "Hide details" : "Show details"}
+            </button>
+          </div>
+          <div className="mt-6 grid gap-6 md:grid-cols-3">
+            {[
+              { label: "LIS", value: material.lis, color: "text-orange-600", helper: "Low lifecycle impact is better" },
+              { label: "RIS", value: material.ris, color: "text-emerald-600", helper: "Higher regenerative score" },
+              { label: "CPI", value: material.cpi, color: "text-blue-600", helper: "Lower cost-per-impact" },
+            ].map((score) => (
+              <Card key={score.label} className="border-slate-200">
+                <CardHeader>
+                  <div className="flex items-center gap-1">
+                    <CardTitle className="text-xs font-semibold text-slate-500">
+                      {score.label}
+                    </CardTitle>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="text-slate-400">
+                          <Info className="h-3 w-3" />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent sideOffset={5}>{score.helper}</TooltipContent>
+                    </Tooltip>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className={`text-3xl font-bold ${score.color}`}>{score.value}</p>
+                  <p className="text-xs text-slate-500">
+                    {score.label === "RIS" ? "Higher is better" : "Lower is better"}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {showScoreDetails && (
+            <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/70 px-4 py-3 text-xs text-slate-600">
+              <p>LIS summarizes lifecycle impact over the material lifecycle.</p>
+              <p className="mt-1">RIS highlights regenerative circularity signals.</p>
+              <p className="mt-1">CPI reports cost efficiency per unit of impact.</p>
+            </div>
+          )}
+          {takeaways.length > 0 && (
+            <div className="mt-5 space-y-2 text-xs text-slate-600">
+              <p className="font-semibold uppercase tracking-[0.3em] text-slate-500">Key Takeaways</p>
+              <ul className="list-disc pl-4 space-y-1">
+                {takeaways.slice(0, 3).map((takeaway, idx) => (
+                  <li key={idx}>{takeaway}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {hasAlternatives && (
+            <section id="better-alternatives" className="mt-6 space-y-2 text-sm text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-900">Better Alternatives</h3>
               {betterAlternatives.map((alt) => (
-                <div key={alt.id}>
-                  <Link href={`/materials/${alt.id}`}>{alt.name}</Link> —{" "}
-                  {alt.reason}
+                <div key={alt.id} className="text-xs">
+                  <Link
+                    href={`/materials/${alt.id}`}
+                    className="font-semibold text-slate-800 hover:underline"
+                  >
+                    {alt.name}
+                  </Link>{" "}
+                  — {alt.reason}
                 </div>
               ))}
             </section>
           )}
-
           {hasAlternatives && championNotes.length > 0 && (
-            <section className="mt-6 space-y-2">
-              <h2 className="text-lg font-semibold">
+            <section className="mt-6 space-y-2 text-xs text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-900">
                 Why You Might Still Choose This
-              </h2>
-              <ul className="list-disc pl-4">
+              </h3>
+              <ul className="list-disc pl-4 space-y-1">
                 {championNotes.map((note, idx) => (
                   <li key={idx}>{note}</li>
                 ))}
@@ -227,14 +252,26 @@ export default function MaterialDetail() {
           )}
         </section>
 
-        <InsightBoxV2
-          materialId={material.id}
-          materialName={material.name}
-          lis={material.lis}
-          ris={material.ris}
-          cpi={material.cpi}
-          staticInsight={`LIS ${material.lis} • RIS ${material.ris} • CPI ${material.cpi}`}
-        />
+        <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
+          <div className="space-y-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
+                InsightBox v2
+              </p>
+              <p className="text-sm text-slate-600">
+                Static insight is always available; enable AI mode for experimental commentary.
+              </p>
+            </div>
+            <InsightBoxV2
+              materialId={material.id}
+              materialName={material.name}
+              lis={material.lis}
+              ris={material.ris}
+              cpi={material.cpi}
+              staticInsight={`LIS ${material.lis} • RIS ${material.ris} • CPI ${material.cpi}`}
+            />
+          </div>
+        </section>
       </div>
     </div>
   );
