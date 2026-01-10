@@ -109,6 +109,15 @@ export function InsightBoxV2({
 
   const aiDisplayText = aiContent ?? cachedContent;
 
+  const trimmedStatic = staticCopy?.trim();
+  const trimmedAi = aiDisplayText?.trim();
+  const hasInsightText = Boolean(trimmedStatic || trimmedAi);
+  const confidenceLevel = !hasInsightText
+    ? "Low"
+    : isAIMode || Boolean(trimmedAi)
+      ? "Medium"
+      : "High";
+
   const handleGenerate = async () => {
     if (status === "loading") return;
     setStatus("loading");
@@ -183,16 +192,21 @@ export function InsightBoxV2({
         </button>
       </div>
 
-      <div className="mt-4 space-y-1 text-xs text-slate-500 dark:text-slate-400">
-        <p className="font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-          Insight source
-        </p>
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">
-          {isAIMode
-            ? `AI-generated insight (beta)${aiDisplayText ? "" : " — producing fresh text"}`
-            : "Static insight (deterministic)"}
-          {(!aiContent && cachedContent && !isAIMode) || cachedContent ? " • cached" : ""}
-        </p>
+      <div className="mt-4 space-y-2">
+        <div className="sticky top-4 z-10 flex w-full items-center rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-300">
+          Confidence: {confidenceLevel}
+        </div>
+        <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
+          <p className="font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+            Insight source
+          </p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {isAIMode
+              ? `AI-generated insight (beta)${aiDisplayText ? "" : " — producing fresh text"}`
+              : "Static insight (deterministic)"}
+            {(!aiContent && cachedContent && !isAIMode) || cachedContent ? " • cached" : ""}
+          </p>
+        </div>
       </div>
       <div className="mt-1 space-y-4">
         {isAIMode ? (
