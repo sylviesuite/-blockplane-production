@@ -183,7 +183,18 @@ export function InsightBoxV2({
         </button>
       </div>
 
-      <div className="mt-5 space-y-4">
+      <div className="mt-4 space-y-1 text-xs text-slate-500 dark:text-slate-400">
+        <p className="font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+          Insight source
+        </p>
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">
+          {isAIMode
+            ? `AI-generated insight (beta)${aiDisplayText ? "" : " — producing fresh text"}`
+            : "Static insight (deterministic)"}
+          {(!aiContent && cachedContent && !isAIMode) || cachedContent ? " • cached" : ""}
+        </p>
+      </div>
+      <div className="mt-1 space-y-4">
         {isAIMode ? (
           <div className="space-y-3">
             <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-200">
