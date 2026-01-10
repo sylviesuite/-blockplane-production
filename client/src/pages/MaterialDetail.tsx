@@ -158,7 +158,7 @@ export default function MaterialDetail() {
           </p>
         </header>
 
-        <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5">
+        <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm shadow-slate-900/5">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
@@ -251,6 +251,10 @@ export default function MaterialDetail() {
             </section>
           )}
         </section>
+
+        <div className="mx-auto w-full max-w-4xl border-t border-slate-200/60"></div>
+
+        <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
 
         <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
           <div className="space-y-3">
