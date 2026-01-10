@@ -6,6 +6,11 @@ export type LocalMaterial = {
   lis: number;
   ris: number;
   cpi: number;
+  context?: {
+    climateZone?: string;
+    region?: string;
+    buildingType?: string;
+  };
 };
 
 export const localMaterials: LocalMaterial[] = [
@@ -18,6 +23,11 @@ export const localMaterials: LocalMaterial[] = [
     lis: 18,
     ris: 82,
     cpi: 42,
+    context: {
+      climateZone: "CZ6",
+      region: "Great Lakes",
+      buildingType: "Residential",
+    },
   },
   {
     id: "osb-board",
@@ -28,6 +38,11 @@ export const localMaterials: LocalMaterial[] = [
     lis: 55,
     ris: 38,
     cpi: 33,
+    context: {
+      climateZone: "CZ4",
+      region: "Midwest",
+      buildingType: "Sheathing / Structural",
+    },
   },
   {
     id: "hempcrete-infill",
@@ -38,6 +53,11 @@ export const localMaterials: LocalMaterial[] = [
     lis: 27,
     ris: 76,
     cpi: 48,
+    context: {
+      climateZone: "CZ6",
+      region: "Pacific Northwest",
+      buildingType: "Envelope / Insulation",
+    },
   },
 ];
 
