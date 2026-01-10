@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getInsightProvider } from "@/lib/ai/insightProvider";
 import type { InsightProvider } from "@/lib/ai/insightProviderTypes";
+import { Info } from "lucide-react";
 
 type Mode = "static" | "ai";
 
@@ -197,9 +199,19 @@ export function InsightBoxV2({
           Confidence: {confidenceLevel}
         </div>
         {contextSummary && (
-          <p className="text-[11px] text-slate-500 dark:text-slate-400">
-            Context: {contextSummary}
-          </p>
+          <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+            <span>Context: {contextSummary}</span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                  <Info className="h-3 w-3" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent sideOffset={4} className="max-w-xs text-xs">
+                Context explains the real-world conditions that affect how this material performs and why its impact score looks the way it does.
+              </TooltipContent>
+            </Tooltip>
+          </div>
         )}
         <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
           <p className="font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
