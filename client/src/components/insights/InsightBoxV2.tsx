@@ -196,6 +196,11 @@ export function InsightBoxV2({
         <div className="sticky top-4 z-10 flex w-full items-center rounded-full border border-slate-200/80 bg-slate-50/90 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 backdrop-blur dark:border-slate-800/80 dark:bg-slate-900/70 dark:text-slate-300">
           Confidence: {confidenceLevel}
         </div>
+        {contextSummary && (
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            Context: {contextSummary}
+          </p>
+        )}
         <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
           <p className="font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
             Insight source

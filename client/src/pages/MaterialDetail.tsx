@@ -33,6 +33,11 @@ export default function MaterialDetail() {
     lis: 18,
     ris: 82,
     cpi: 42,
+    context: {
+      climateZone: "CZ6",
+      region: "Great Lakes",
+      buildingType: "Residential",
+    },
   };
   const foundMaterial = localMaterials.find((item) => item.id === materialId);
   const material = foundMaterial ?? FALLBACK_MATERIAL;
@@ -255,8 +260,6 @@ export default function MaterialDetail() {
         <div className="mx-auto w-full max-w-4xl border-t border-slate-200/60"></div>
 
         <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
-
-        <section className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
           <div className="space-y-3">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
@@ -272,6 +275,7 @@ export default function MaterialDetail() {
               lis={material.lis}
               ris={material.ris}
               cpi={material.cpi}
+              context={material.context}
               staticInsight={`LIS ${material.lis} • RIS ${material.ris} • CPI ${material.cpi}`}
             />
           </div>
