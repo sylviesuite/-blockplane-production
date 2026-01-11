@@ -203,11 +203,20 @@ export function InsightBoxV2({
             <span>Context: {contextSummary}</span>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
-                  <Info className="h-3 w-3" />
-                </span>
+                <button
+                  type="button"
+                  aria-label="Explain context"
+                  className="rounded-full border border-transparent p-1 text-slate-400 transition hover:border-slate-300 hover:text-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:text-slate-400 dark:hover:text-slate-200 dark:focus-visible:outline-emerald-400"
+                >
+                  <Info className="h-3 w-3" aria-hidden />
+                </button>
               </TooltipTrigger>
-              <TooltipContent sideOffset={4} className="max-w-xs text-xs">
+              <TooltipContent
+                side="top"
+                align="center"
+                sideOffset={4}
+                className="max-w-xs rounded-xl border border-slate-200/60 bg-white text-xs text-slate-700 shadow-lg dark:border-slate-800/70 dark:bg-slate-950 dark:text-slate-300"
+              >
                 Context explains the real-world conditions that affect how this material performs and why its impact score looks the way it does.
               </TooltipContent>
             </Tooltip>
