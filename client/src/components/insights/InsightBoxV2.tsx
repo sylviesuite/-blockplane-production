@@ -3,6 +3,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getInsightProvider } from "@/lib/ai/insightProvider";
 import type { InsightProvider } from "@/lib/ai/insightProviderTypes";
 import { Info } from "lucide-react";
+import { renderInsightStaticV2 } from "./v2/insightbox-v2.contract";
+import type { InsightBlock } from "./v2/insightbox-v2.contract";
 
 type Mode = "static" | "ai";
 
@@ -92,6 +94,17 @@ export function InsightBoxV2({
   }, [cacheKey, materialId]);
 
   const isAIMode = mode === "ai";
+  const staticBlocks = useMemo(
+    () =>
+      renderInsightStaticV2({
+        materialId,
+        materialName,
+        lis,
+        ris,
+        cpi,
+      }),
+    [materialId, materialName, lis, ris, cpi]
+  );
   const staticCopy = useMemo(() => {
     if (staticInsight) return staticInsight;
 
@@ -269,11 +282,66 @@ export function InsightBoxV2({
             )}
           </div>
         ) : (
-          <div className="rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-200">
-            <p>{staticCopy}</p>
-            <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-              Static insights reflect the deterministic LIS/RIS/CPI template tied to the scores shown above.
-            </p>
+          <div className="space-y-4 rounded-2xl border border-slate-100 bg-slate-50/80 p-4 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/40 dark:text-slate-200">
+            <p className="text-base font-semibold text-slate-900 dark:text-slate-100">{staticBlocks.takeaway}</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  LIS drivers
+                </p>
+                <ul className="mt-1 space-y-1 text-xs">
+                  {staticBlocks.lis_drivers.map((item: InsightBlock) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  RIS drivers
+                </p>
+                <ul className="mt-1 space-y-1 text-xs">
+                  {staticBlocks.ris_drivers.map((item: InsightBlock) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                CPI explainer
+              </p>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{staticBlocks.cpi_explainer}</p>
+            </div>
+            {staticBlocks.comparison && (
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  Comparison
+                </p>
+                <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{staticBlocks.comparison}</p>
+              </div>
+            )}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  Confidence
+                </p>
+                <ul className="mt-1 space-y-1 text-xs">
+                  {staticBlocks.confidence.map((note: string) => (
+                    <li key={note}>{note}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                  Next actions
+                </p>
+                <ul className="mt-1 space-y-1 text-xs">
+                  {staticBlocks.next_actions.map((item: string) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         )}
       </div>
