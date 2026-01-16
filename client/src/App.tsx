@@ -32,7 +32,6 @@ function Router() {
       <Route path={"/breakdown"} component={LifecycleBreakdown} />
       <Route path={"/analysis"} component={Analysis} />
       <Route path={"/impact"} component={KPIDashboard} />
-      <Route path="/material/:id" component={MaterialDetailEnhanced} />
       <Route path="/materials/:id" component={MaterialDetail} />
       <Route path="/projects" component={ProjectAnalysis} />
       <Route path="/admin" component={AdminDashboard} />

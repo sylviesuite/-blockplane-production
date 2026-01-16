@@ -64,8 +64,8 @@ export default function APIDocumentation() {
                 </CardHeader>
                 <CardContent className="space-y-4 text-slate-200">
                   <div>
-                    <h3 className="font-semibold mb-2">Key Features</h3>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                    <h3 className="font-semibold mb-2 text-white">Key Features</h3>
+                    <ul className="list-disc list-inside space-y-1 text-sm text-slate-200">
                       <li>Advanced material search with filters (category, RIS, carbon, regenerative)</li>
                       <li>Comprehensive material data including lifecycle carbon breakdown</li>
                       <li>Confidence levels and data quality metadata for transparency</li>
@@ -76,8 +76,8 @@ export default function APIDocumentation() {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold mb-2">Authentication</h3>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <h3 className="font-semibold mb-2 text-white">Authentication</h3>
+                    <p className="text-sm text-slate-200 mb-2">
                       Currently, the API is publicly accessible. Future versions will require API keys.
                     </p>
                   <Alert className="bg-slate-900/70 border border-slate-800 text-slate-200">
