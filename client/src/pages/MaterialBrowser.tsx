@@ -55,7 +55,7 @@ export default function MaterialBrowser() {
   // Fetch materials with current filters
   const { data: searchResults, isLoading } = trpc.materialAPI.search.useQuery({
     query: searchQuery || undefined,
-    categories: selectedCategories.length > 0 ? selectedCategories as any : undefined,
+    categories: selectedCategories.length > 0 ? (selectedCategories as any) : undefined,
     minRIS,
     maxCarbon,
     regenerativeOnly: regenerativeOnly || undefined,
@@ -113,23 +113,23 @@ export default function MaterialBrowser() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-blue-50">
+    <div className="min-h-screen bg-slate-950 text-white">
       <Header />
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-slate-900/90 border-b border-slate-800">
         <div className="container py-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Material Database</h1>
-          <p className="text-lg text-gray-600">
+          <h1 className="text-4xl font-bold text-white mb-2">Material Database</h1>
+          <p className="text-lg text-slate-200">
             Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
           </p>
         </div>
       </div>
 
       <div className="container py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
-            <Card>
+            <div className="lg:col-span-1">
+              <Card className="bg-slate-900/95 border border-slate-800/80 text-white shadow-lg shadow-slate-900/60">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Filter className="w-5 h-5" />
@@ -139,7 +139,7 @@ export default function MaterialBrowser() {
                   Refine your material search
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 text-slate-100">
                 {/* Search */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">Search</label>
@@ -235,7 +235,7 @@ export default function MaterialBrowser() {
           </div>
 
           {/* Materials Grid */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-6 bg-slate-950/50 rounded-3xl p-4 border border-slate-900/60 shadow-inner shadow-slate-950/40">
             {/* Sort and Results Info */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="text-sm text-gray-600">
@@ -290,7 +290,7 @@ export default function MaterialBrowser() {
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {searchResults.items.map((material: any) => (
                       <Link key={material.id} href={`/material/${material.id}`}>
-                        <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
+                        <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-slate-900 border border-slate-800 text-white">
                           <CardHeader>
                             <div className="flex justify-between items-start mb-2">
                               <Badge variant="outline">{material.category}</Badge>
@@ -302,12 +302,12 @@ export default function MaterialBrowser() {
                                 {material.confidenceLevel}
                               </Badge>
                             </div>
-                            <CardTitle className="text-lg">{material.name}</CardTitle>
-                            <CardDescription className="line-clamp-2">
+                            <CardTitle className="text-lg text-white">{material.name}</CardTitle>
+                            <CardDescription className="line-clamp-2 text-slate-300">
                               {material.description || "No description available"}
                             </CardDescription>
                           </CardHeader>
-                          <CardContent className="space-y-3">
+                          <CardContent className="space-y-3 text-slate-100">
                             {/* Key Metrics */}
                             <div className="grid grid-cols-2 gap-3">
                               <div className="flex items-center gap-2">

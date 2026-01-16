@@ -23,11 +23,13 @@ export default function MaterialTypeFilters({ materials, activeFilter, onFilterC
     if (!category || !category.keywords) return 0;
     
     return materials.filter(material => {
-      const materialName = material.name.toLowerCase();
-      const materialType = material.materialType.toLowerCase();
-      return category.keywords.some(keyword => 
-        materialName.includes(keyword) || materialType.includes(keyword)
-      );
+      const materialName = (material.name ?? "").toLowerCase();
+      const materialType = (material.materialType ?? "").toLowerCase();
+      if (!materialName && !materialType) return false;
+      return category.keywords.some(keyword => {
+        const normalizedKeyword = keyword.toLowerCase();
+        return materialName.includes(normalizedKeyword) || materialType.includes(normalizedKeyword);
+      });
     }).length;
   };
 
@@ -83,10 +85,12 @@ export function filterMaterialsByType(materials: Material[], filterType: string)
   if (!category || !category.keywords) return materials;
   
   return materials.filter(material => {
-    const materialName = material.name.toLowerCase();
-    const materialType = material.materialType.toLowerCase();
-    return category.keywords.some(keyword => 
-      materialName.includes(keyword) || materialType.includes(keyword)
-    );
+    const materialName = (material.name ?? "").toLowerCase();
+    const materialType = (material.materialType ?? "").toLowerCase();
+    if (!materialName && !materialType) return false;
+    return category.keywords.some(keyword => {
+      const normalizedKeyword = keyword.toLowerCase();
+      return materialName.includes(normalizedKeyword) || materialType.includes(normalizedKeyword);
+    });
   });
 }
