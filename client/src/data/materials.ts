@@ -3,12 +3,11 @@ export type LocalMaterial = {
   name: string;
   category: string;
   description: string;
-  lis: number;
+  carbonKgPerM2: number;
+  costPerM2: number;
   ris: number;
-  cpi: number;
-  totalCarbon?: number;
-  costPerUnit?: number;
-  functionalUnit?: string;
+  lis: number;
+  regenerative: boolean;
   tags?: string[];
   context?: {
     climateZone?: string;
@@ -20,74 +19,16 @@ export type LocalMaterial = {
 export const localMaterials: LocalMaterial[] = [
   {
     id: "rammed-earth",
-    name: "Rammed Earth",
+    name: "Rammed Earth (Structural Wall)",
     category: "Earthen Construction",
     description:
-      "Stabilized rammed earth walls sourced from regional soils; low embodied carbon and excellent thermal mass for arid climates.",
-    lis: 18,
-    ris: 82,
-    cpi: 42,
-    totalCarbon: 8.2,
-    costPerUnit: 68,
-    functionalUnit: "m²",
-    tags: ["rammed earth", "earthen", "thermal mass"],
-    context: {
-      climateZone: "CZ6",
-      region: "Great Lakes",
-      buildingType: "Residential",
-    },
-  },
-  {
-    id: "osb-board",
-    name: "OSB Board",
-    category: "Engineered Wood",
-    description:
-      "Oriented strand board with certified wood fiber, widely used for sheathing; balances cost with structural performance.",
-    lis: 55,
-    ris: 38,
-    cpi: 33,
-    totalCarbon: 22,
-    costPerUnit: 34,
-    functionalUnit: "m²",
-    tags: ["OSB", "sheathing", "engineered wood"],
-    context: {
-      climateZone: "CZ4",
-      region: "Midwest",
-      buildingType: "Sheathing / Structural",
-    },
-  },
-  {
-    id: "hempcrete-infill",
-    name: "Hempcrete Infill",
-    category: "Bio-Based Insulation",
-    description:
-      "Lightweight hemp-lime composite providing thermal and moisture buffering; sequesters carbon while delivering a breathable assembly.",
-    lis: 27,
-    ris: 76,
-    cpi: 48,
-    totalCarbon: 5.5,
-    costPerUnit: 58,
-    functionalUnit: "m²",
-    tags: ["hempcrete", "bio-based", "insulation"],
-    context: {
-      climateZone: "CZ6",
-      region: "Pacific Northwest",
-      buildingType: "Envelope / Insulation",
-    },
-  },
-  {
-    id: "rammed-earth-wall",
-    name: "Rammed Earth Wall",
-    category: "Earthen Construction",
-    description:
-      "Load-bearing rammed earth wall with low-cement stabilization, sourced within 100 km to keep embodied carbon ultra-low.",
-    lis: 15,
-    ris: 80,
-    cpi: 39,
-    totalCarbon: 6.0,
-    costPerUnit: 73,
-    functionalUnit: "m²",
-    tags: ["rammed earth", "mass wall", "local soil"],
+      "Load-bearing rammed earth wall with low-cement stabilization and regional soils, delivering excellent thermal mass and sequestering potential.",
+    carbonKgPerM2: 7.8,
+    costPerM2: 72,
+    lis: 32,
+    ris: 84,
+    regenerative: true,
+    tags: ["rammed earth", "mass wall", "high thermal mass", "local soil"],
     context: {
       climateZone: "CZ6",
       region: "Great Plains",
@@ -95,18 +36,17 @@ export const localMaterials: LocalMaterial[] = [
     },
   },
   {
-    id: "hempcrete-infill-lime",
-    name: "Hempcrete Infill (Lime Blend)",
+    id: "hempcrete-infill",
+    name: "Hempcrete Infill (Lime-based)",
     category: "Bio-Based Insulation",
     description:
-      "Hemp-lime infill with a vapor-open lime binder, offering sequestration alongside high RIS performance for breathable walls.",
-    lis: 22,
-    ris: 78,
-    cpi: 45,
-    totalCarbon: 5.2,
-    costPerUnit: 62,
-    functionalUnit: "m²",
-    tags: ["hempcrete", "bio-based", "carbon storing"],
+      "Hemp-lime infill for lightweight, vapor-open walls that sequester carbon while keeping assemblies breathable.",
+    carbonKgPerM2: 5.3,
+    costPerM2: 64,
+    lis: 45,
+    ris: 89,
+    regenerative: true,
+    tags: ["hempcrete", "bio-based", "vapor-open", "carbon storing"],
     context: {
       climateZone: "CZ5",
       region: "Pacific Northwest",
@@ -114,17 +54,16 @@ export const localMaterials: LocalMaterial[] = [
     },
   },
   {
-    id: "fiberglass-stud-wall",
-    name: "Standard 2x6 Stud Wall (Fiberglass)",
-    category: "Wood Construction",
+    id: "spf-stud-wall",
+    name: "2×6 SPF Stud Wall (Baseline Assembly)",
+    category: "Framed Wall",
     description:
-      "Typical North American wall using SPF studs and fiberglass batt insulation; easy to frame but carries moderate embodied carbon.",
-    lis: 55,
-    ris: 42,
-    cpi: 52,
-    totalCarbon: 30,
-    costPerUnit: 29,
-    functionalUnit: "m²",
+      "Conventional 2×6 SPF studs with fiberglass batt insulation, representing a typical baseline assembly in North America.",
+    carbonKgPerM2: 28,
+    costPerM2: 31,
+    lis: 72,
+    ris: 41,
+    regenerative: false,
     tags: ["2x6", "stud wall", "fiberglass", "baseline"],
     context: {
       climateZone: "CZ3",
@@ -134,17 +73,16 @@ export const localMaterials: LocalMaterial[] = [
   },
   {
     id: "osb-sheathing",
-    name: "OSB Sheathing",
+    name: "OSB Sheathing Board",
     category: "Engineered Wood",
     description:
-      "Engineered strand board sheathing with resin binders; efficient but resin content and end-of-life recycling remain issues.",
-    lis: 48,
-    ris: 35,
-    cpi: 37,
-    totalCarbon: 20,
-    costPerUnit: 31,
-    functionalUnit: "m²",
-    tags: ["OSB", "sheathing", "structural panel"],
+      "Engineered strand board sheathing blended with resin; efficient for structural panels but relies on adhesives and limited recyclability.",
+    carbonKgPerM2: 22,
+    costPerM2: 33,
+    lis: 62,
+    ris: 57,
+    regenerative: false,
+    tags: ["OSB", "sheathing", "engineered wood", "structural panel"],
     context: {
       climateZone: "CZ4",
       region: "Midwest",
@@ -152,17 +90,16 @@ export const localMaterials: LocalMaterial[] = [
     },
   },
   {
-    id: "gypsum-drywall-1-2",
+    id: "gypsum-drywall",
     name: "Gypsum Drywall (½\")",
     category: "Interior Finish",
     description:
-      "Standard gypsum board used for interior finishes; locally manufactured and recyclable in some regions but brittle at end-of-life.",
-    lis: 44,
-    ris: 32,
-    cpi: 40,
-    totalCarbon: 18,
-    costPerUnit: 24,
-    functionalUnit: "m²",
+      "Standard gypsum board for interior finishes; widely available and recyclable in many regions but still carries moderate emissions.",
+    carbonKgPerM2: 18,
+    costPerM2: 26,
+    lis: 48,
+    ris: 43,
+    regenerative: false,
     tags: ["drywall", "gypsum", "interior", "finish"],
     context: {
       climateZone: "CZ3",
