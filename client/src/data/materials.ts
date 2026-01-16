@@ -6,6 +6,10 @@ export type LocalMaterial = {
   lis: number;
   ris: number;
   cpi: number;
+  totalCarbon?: number;
+  costPerUnit?: number;
+  functionalUnit?: string;
+  tags?: string[];
   context?: {
     climateZone?: string;
     region?: string;
@@ -23,6 +27,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 18,
     ris: 82,
     cpi: 42,
+    totalCarbon: 8.2,
+    costPerUnit: 68,
+    functionalUnit: "m²",
+    tags: ["rammed earth", "earthen", "thermal mass"],
     context: {
       climateZone: "CZ6",
       region: "Great Lakes",
@@ -38,6 +46,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 55,
     ris: 38,
     cpi: 33,
+    totalCarbon: 22,
+    costPerUnit: 34,
+    functionalUnit: "m²",
+    tags: ["OSB", "sheathing", "engineered wood"],
     context: {
       climateZone: "CZ4",
       region: "Midwest",
@@ -53,6 +65,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 27,
     ris: 76,
     cpi: 48,
+    totalCarbon: 5.5,
+    costPerUnit: 58,
+    functionalUnit: "m²",
+    tags: ["hempcrete", "bio-based", "insulation"],
     context: {
       climateZone: "CZ6",
       region: "Pacific Northwest",
@@ -68,6 +84,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 15,
     ris: 80,
     cpi: 39,
+    totalCarbon: 6.0,
+    costPerUnit: 73,
+    functionalUnit: "m²",
+    tags: ["rammed earth", "mass wall", "local soil"],
     context: {
       climateZone: "CZ6",
       region: "Great Plains",
@@ -83,6 +103,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 22,
     ris: 78,
     cpi: 45,
+    totalCarbon: 5.2,
+    costPerUnit: 62,
+    functionalUnit: "m²",
+    tags: ["hempcrete", "bio-based", "carbon storing"],
     context: {
       climateZone: "CZ5",
       region: "Pacific Northwest",
@@ -98,6 +122,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 55,
     ris: 42,
     cpi: 52,
+    totalCarbon: 30,
+    costPerUnit: 29,
+    functionalUnit: "m²",
+    tags: ["2x6", "stud wall", "fiberglass", "baseline"],
     context: {
       climateZone: "CZ3",
       region: "Northeast",
@@ -113,6 +141,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 48,
     ris: 35,
     cpi: 37,
+    totalCarbon: 20,
+    costPerUnit: 31,
+    functionalUnit: "m²",
+    tags: ["OSB", "sheathing", "structural panel"],
     context: {
       climateZone: "CZ4",
       region: "Midwest",
@@ -128,6 +160,10 @@ export const localMaterials: LocalMaterial[] = [
     lis: 44,
     ris: 32,
     cpi: 40,
+    totalCarbon: 18,
+    costPerUnit: 24,
+    functionalUnit: "m²",
+    tags: ["drywall", "gypsum", "interior", "finish"],
     context: {
       climateZone: "CZ3",
       region: "Southeast",
