@@ -7,6 +7,7 @@ export type LocalMaterial = {
   costPerM2: number;
   ris: number;
   lis: number;
+  cpi: number;
   regenerative: boolean;
   tags?: string[];
   context?: {
@@ -22,11 +23,12 @@ export const localMaterials: LocalMaterial[] = [
     name: "Rammed Earth (Structural Wall)",
     category: "Earthen Construction",
     description:
-      "Load-bearing rammed earth wall with low-cement stabilization and regional soils, delivering excellent thermal mass and sequestering potential.",
+      "Representative demo values for a load-bearing rammed earth wall with low-cement stabilization and regional soils, delivering high thermal mass and sequestering potential.",
     carbonKgPerM2: 7.8,
     costPerM2: 72,
     lis: 32,
     ris: 84,
+    cpi: 38,
     regenerative: true,
     tags: ["rammed earth", "mass wall", "high thermal mass", "local soil"],
     context: {
@@ -40,11 +42,12 @@ export const localMaterials: LocalMaterial[] = [
     name: "Hempcrete Infill (Lime-based)",
     category: "Bio-Based Insulation",
     description:
-      "Hemp-lime infill for lightweight, vapor-open walls that sequester carbon while keeping assemblies breathable.",
+      "Representative demo values for hemp-lime infill that keeps walls vapor-open and sequesters carbon while maintaining insulation performance.",
     carbonKgPerM2: 5.3,
     costPerM2: 64,
     lis: 45,
     ris: 89,
+    cpi: 44,
     regenerative: true,
     tags: ["hempcrete", "bio-based", "vapor-open", "carbon storing"],
     context: {
@@ -58,11 +61,12 @@ export const localMaterials: LocalMaterial[] = [
     name: "2×6 SPF Stud Wall (Baseline Assembly)",
     category: "Framed Wall",
     description:
-      "Conventional 2×6 SPF studs with fiberglass batt insulation, representing a typical baseline assembly in North America.",
+      "Representative demo values for a conventional 2×6 SPF assembly with fiberglass batt insulation and baseline embodied carbon.",
     carbonKgPerM2: 28,
     costPerM2: 31,
     lis: 72,
     ris: 41,
+    cpi: 52,
     regenerative: false,
     tags: ["2x6", "stud wall", "fiberglass", "baseline"],
     context: {
@@ -76,11 +80,12 @@ export const localMaterials: LocalMaterial[] = [
     name: "OSB Sheathing Board",
     category: "Engineered Wood",
     description:
-      "Engineered strand board sheathing blended with resin; efficient for structural panels but relies on adhesives and limited recyclability.",
+      "Representative demo values for engineered strand board sheathing with resin binders; efficient structurally but relies on adhesives.",
     carbonKgPerM2: 22,
     costPerM2: 33,
     lis: 62,
     ris: 57,
+    cpi: 37,
     regenerative: false,
     tags: ["OSB", "sheathing", "engineered wood", "structural panel"],
     context: {
@@ -94,11 +99,12 @@ export const localMaterials: LocalMaterial[] = [
     name: "Gypsum Drywall (½\")",
     category: "Interior Finish",
     description:
-      "Standard gypsum board for interior finishes; widely available and recyclable in many regions but still carries moderate emissions.",
+      "Representative demo values for standard gypsum drywall used on interiors; widely available and recyclable with moderate emissions.",
     carbonKgPerM2: 18,
     costPerM2: 26,
     lis: 48,
     ris: 43,
+    cpi: 40,
     regenerative: false,
     tags: ["drywall", "gypsum", "interior", "finish"],
     context: {

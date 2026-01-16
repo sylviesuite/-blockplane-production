@@ -23,12 +23,22 @@ function useMaterialParams() {
 
 export default function MaterialDetail() {
   const params = useMaterialParams();
-  const materialId = params?.id;
-  const foundMaterial = localMaterials.find((item) => item.id === materialId);
-  const material = foundMaterial;
-  console.log("MaterialDetail slug + material", materialId, material);
+  const materialKey = params?.id;
 
-  if (!materialId || !material) {
+  const material =
+    materialKey &&
+    localMaterials.find((item) => {
+      const normalizedKey = materialKey.toLowerCase();
+      return (
+        item.id === materialKey ||
+        item.id.toLowerCase() === normalizedKey ||
+        item.name.toLowerCase() === normalizedKey
+      );
+    });
+
+  console.log("MaterialDetail param + material", materialKey, Boolean(material));
+
+  if (!material) {
     return (
       <div className="p-8 text-center text-gray-600">
         Material not found.
@@ -115,7 +125,7 @@ export default function MaterialDetail() {
     }
   }
 
-  if (!materialId || !material) {
+  if (!material) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
         <Card className="max-w-md text-center">
@@ -254,16 +264,15 @@ export default function MaterialDetail() {
 
         <div className="mx-auto w-full max-w-4xl border-t border-slate-200/60"></div>
 
-        <section className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-lg shadow-slate-900/5">
-          <div className="space-y-3">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-500">
-                InsightBox v2
-              </p>
-              <p className="text-sm text-slate-600">
-                Static insight is always available; enable AI mode for experimental commentary.
-              </p>
-            </div>
+        <section className="mx-auto w-full max-w-4xl">
+          <div className="mt-8 space-y-2">
+            <h2 className="text-2xl font-semibold text-slate-900">Material insight & alternatives</h2>
+            <p className="text-sm text-slate-500">
+              Key takeaways, trade-offs, and better options when available.
+            </p>
+            <div className="border-t border-slate-200/80"></div>
+          </div>
+          <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 mt-6 shadow-lg shadow-slate-900/5">
             <InsightBoxV2
               materialId={material.id}
               materialName={material.name}
@@ -273,6 +282,9 @@ export default function MaterialDetail() {
               context={material.context}
               staticInsight={`LIS ${material.lis} • RIS ${material.ris} • CPI ${material.cpi}`}
             />
+            <div className="mt-3 text-sm text-slate-500">
+              Insights are loading…
+            </div>
           </div>
         </section>
       </div>
