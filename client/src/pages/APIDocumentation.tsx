@@ -20,22 +20,23 @@ import { Header } from "@/components/Header";
 
 export default function APIDocumentation() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+    <div className="min-h-screen bg-slate-950 text-slate-100">
       <Header />
-      <div className="container py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">BlockPlane Material API</h1>
-          <p className="text-lg text-gray-600">
+      <div className="container mx-auto px-4 py-16 max-w-5xl space-y-8">
+        <section className="space-y-3 pb-6 border-b border-slate-800">
+          <h1 className="text-4xl md:text-5xl font-bold text-white">BlockPlane Material API</h1>
+          <p className="text-lg text-slate-300">
             RESTful API for Revit Plugin Integration - Version 1.0
           </p>
-        </div>
+        </section>
 
-        {/* Quick Start */}
-        <Alert className="mb-6">
-          <CheckCircle className="h-4 w-4" />
+        <Alert className="mb-6 bg-slate-900/80 border border-slate-800 text-slate-100">
+          <CheckCircle className="h-4 w-4 text-emerald-400" />
           <AlertDescription>
-            <strong>Base URL:</strong> <code className="bg-gray-100 px-2 py-1 rounded">https://api.blockplane.com/trpc</code>
+            <strong className="text-white">Base URL:</strong>{" "}
+            <span className="font-mono text-xs text-slate-200 bg-slate-900/70 border border-slate-800 rounded px-2 py-1 inline-flex items-center">
+              https://api.blockplane.com/trpc
+            </span>
           </AlertDescription>
         </Alert>
 
@@ -51,7 +52,7 @@ export default function APIDocumentation() {
           {/* Overview Tab */}
           <TabsContent value="overview">
             <div className="space-y-6">
-              <Card>
+              <Card className="bg-slate-900/80 border border-slate-800 rounded-xl p-6 shadow-lg shadow-slate-900/50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Book className="w-5 h-5" />
@@ -61,7 +62,7 @@ export default function APIDocumentation() {
                     Introduction to the BlockPlane Material Database API
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 text-slate-200">
                   <div>
                     <h3 className="font-semibold mb-2">Key Features</h3>
                     <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
@@ -79,7 +80,7 @@ export default function APIDocumentation() {
                     <p className="text-sm text-gray-700 mb-2">
                       Currently, the API is publicly accessible. Future versions will require API keys.
                     </p>
-                    <Alert>
+                  <Alert className="bg-slate-900/70 border border-slate-800 text-slate-200">
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription className="text-sm">
                         <strong>Coming Soon:</strong> API key authentication for production use
@@ -99,7 +100,7 @@ export default function APIDocumentation() {
                     <p className="text-sm text-gray-700 mb-2">
                       All responses are in JSON format with the following structure:
                     </p>
-                    <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                    <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`{
   "result": {
     "data": { /* response data */ }
@@ -124,7 +125,7 @@ export default function APIDocumentation() {
               <CardContent className="space-y-6">
                 <div>
                   <Badge variant="default" className="mb-2">POST</Badge>
-                  <code className="bg-gray-100 px-3 py-1 rounded text-sm">
+                  <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.search
                   </code>
                 </div>
@@ -209,7 +210,7 @@ export default function APIDocumentation() {
 
                 <div>
                   <h3 className="font-semibold mb-2">Example Request</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`POST /materialAPI.search
 Content-Type: application/json
 
@@ -228,7 +229,7 @@ Content-Type: application/json
 
                 <div>
                   <h3 className="font-semibold mb-2">Example Response</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`{
   "result": {
     "data": {
@@ -274,7 +275,7 @@ Content-Type: application/json
               <CardContent className="space-y-6">
                 <div>
                   <Badge variant="default" className="mb-2">POST</Badge>
-                  <code className="bg-gray-100 px-3 py-1 rounded text-sm">
+                  <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.getById
                   </code>
                 </div>
@@ -343,7 +344,7 @@ Content-Type: application/json
               <CardContent className="space-y-6">
                 <div>
                   <Badge variant="default" className="mb-2">POST</Badge>
-                  <code className="bg-gray-100 px-3 py-1 rounded text-sm">
+                  <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.getRecommendations
                   </code>
                 </div>
