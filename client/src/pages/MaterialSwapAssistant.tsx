@@ -116,8 +116,8 @@ export default function MaterialSwapAssistant() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="container mx-auto py-8 px-4 max-w-5xl">
+    <div className="min-h-screen bg-slate-950 text-white">
+      <div className="container mx-auto px-4 py-12 max-w-5xl">
         {/* Header */}
         <div className="mb-8">
           <Link href="/">
@@ -127,12 +127,12 @@ export default function MaterialSwapAssistant() {
             </Button>
           </Link>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-3 bg-purple-100 dark:bg-purple-900 rounded-lg">
-              <Sparkles className="w-8 h-8 text-purple-600" />
+            <div className="p-3 bg-slate-900 rounded-lg">
+              <Sparkles className="w-8 h-8 text-indigo-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold">Material Swap Assistant</h1>
-              <p className="text-muted-foreground">
+              <h1 className="text-3xl font-bold text-white">Material Swap Assistant</h1>
+              <p className="text-slate-300">
                 AI-powered recommendations for sustainable material alternatives
               </p>
             </div>
@@ -140,7 +140,7 @@ export default function MaterialSwapAssistant() {
         </div>
 
         {/* Chat Container */}
-        <Card className="mb-6 shadow-lg">
+        <Card className="mb-6 bg-slate-900/90 border border-slate-800 text-white shadow-lg shadow-slate-900/60">
           <CardContent className="p-0">
             {/* Messages */}
             <div className="h-[500px] overflow-y-auto p-6 space-y-6">
@@ -157,11 +157,11 @@ export default function MaterialSwapAssistant() {
                     }`}
                   >
                     {message.role === "assistant" ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                      <div className="prose prose-sm dark:prose-invert max-w-none text-slate-100">
                         <Streamdown>{message.content}</Streamdown>
                       </div>
                     ) : (
-                      <p className="text-sm">{message.content}</p>
+                      <p className="text-sm text-white">{message.content}</p>
                     )}
 
                     {/* Recommendations */}
@@ -185,7 +185,7 @@ export default function MaterialSwapAssistant() {
                         {message.recommendations.map((rec, recIndex) => (
                           <div
                             key={recIndex}
-                            className="bg-background rounded-lg p-4 border shadow-sm"
+                            className="bg-slate-900/70 rounded-lg p-4 border border-slate-800 shadow-sm text-white"
                           >
                             <div className="flex items-start justify-between mb-3">
                               <div className="flex items-center gap-3">
@@ -262,7 +262,7 @@ export default function MaterialSwapAssistant() {
             </div>
 
             {/* Input Area */}
-            <div className="border-t p-4 bg-muted/30">
+            <div className="border-t border-slate-800 bg-slate-900/80 p-4">
               <form onSubmit={handleSubmit} className="flex gap-2">
                 <Input
                   value={input}
@@ -297,7 +297,7 @@ export default function MaterialSwapAssistant() {
 
         {/* Example Queries */}
         {messages.length === 1 && (
-          <Card>
+          <Card className="bg-slate-900/90 border border-slate-800 shadow-lg shadow-slate-900/60 text-white">
             <CardHeader>
               <CardTitle className="text-lg">Try these examples:</CardTitle>
               <CardDescription>Click any example to get started</CardDescription>
