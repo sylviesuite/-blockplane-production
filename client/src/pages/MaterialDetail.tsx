@@ -24,23 +24,18 @@ function useMaterialParams() {
 export default function MaterialDetail() {
   const params = useMaterialParams();
   const materialId = params?.id;
-
-  const FALLBACK_MATERIAL = {
-    id: "rammed-earth",
-    name: "Rammed Earth",
-    category: "Earth Materials",
-    description: "Stabilized rammed earth walls with low embodied carbon.",
-    lis: 18,
-    ris: 82,
-    cpi: 42,
-    context: {
-      climateZone: "CZ6",
-      region: "Great Lakes",
-      buildingType: "Residential",
-    },
-  };
   const foundMaterial = localMaterials.find((item) => item.id === materialId);
-  const material = foundMaterial ?? FALLBACK_MATERIAL;
+  const material = foundMaterial;
+  console.log("MaterialDetail slug + material", materialId, material);
+
+  if (!materialId || !material) {
+    return (
+      <div className="p-8 text-center text-gray-600">
+        Material not found.
+      </div>
+    );
+  }
+
   const [showScoreDetails, setShowScoreDetails] = useState(false);
 
   const takeaways: string[] = [];
