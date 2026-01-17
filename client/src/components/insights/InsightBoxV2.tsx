@@ -351,13 +351,14 @@ export function InsightBoxV2({
           <button
             type="button"
             disabled
-            className="inline-flex items-center justify-center rounded-2xl bg-slate-800 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200 border border-slate-700 cursor-not-allowed"
+            className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm opacity-60 cursor-not-allowed"
           >
             Generate Insight
           </button>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-muted-foreground">
             AI-generated insights are coming soon. This version shows curated static insights.
           </p>
+        </div>
       </div>
 
       {isAIMode && (
