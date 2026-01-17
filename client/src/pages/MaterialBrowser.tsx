@@ -289,7 +289,7 @@ export default function MaterialBrowser() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {searchResults.items.map((material: any) => (
-                      <Link key={material.id} href={`/material/${material.id}`}>
+                      <Link key={material.id} href={`/materials/${material.slug ?? material.id}`}>
                         <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-slate-900 border border-slate-800 text-white">
                           <CardHeader>
                             <div className="flex justify-between items-start mb-2">

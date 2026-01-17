@@ -350,25 +350,14 @@ export function InsightBoxV2({
         <div className="flex flex-col gap-2">
           <button
             type="button"
-            onClick={handleGenerate}
-            disabled={!isAIMode || status === "loading"}
-            className="inline-flex items-center justify-center rounded-2xl bg-emerald-600 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:bg-emerald-500 disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled
+            className="inline-flex items-center justify-center rounded-2xl bg-slate-800 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-200 border border-slate-700 cursor-not-allowed"
           >
-            {status === "loading"
-              ? "Generating…"
-              : aiDisplayText
-                ? "Regenerate Insight"
-                : "Generate Insight"}
+            Generate Insight
           </button>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {isAIMode
-              ? "AI mode phrases a short insight using the visible LIS/RIS/CPI data."
-              : "Switch to AI mode to enable the generator."}
+          <p className="text-xs text-slate-400">
+            AI-generated insights are coming soon. This version shows curated static insights.
           </p>
-          {status === "loading" && (
-            <p className="text-xs text-slate-500 dark:text-slate-400">Thinking…</p>
-          )}
-        </div>
       </div>
 
       {isAIMode && (
