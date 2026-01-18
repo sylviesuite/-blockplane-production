@@ -12,6 +12,12 @@
 
 BlockPlane for Revit brings sustainable materials data and carbon footprint analysis directly into your Revit workflow. Make informed decisions to reduce embodied carbon and build more sustainably.
 
+## 🛡️ Responsible transparency
+BlockPlane highlights data confidence and assumptions so every recommendation can be evaluated alongside professional judgment. The platform surfaces methodology and limitations up front rather than obscuring them.
+
+## ⚖️ Calibration, not claims
+The tool is calibrated for early-stage comparison, not final specification. Carbon and cost figures are illustrative guidance, and users are encouraged to validate results with project-specific engineering, procurement, and code reviews.
+
 ### Key Features
 
 - 🔍 **Material Browser** - Search and browse thousands of sustainable materials
