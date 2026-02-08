@@ -9,7 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import InsightBoxV2 from "@/components/insights/InsightBoxV2";
+import { InsightBox } from "@/insightBox/v2/InsightBox";
+import type { InsightContext } from "@/insightBox/v2/types";
 import { localMaterials } from "@/data/materials";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
@@ -19,6 +20,98 @@ type MaterialParams = { id: string };
 function useMaterialParams() {
   const [match, params] = useRoute<MaterialParams>("/materials/:id");
   return match ? params : null;
+}
+
+function buildInsightContextForMaterial(slug: string): InsightContext {
+  switch (slug) {
+    case "rammed-earth-hempcrete-wall":
+      return {
+        type: "comparison",
+        primaryId: "rammed_earth_hempcrete_wall",
+        secondaryId: "standard_2x6_wall",
+        materialIds: ["rammed_earth", "hempcrete", "wood_framing_2x6"],
+        tags: ["wall", "mass_wall"],
+      };
+    case "fiberglass-batt":
+    case "dense-pack-cellulose":
+      return {
+        type: "comparison",
+        primaryId: "fiberglass_batt_insulation",
+        secondaryId: "dense_pack_cellulose",
+        materialIds: ["fiberglass_batt_insulation", "dense_pack_cellulose"],
+        tags: ["insulation"],
+      };
+    case "hempcrete-infill":
+      return {
+        type: "comparison",
+        primaryId: "hempcrete_infill",
+        secondaryId: "rammed_earth_hempcrete_wall",
+        materialIds: ["hempcrete", "rammed_earth"],
+        tags: ["wall", "bio-based", "infill"],
+      };
+    case "double-pane-vinyl-window":
+    case "triple-pane-high-performance-window":
+      return {
+        type: "comparison",
+        primaryId: "double_pane_vinyl_windows",
+        secondaryId: "triple_pane_high_performance_windows",
+        materialIds: [
+          "double_pane_vinyl_windows",
+          "triple_pane_high_performance_windows",
+        ],
+        tags: ["windows"],
+      };
+    default:
+      return {
+        type: "material",
+        primaryId: slug,
+        materialIds: [slug],
+        tags: ["material"],
+      };
+  }
+}
+
+function getComparisonLabel(
+  context: InsightContext,
+  materialName: string,
+): string | null {
+  if (context.type !== "comparison") {
+    return null;
+  }
+
+  const nameMap: Record<string, string> = {
+    rammed_earth_hempcrete_wall: "Rammed Earth + Hempcrete Wall",
+    standard_2x6_wall: "2×6 SPF Stud Wall (Baseline Assembly)",
+    fiberglass_batt_insulation: "Fiberglass Batt Insulation",
+    dense_pack_cellulose: "Dense-Pack Cellulose",
+    double_pane_vinyl_windows: "Double-Pane Vinyl Window",
+    triple_pane_high_performance_windows:
+      "Triple-Pane High-Performance Window",
+    hempcrete_infill: "Hempcrete Infill",
+  };
+
+  const primaryId = context.primaryId;
+  const secondaryIdFromContext = context.secondaryId;
+
+  const primaryName =
+    (primaryId && nameMap[primaryId]) ||
+    materialName;
+
+  let secondaryId = secondaryIdFromContext;
+  if (!secondaryId && Array.isArray(context.materialIds)) {
+    secondaryId = context.materialIds.find((id) => id !== primaryId);
+  }
+  if (!secondaryId) {
+    return null;
+  }
+
+  const secondaryName =
+    nameMap[secondaryId] ||
+    secondaryId
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  return `${primaryName} → ${secondaryName}`;
 }
 
 export default function MaterialDetail() {
@@ -47,6 +140,9 @@ export default function MaterialDetail() {
   }
 
   const [showScoreDetails, setShowScoreDetails] = useState(false);
+
+  const insightContext = buildInsightContextForMaterial(material.slug);
+  const comparisonLabel = getComparisonLabel(insightContext, material.name);
 
   const takeaways: string[] = [];
 
@@ -144,6 +240,70 @@ export default function MaterialDetail() {
       </div>
     );
   }
+
+function buildInsightContextForMaterial(slug: string): InsightContext {
+  switch (slug) {
+    case "rammed-earth-hempcrete-wall":
+      return {
+        type: "comparison",
+        primaryId: "rammed_earth_hempcrete_wall",
+        secondaryId: "standard_2x6_wall",
+        materialIds: ["rammed_earth", "hempcrete", "wood_framing_2x6"],
+        tags: ["wall", "mass_wall"],
+      };
+    case "fiberglass-batt":
+    case "dense-pack-cellulose":
+      return {
+        type: "comparison",
+        primaryId: "fiberglass_batt_insulation",
+        secondaryId: "dense_pack_cellulose",
+        materialIds: ["fiberglass_batt_insulation", "dense_pack_cellulose"],
+        tags: ["insulation"],
+      };
+    case "double-pane-vinyl-window":
+    case "triple-pane-high-performance-window":
+      return {
+        type: "comparison",
+        primaryId: "double_pane_vinyl_windows",
+        secondaryId: "triple_pane_high_performance_windows",
+        materialIds: [
+          "double_pane_vinyl_windows",
+          "triple_pane_high_performance_windows",
+        ],
+        tags: ["windows"],
+      };
+    default:
+      return {
+        type: "material",
+        primaryId: slug,
+        materialIds: [slug],
+        tags: ["material"],
+      };
+  }
+}
+
+function getComparisonLabel(
+  context: InsightContext,
+  materialName: string,
+): string | null {
+  if (context.type !== "comparison" || !context.secondaryId) {
+    return null;
+  }
+
+  const nameMap: Record<string, string> = {
+    rammed_earth_hempcrete_wall: "Rammed Earth + Hempcrete Wall",
+    standard_2x6_wall: "2×6 SPF Stud Wall (Baseline Assembly)",
+    fiberglass_batt_insulation: "Fiberglass Batt Insulation",
+    dense_pack_cellulose: "Dense-Pack Cellulose",
+    double_pane_vinyl_windows: "Double-Pane Vinyl Window",
+    triple_pane_high_performance_windows: "Triple-Pane High-Performance Window",
+  };
+
+  const primaryName = nameMap[context.primaryId] ?? materialName;
+  const secondaryName = nameMap[context.secondaryId] ?? context.secondaryId;
+
+  return `${primaryName} → ${secondaryName}`;
+}
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
@@ -270,21 +430,15 @@ export default function MaterialDetail() {
             <p className="text-sm text-slate-500">
               Key takeaways, trade-offs, and better options when available.
             </p>
+            {comparisonLabel && (
+              <div className="mt-2 mb-4 text-xs font-medium text-slate-600 uppercase tracking-wide">
+                Comparing: {comparisonLabel}
+              </div>
+            )}
             <div className="border-t border-slate-200/80"></div>
           </div>
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 mt-6 shadow-lg shadow-slate-900/5">
-            <InsightBoxV2
-              materialId={material.id}
-              materialName={material.name}
-              lis={material.lis}
-              ris={material.ris}
-              cpi={material.cpi}
-              context={material.context}
-              staticInsight={`LIS ${material.lis} • RIS ${material.ris} • CPI ${material.cpi}`}
-            />
-            <div className="mt-3 text-sm text-slate-500">
-              Insights are loading…
-            </div>
+            <InsightBox context={insightContext} />
           </div>
         </section>
       </div>

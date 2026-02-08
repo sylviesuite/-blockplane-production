@@ -1,0 +1,63 @@
+{
+  "id": "insight-001",
+  "title": "Rammed Earth + Hempcrete vs Conventional 2x6 Wood-Framed Wall",
+  "type": "comparison",
+  "status": "canonical",
+  "source": "human-authored",
+  "related_materials": [
+    "rammed_earth",
+    "hempcrete",
+    "wood_framing_2x6"
+  ],
+  "metrics_context": {
+    "LIS": {
+      "summary": "Higher upfront impact offset by long service life and reduced replacement",
+      "relative_position": "converges or outperforms over full lifecycle"
+    },
+    "RIS": {
+      "rammed_earth_hempcrete": "Resilient to High Performance",
+      "wood_2x6": "Low Harm"
+    },
+    "CPI": {
+      "summary": "Higher upfront cost with lower lifecycle impact per year of service"
+    }
+  },
+  "sections": {
+    "overview": "This comparison evaluates a hybrid wall assembly using rammed earth for structure and hempcrete for insulation against a conventional 2×6 wood-framed wall. Both meet enclosure requirements, but they behave very differently over time.",
+    "why_it_scores_this_way": {
+      "LIS": "Rammed Earth + Hempcrete carries higher initial impact due to labor intensity and binder production, but benefits from minimal processing, long service life, and low maintenance. The 2×6 wall begins with lower impact but accumulates lifecycle cost through processed materials, replacements, and maintenance.",
+      "RIS": "Rammed Earth + Hempcrete scores higher due to durability, fire resistance, moisture buffering, indoor air quality, partial carbon storage, and reduced end-of-life waste. The 2×6 wall remains adaptable and familiar but relies more heavily on managed forests and petrochemical insulation."
+    },
+    "tradeoffs": [
+      "15–30% higher upfront cost in North America",
+      "Specialized labor and sequencing",
+      "Regional availability constraints",
+      "Fewer long-term contractor precedents"
+    ],
+    "when_it_makes_sense": {
+      "choose_this_when": [
+        "Longevity and low maintenance are priorities",
+        "Thermal mass benefits the climate",
+        "Indoor air quality matters",
+        "The project is designed for generational use"
+      ],
+      "choose_alternative_when": [
+        "Budget and schedule dominate",
+        "Skilled labor is limited",
+        "Future remodel flexibility is required"
+      ]
+    },
+    "alternatives": [
+      "Hybrid mass walls",
+      "Exterior hempcrete insulation",
+      "Wood-fiber insulation systems",
+      "Reduced-cement conventional framing"
+    ],
+    "takeaway": "This comparison highlights a difference in time horizon. Conventional 2×6 framing optimizes for speed and familiarity, while Rammed Earth + Hempcrete optimizes for durability, stability, and long-term impact reduction."
+  },
+  "ui_hints": {
+    "default_expanded": true,
+    "emphasis": "time_horizon",
+    "tone": "calm_practical_builder"
+  }
+}

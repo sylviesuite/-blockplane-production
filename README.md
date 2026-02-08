@@ -12,6 +12,110 @@
 
 BlockPlane for Revit brings sustainable materials data and carbon footprint analysis directly into your Revit workflow. Make informed decisions to reduce embodied carbon and build more sustainably.
 
+---
+
+## BlackTent v1 Definition
+
+BlackTent is a local-first safety environment for diagnosing development problems without exposing secrets or destabilizing working systems. It helps developers understand what is actually running, what is misconfigured, and where assumptions no longer match reality. BlackTent focuses on structure, state, and coherence rather than code rewriting or automated fixes.
+
+BlackTent does not scan entire repositories, read secret values, or push changes. Its job is to reduce panic, prevent damage, and restore clarity so developers can make informed, confident decisions.
+
+---
+
+## When NOT to Use BlackTent
+
+BlackTent is not the right tool when you are looking for automatic fixes, refactors, or code generation. It will not repair broken logic, optimize performance, rewrite configuration files, or replace debugging skill.
+
+BlackTent is also not designed for production monitoring, cloud security scanning, or continuous background analysis. If your goal is speed through automation rather than safety through understanding, BlackTent will feel intentionally restrained.
+
+Its value is in preventing irreversible mistakes, not in acting on your behalf.
+
+---
+
+## BlackTent Guarantees
+
+BlackTent operates under strict, explicit guarantees designed to protect developers and their systems.
+
+* **No secret exposure**
+
+  BlackTent never reads, logs, or transmits secret values. Environment variables are treated as opaque: only presence, naming, and structure are evaluated.
+
+* **No repository scanning**
+
+  BlackTent does not crawl, index, or analyze entire codebases. It works only with explicitly provided context and runtime signals.
+
+* **No automatic changes**
+
+  BlackTent will not modify files, rewrite configuration, install dependencies, or apply fixes. All decisions remain human-controlled.
+
+* **No background behavior**
+
+  BlackTent runs only when invoked. It performs no continuous monitoring, telemetry, or hidden analysis.
+
+* **Local-first by design**
+
+  All diagnostics occur locally unless the developer explicitly chooses otherwise.
+
+These guarantees are not optional features. They are architectural constraints.
+
+---
+
+## `blacktent doctor`
+
+The `blacktent doctor` command runs a focused, read-only diagnostic on the current project. It is designed to give a calm summary of what BlackTent can see without changing any files, secrets, or configuration.
+
+Expected behavior:
+
+* Runs locally only
+
+* Does not modify files or environment
+
+* Does not read or print secret values
+
+* Performs a small set of coherence checks (environment, dev server, basic tooling assumptions)
+
+* Prints a short summary instead of a large log dump
+
+Example output:
+
+```text
+
+BlackTent Doctor — Summary
+
+Mode: local-only
+
+Scope: current project
+
+
+Checks run:
+
+  ✓ Environment configuration
+
+  ✓ Dev server / ports
+
+  ✓ Tooling and runtime assumptions
+
+
+Findings:
+
+  - Environment: OK
+
+  - Dev server: not running
+
+  - Config & aliases: mismatches detected
+
+
+Next steps:
+
+  1. Start the dev server and confirm the expected port.
+
+  2. Review alias configuration for unresolved paths.
+
+
+BlackTent does not modify files or secrets. It only reports what it sees.
+
+```
+
 ## 🛡️ Responsible transparency
 BlockPlane highlights data confidence and assumptions so every recommendation can be evaluated alongside professional judgment. The platform surfaces methodology and limitations up front rather than obscuring them.
 

@@ -89,15 +89,15 @@ export default function APIDocumentation() {
                   </div>
 
                   <div>
-                    <h3 className="font-semibold mb-2">Rate Limiting</h3>
-                    <p className="text-sm text-gray-700">
+                    <h3 className="font-semibold mb-2 text-white">Rate Limiting</h3>
+                    <p className="text-sm text-slate-200">
                       Current limits: 100 requests per minute per IP address
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="font-semibold mb-2">Response Format</h3>
-                    <p className="text-sm text-gray-700 mb-2">
+                    <h3 className="font-semibold mb-2 text-white">Response Format</h3>
+                    <p className="text-sm text-slate-200 mb-2">
                       All responses are in JSON format with the following structure:
                     </p>
                     <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
@@ -114,8 +114,8 @@ export default function APIDocumentation() {
           </TabsContent>
 
           {/* Search Tab */}
-          <TabsContent value="search">
-            <Card>
+        <TabsContent value="search">
+          <Card className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg shadow-slate-900/50">
               <CardHeader>
                 <CardTitle>Material Search Endpoint</CardTitle>
                 <CardDescription>
@@ -124,7 +124,12 @@ export default function APIDocumentation() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <Badge variant="default" className="mb-2">POST</Badge>
+                <Badge
+                  variant="default"
+                  className="mb-2 bg-slate-900/80 border border-slate-800 text-slate-100 font-mono text-xs uppercase tracking-wide"
+                >
+                  POST
+                </Badge>
                   <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.search
                   </code>
@@ -132,9 +137,9 @@ export default function APIDocumentation() {
 
                 <div>
                   <h3 className="font-semibold mb-2">Request Parameters</h3>
-                  <div className="overflow-auto">
-                    <table className="w-full text-sm">
-                      <thead className="bg-gray-100">
+                  <div className="overflow-auto rounded-xl border border-slate-800">
+                    <table className="w-full text-sm text-slate-200">
+                      <thead className="bg-slate-900/70 text-slate-100">
                         <tr>
                           <th className="text-left p-2">Parameter</th>
                           <th className="text-left p-2">Type</th>
@@ -142,7 +147,7 @@ export default function APIDocumentation() {
                           <th className="text-left p-2">Description</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y">
+                      <tbody className="divide-y divide-slate-800 bg-slate-950/40">
                         <tr>
                           <td className="p-2"><code>query</code></td>
                           <td className="p-2">string</td>
@@ -265,7 +270,7 @@ Content-Type: application/json
 
           {/* Retrieve Tab */}
           <TabsContent value="retrieve">
-            <Card>
+          <Card className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg shadow-slate-900/50">
               <CardHeader>
                 <CardTitle>Get Material by ID</CardTitle>
                 <CardDescription>
@@ -274,37 +279,44 @@ Content-Type: application/json
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <Badge variant="default" className="mb-2">POST</Badge>
+                <Badge
+                  variant="default"
+                  className="mb-2 bg-slate-900/80 border border-slate-800 text-slate-100 font-mono text-xs uppercase tracking-wide"
+                >
+                  POST
+                </Badge>
                   <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.getById
                   </code>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Request Parameters</h3>
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="text-left p-2">Parameter</th>
-                        <th className="text-left p-2">Type</th>
-                        <th className="text-left p-2">Required</th>
-                        <th className="text-left p-2">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="p-2"><code>id</code></td>
-                        <td className="p-2">number</td>
-                        <td className="p-2">Yes</td>
-                        <td className="p-2">Material ID</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                  <h3 className="font-semibold mb-2 text-white">Request Parameters</h3>
+                  <div className="overflow-auto rounded-xl border border-slate-800">
+                    <table className="w-full text-sm text-slate-200">
+                      <thead className="bg-slate-900/70 text-slate-100">
+                        <tr>
+                          <th className="text-left p-2">Parameter</th>
+                          <th className="text-left p-2">Type</th>
+                          <th className="text-left p-2">Required</th>
+                          <th className="text-left p-2">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-slate-950/40">
+                        <tr>
+                          <td className="p-2"><code>id</code></td>
+                          <td className="p-2">number</td>
+                          <td className="p-2">Yes</td>
+                          <td className="p-2">Material ID</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Example Request</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">Example Request</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`POST /materialAPI.getById
 Content-Type: application/json
 
@@ -315,11 +327,11 @@ Content-Type: application/json
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Response Fields</h3>
-                  <p className="text-sm text-gray-700 mb-2">
+                  <h3 className="font-semibold mb-2 text-white">Response Fields</h3>
+                  <p className="text-sm text-slate-200 mb-2">
                     Returns complete material data including:
                   </p>
-                  <ul className="list-disc list-inside space-y-1 text-sm text-gray-700">
+                  <ul className="list-disc list-inside space-y-1 text-sm text-slate-200">
                     <li><code>lifecycleBreakdown</code> - Carbon values by phase (a1a3, a4, a5, b, c1c4)</li>
                     <li><code>epdMetadata</code> - Array of EPD sources with URLs, dates, manufacturers</li>
                     <li><code>confidenceLevel</code> - High, Medium, Low, or None</li>
@@ -334,7 +346,7 @@ Content-Type: application/json
 
           {/* Recommendations Tab */}
           <TabsContent value="recommendations">
-            <Card>
+            <Card className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg shadow-slate-900/50">
               <CardHeader>
                 <CardTitle>Get Material Recommendations</CardTitle>
                 <CardDescription>
@@ -343,24 +355,30 @@ Content-Type: application/json
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <Badge variant="default" className="mb-2">POST</Badge>
+                  <Badge
+                    variant="default"
+                    className="mb-2 bg-slate-900/80 border border-slate-800 text-slate-100 font-mono text-xs uppercase tracking-wide"
+                  >
+                    POST
+                  </Badge>
                   <code className="bg-slate-800/80 text-slate-100 rounded-md px-3 py-1 text-sm font-mono">
                     /materialAPI.getRecommendations
                   </code>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Request Parameters</h3>
-                  <table className="w-full text-sm">
-                    <thead className="bg-gray-100">
-                      <tr>
-                        <th className="text-left p-2">Parameter</th>
-                        <th className="text-left p-2">Type</th>
-                        <th className="text-left p-2">Required</th>
-                        <th className="text-left p-2">Description</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
+                  <h3 className="font-semibold mb-2 text-white">Request Parameters</h3>
+                  <div className="overflow-auto rounded-xl border border-slate-800">
+                    <table className="w-full text-sm text-slate-200">
+                      <thead className="bg-slate-900/70 text-slate-100">
+                        <tr>
+                          <th className="text-left p-2">Parameter</th>
+                          <th className="text-left p-2">Type</th>
+                          <th className="text-left p-2">Required</th>
+                          <th className="text-left p-2">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800 bg-slate-950/40">
                       <tr>
                         <td className="p-2"><code>materialId</code></td>
                         <td className="p-2">number</td>
@@ -400,10 +418,11 @@ Content-Type: application/json
                     </tbody>
                   </table>
                 </div>
+              </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Example Response</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">Example Response</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`{
   "result": {
     "data": [
@@ -433,7 +452,7 @@ Content-Type: application/json
 
           {/* C# Examples Tab */}
           <TabsContent value="examples">
-            <Card>
+            <Card className="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-lg shadow-slate-900/50">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Code className="w-5 h-5" />
@@ -445,8 +464,8 @@ Content-Type: application/json
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
-                  <h3 className="font-semibold mb-2">1. Setup HTTP Client</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">1. Setup HTTP Client</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
@@ -466,8 +485,8 @@ public class BlockPlaneApiClient
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">2. Search Materials</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">2. Search Materials</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`public async Task<MaterialSearchResponse> SearchMaterials(
     string query = null,
     string[] categories = null,
@@ -502,8 +521,8 @@ public class BlockPlaneApiClient
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">3. Get Material by ID</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">3. Get Material by ID</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`public async Task<Material> GetMaterialById(int id)
 {
     var request = new { id = id };
@@ -524,8 +543,8 @@ public class BlockPlaneApiClient
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">4. Get Recommendations</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">4. Get Recommendations</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`public async Task<List<Recommendation>> GetRecommendations(
     int materialId,
     int maxResults = 5)
@@ -556,8 +575,8 @@ public class BlockPlaneApiClient
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">5. Data Models</h3>
-                  <pre className="bg-gray-900 text-gray-100 p-4 rounded text-xs overflow-auto">
+                  <h3 className="font-semibold mb-2 text-white">5. Data Models</h3>
+                  <pre className="bg-slate-950 border border-slate-800 rounded-lg p-4 text-xs font-mono text-slate-200 overflow-auto">
 {`public class Material
 {
     public int Id { get; set; }

@@ -1,0 +1,64 @@
+{
+  "id": "insight-002",
+  "title": "Fiberglass Batt vs Dense-Pack Cellulose Wall Insulation",
+  "type": "comparison",
+  "status": "canonical",
+  "source": "human-authored",
+  "related_materials": [
+    "fiberglass_batt_insulation",
+    "dense_pack_cellulose"
+  ],
+  "metrics_context": {
+    "LIS": {
+      "summary": "Cellulose generally has lower embodied impact per unit of thermal performance, driven by recycled content and low-temperature processing.",
+      "relative_position": "cellulose favored when both are installed well"
+    },
+    "RIS": {
+      "cellulose": "Resilient",
+      "fiberglass_batt": "Transitional"
+    },
+    "CPI": {
+      "summary": "Similar or slightly higher upfront cost for cellulose, with better lifecycle performance when installation quality is high."
+    }
+  },
+  "sections": {
+    "overview": "This comparison looks at two cavity insulation options for framed walls: standard fiberglass batts and dense-pack cellulose. Both can achieve similar R-values, but they differ in embodied impact, installation quality, and long-term behavior.",
+    "why_it_scores_this_way": {
+      "LIS": "Fiberglass batts rely on high-temperature melting and spinning processes, plus binders and facings, while dense-pack cellulose uses recycled paper with lower-energy processing. Over the lifecycle, cellulose often carries lower embodied impact per unit of thermal resistance when installed correctly.",
+      "RIS": "Dense-pack cellulose scores higher on regenerative performance due to recycled feedstock, biogenic carbon storage, and more circular end-of-life options. Fiberglass remains inert and non-combustible but is less circular and more dependent on petrochemical components."
+    },
+    "tradeoffs": [
+      "Cellulose requires skilled installers and blowing equipment",
+      "Fiberglass batts are more vulnerable to gaps and compression",
+      "Cellulose can buffer some moisture but must be able to dry",
+      "Fiberglass can hide condensation against cold sheathing",
+      "Fiberglass is often the lowest upfront cost and most widely stocked",
+      "Cellulose availability varies by region"
+    ],
+    "when_it_makes_sense": {
+      "choose_this_when": [
+        "Choose dense-pack cellulose when recycled content and carbon storage are priorities",
+        "Choose dense-pack cellulose when you have access to experienced installers",
+        "Choose dense-pack cellulose when sound control and draft reduction matter",
+        "Choose dense-pack cellulose when targeting higher RIS tiers"
+      ],
+      "choose_alternative_when": [
+        "Choose fiberglass batts when lowest upfront cost dominates the decision",
+        "Choose fiberglass batts when crews are already standardized on batt installation",
+        "Choose fiberglass batts when framing is regular and simple to insulate",
+        "Choose fiberglass batts when cellulose supply or installers are limited"
+      ]
+    },
+    "alternatives": [
+      "Wood-fiber batts or boards in high-performance assemblies",
+      "Blown-in fiberglass in netted cavities",
+      "Hybrid assemblies combining cellulose with exterior continuous insulation"
+    ],
+    "takeaway": "On paper, fiberglass batts and dense-pack cellulose can look similar in R-value. In practice, cellulose tends to offer lower embodied impact, better circularity, and tighter real-world performance when installed well, while fiberglass favors cost and familiarity. The best choice depends on installer skill, availability, and the project’s time horizon."
+  },
+  "ui_hints": {
+    "default_expanded": true,
+    "emphasis": "installer_skill_and_time_horizon",
+    "tone": "calm_practical_builder"
+  }
+}
