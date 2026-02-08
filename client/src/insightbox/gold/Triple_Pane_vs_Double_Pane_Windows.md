@@ -1,98 +1,92 @@
 ## InsightBox — Triple-Pane vs Double-Pane Windows
 
 ### At a glance
-This comparison looks at **triple-pane windows** versus **double-pane windows**
-in residential construction. Both can meet code in many regions, but they differ
-in comfort, energy performance, cost, and lifecycle impact.
 
-Triple-pane units deliver higher insulation and better comfort, especially in
-cold climates, while double-pane windows remain the standard choice for most
-homes due to lower first cost.
+Both window types can be "high performance," but they solve **different problems**.
+
+- **Double-pane** = good baseline efficiency
+- **Triple-pane** = comfort, resilience, and peak-load control
+
+The question isn't *which is better* — it's *when does triple-pane earn its cost?*
 
 ---
 
 ### Lifecycle Impact (LIS)
-- **Embodied energy & materials**
-  - **Double-pane** windows generally require less glass and framing material,
-    which lowers embodied energy per unit.
-  - **Triple-pane** adds a third lite of glass, more spacers, and heavier
-    frames, increasing manufacturing energy and transport impacts.
-- **Operational performance**
-  - Triple-pane windows typically have **lower U-values and higher comfort**,
-    reducing heating loads and cold-weather drafts.
-  - In milder climates, the operational savings may be modest compared with a
-    well-specified double-pane unit.
-- **Service life**
-  - Both systems can have similar lifespans if installed and flashed correctly.
-    Replacement cycles are more often driven by framing, seals, and building
-    movement than by pane count alone.
 
-Over a full lifecycle, LIS depends heavily on climate: in cold climates,
-triple-pane’s reduced heating demand can offset its higher embodied energy,
-while in temperate regions high-quality double-pane often performs adequately.
+**Double-pane windows**
+- Lower embodied impact
+- Adequate U-values for many climates
+- Shorter manufacturing chain
+
+**Triple-pane windows**
+- Higher embodied energy (extra glass, gas, spacers)
+- Much lower heat loss over time
+- Reduced operational energy for the building's full lifespan
+
+**Cold-climate effect**
+- Heat loss reduction compounds every winter
+- Longer heating seasons increase payoff
+
+> **LIS takeaway:**  
+> Triple-pane windows trade higher upfront impact for lower lifetime energy loss — strongest in heating-dominated climates.
 
 ---
 
 ### Regenerative Impact (RIS)
-- **Comfort and health**
-  - Triple-pane windows improve interior comfort by reducing cold surfaces,
-    downdrafts, and condensation risk at the glass edge.
-  - This can support healthier interiors, fewer mold concerns at sills, and
-    better occupant satisfaction.
-- **Climate alignment**
-  - In **cold and very cold climates**, triple-pane supports deep energy
-    reductions and aligns well with Paris-compatible building performance.
-  - In **mild climates**, RIS gains are smaller and may be better achieved by
-    envelope upgrades elsewhere (air sealing, roof insulation, shading).
-- **Durability and repair**
-  - More complex units can be harder to repair and may require full replacement
-    if seals fail.
-  - High-quality double-pane windows with good installation can still support
-    long-lived, low-impact buildings.
 
-RIS scores triple-pane higher in cold climates and high-performance projects,
-but does not automatically penalize well-specified double-pane in moderate
-climates.
+**Thermal comfort**
+- Triple-pane interior glass stays much warmer
+- Reduced radiant discomfort near windows
+- Less cold downdraft
 
----
+**Resilience**
+- Better performance during power outages
+- Slower indoor temperature drop
+- Supports smaller or simplified heating systems
 
-### Cost Per Impact (CPI)
-- **First cost**
-  - Triple-pane units often carry a **significant price premium** over
-    comparable double-pane windows.
-  - This can be a major budget item in projects with many openings.
-- **Energy savings and payback**
-  - In cold climates with high energy prices, triple-pane can offer reasonable
-    payback when paired with airtight, well-insulated assemblies.
-  - In moderate climates, the cost per unit of energy saved can be high
-    compared to other envelope upgrades.
-- **Comfort value**
-  - Some clients value the comfort and acoustic benefits of triple-pane beyond
-    pure energy savings, which can justify the investment in premium projects.
+**Noise & durability**
+- Improved sound attenuation
+- Lower condensation risk
+- Longer functional comfort life
 
-CPI is most favorable for triple-pane where winters are harsh, energy is
-expensive, and the building is otherwise high-performing. In many typical
-projects, quality double-pane windows remain the more economical option.
+> **RIS takeaway:**  
+> Triple-pane improves *how the building feels*, not just how it performs on paper.
 
 ---
 
-### Takeaway
-If the goal is **maximum comfort and deep energy reductions in a cold climate**,
-triple-pane windows are a strong choice and align well with high-performance
-building standards.
+### Cost & CPI (Cost Per Impact)
 
-If the goal is **good performance on a tight budget** in a mild or mixed
-climate, well-detailed double-pane windows can still deliver acceptable comfort
-and energy outcomes.
+**Up-front cost**
+- Triple-pane typically costs 20–40% more per unit
+- Installation cost is nearly identical
 
-BlockPlane reflects this by scoring triple-pane windows higher where climate
-and project goals justify them, while remaining transparent that high-quality
-double-pane units are often the more cost-effective baseline.
+**System savings**
+- Smaller heating equipment possible
+- Reduced perimeter heat loss
+- Can eliminate supplemental perimeter heat in some designs
+
+**Best ROI cases**
+- Cold climates
+- High window-to-wall ratios
+- High comfort expectations
+- Electrified heating systems
+
+> **CPI takeaway:**  
+> Triple-pane often pays for itself indirectly through system downsizing and comfort gains.
 
 ---
 
-### Notes
-- Actual performance depends on frame type, installation quality, and air
-  sealing as much as on pane count.
-- Local energy prices and climate should be considered when comparing payback.
-- Scores assume modern low-E coatings and code-compliant installation.
+### Summary Takeaway
+
+- **Double-pane**
+  - Best for mild climates
+  - Budget-driven projects
+  - Lower-performance envelopes
+
+- **Triple-pane**
+  - Best for cold or mixed climates
+  - High-performance and comfort-focused builds
+  - Electrified heating and resilience goals
+
+**Builder's rule of thumb:**  
+> *In cold climates, triple-pane pays back in comfort and energy; in mild climates, double-pane is enough.*

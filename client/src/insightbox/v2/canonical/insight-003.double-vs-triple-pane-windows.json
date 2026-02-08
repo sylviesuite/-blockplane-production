@@ -1,0 +1,61 @@
+{
+  "id": "insight-003",
+  "title": "Double-Pane Vinyl Windows vs Triple-Pane High-Performance Windows",
+  "type": "comparison",
+  "status": "canonical",
+  "source": "human-authored",
+  "related_materials": [
+    "double_pane_vinyl_windows",
+    "triple_pane_high_performance_windows"
+  ],
+  "metrics_context": {
+    "LIS": {
+      "summary": "Triple-pane windows have higher upfront embodied energy but reduce operational losses and extend service life, offsetting the initial impact in colder climates.",
+      "relative_position": "triple-pane favored in high-heating or long-life scenarios"
+    },
+    "RIS": {
+      "triple_pane_windows": "Resilient",
+      "double_pane_vinyl_windows": "Transitional"
+    },
+    "CPI": {
+      "summary": "Triple-pane windows cost 20–40% more upfront but deliver lower lifetime energy and comfort gains."
+    }
+  },
+  "sections": {
+    "overview": "This comparison looks at two residential window strategies: standard double-pane vinyl windows and triple-pane high-performance windows. Both meet modern codes, but they diverge in energy performance, durability, and long-term impact.",
+    "why_it_scores_this_way": {
+      "LIS": "Double-pane vinyl windows rely on simpler manufacturing and lighter transport, but they lose heat faster, need earlier replacement, and lean on PVC components. Triple-pane windows add glass, coatings, and heavier frames, yet they dramatically reduce operational draw, extend service life, and shrink HVAC runtime.",
+      "RIS": "Triple-pane windows deliver better thermal comfort, condensation resistance, and lower failure rates, while being easier to repair. Double-pane vinyl remains familiar but offers limited circularity and carries PVC-related toxicity concerns."
+    },
+    "tradeoffs": [
+      "Triple-pane windows cost 20–40% more upfront.",
+      "Double-pane vinyl windows are easier to source and install.",
+      "Installation quality is critical for both—air sealing and flashing matter.",
+      "Triple-pane windows deliver comfort benefits immediately but rely on climate to achieve payback."
+    ],
+    "when_it_makes_sense": {
+      "choose_this_when": [
+        "Choose triple-pane windows in cold or high-heating climates.",
+        "Choose triple-pane windows when occupant comfort and durability are priorities.",
+        "Choose triple-pane windows when aiming to optimize the entire enclosure."
+      ],
+      "choose_alternative_when": [
+        "Choose double-pane vinyl when upfront budget is tight.",
+        "Choose double-pane vinyl when replacement is expected soon.",
+        "Choose double-pane vinyl when fast availability and simple installation are essential.",
+        "Choose double-pane vinyl when performance targets remain modest."
+      ]
+    },
+    "alternatives": [
+      "High-quality double-pane fiberglass windows",
+      "Triple-pane on north and west elevations only",
+      "Storm window retrofits for existing buildings"
+    ],
+    "takeaway": "Windows are a small envelope area with outsized impact. Double-pane vinyl keeps costs low, while triple-pane high-performance glazing prioritizes comfort and long-term energy reduction."
+  },
+  "ui_hints": {
+    "default_expanded": true,
+    "emphasis": "comfort_and_energy",
+    "tone": "calm_practical_builder"
+  }
+}
