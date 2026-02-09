@@ -21,11 +21,13 @@ import MaterialSwapAssistant from "./pages/MaterialSwapAssistant";
 import GlobalImpactDashboard from "./pages/GlobalImpactDashboard";
 import MaterialBrowser from "./pages/MaterialBrowser";
 import APIDocumentation from "./pages/APIDocumentation";
+import GoldInsightPage from "./pages/GoldInsightPage";
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path="/insights/gold/:slug" component={GoldInsightPage} />
       <Route path={"/features"} component={Features} />
       <Route path={"/visuals"} component={Visuals} />
       <Route path={"/lifecycle"} component={Lifecycle} />

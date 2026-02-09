@@ -9,13 +9,25 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { InsightBox } from "@/insightBox/v2/InsightBox";
-import type { InsightContext } from "@/insightBox/v2/types";
+import { InsightBox } from "@/insightbox/v2/InsightBox";
+import type { InsightContext } from "@/insightbox/v2/types";
 import { localMaterials } from "@/data/materials";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
+import { RelatedGoldInsights } from "@/components/RelatedGoldInsights";
+import type { LocalMaterial } from "@/data/materials";
 
 type MaterialParams = { id: string };
+
+function isEnvelopeRelatedMaterial(material: LocalMaterial): boolean {
+  const c = material.category.toLowerCase();
+  return (
+    c.includes("insulation") ||
+    c.includes("wall") ||
+    c.includes("earthen") ||
+    c.includes("construction")
+  );
+}
 
 function useMaterialParams() {
   const [match, params] = useRoute<MaterialParams>("/materials/:id");
@@ -141,7 +153,7 @@ export default function MaterialDetail() {
 
   const [showScoreDetails, setShowScoreDetails] = useState(false);
 
-  const insightContext = buildInsightContextForMaterial(material.slug);
+  const insightContext = buildInsightContextForMaterial(material.id);
   const comparisonLabel = getComparisonLabel(insightContext, material.name);
 
   const takeaways: string[] = [];
@@ -440,6 +452,14 @@ function getComparisonLabel(
           <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 mt-6 shadow-lg shadow-slate-900/5">
             <InsightBox context={insightContext} />
           </div>
+          {isEnvelopeRelatedMaterial(material) && (
+            <div className="mt-6">
+              <RelatedGoldInsights
+                contextId="airtight_envelope"
+                heading="Why this matters — high-performance envelope"
+              />
+            </div>
+          )}
         </section>
       </div>
     </div>
