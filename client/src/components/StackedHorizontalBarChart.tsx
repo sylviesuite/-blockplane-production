@@ -38,6 +38,18 @@ const PHASE_LABELS = {
   'C1-C4': 'End of Life',
 };
 
+/** Derive chart phase values from Material.phases (PhaseMap). */
+function getChartPhases(material: Material): Record<keyof typeof PHASE_LABELS, number> {
+  const p = material.phases;
+  return {
+    'A1-A3': (p.pointOfOrigin ?? 0) + (p.production ?? 0),
+    'A4': p.transport ?? 0,
+    'A5': p.construction ?? 0,
+    'B': 0,
+    'C1-C4': p.disposal ?? 0,
+  };
+}
+
 export function StackedHorizontalBarChart({
   materials,
   title = 'Lifecycle Carbon Breakdown',
@@ -46,21 +58,18 @@ export function StackedHorizontalBarChart({
 }: StackedHorizontalBarChartProps) {
   const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
 
-  // Transform materials data for Recharts
+  // Transform materials data for Recharts (derive phases from Material.phases)
   const chartData = materials.slice(0, maxMaterials).map(material => {
-    const lifecycleData: Record<string, any> = {
+    const phases = getChartPhases(material);
+    return {
       name: material.name,
       id: material.id,
+      'A1-A3': phases['A1-A3'],
+      'A4': phases['A4'],
+      'A5': phases['A5'],
+      'B': phases['B'],
+      'C1-C4': phases['C1-C4'],
     };
-
-    // Map our database phases to chart phases
-    if (material.a1_a3 !== undefined) lifecycleData['A1-A3'] = material.a1_a3;
-    if (material.a4 !== undefined) lifecycleData['A4'] = material.a4;
-    if (material.a5 !== undefined) lifecycleData['A5'] = material.a5;
-    if (material.b !== undefined) lifecycleData['B'] = material.b;
-    if (material.c1_c4 !== undefined) lifecycleData['C1-C4'] = material.c1_c4;
-
-    return lifecycleData;
   });
 
   // Handle bar click for material selection
@@ -256,8 +265,9 @@ export function StackedHorizontalBarChart({
           {/* Summary Stats */}
           <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-4">
             {Object.entries(PHASE_LABELS).map(([key, label]) => {
-              const total = chartData.reduce((sum, material) => sum + (material[key] || 0), 0);
-              const avg = total / chartData.length;
+              const phaseKey = key as keyof typeof PHASE_LABELS;
+              const total = chartData.reduce((sum, row) => sum + (row[phaseKey] ?? 0), 0);
+              const avg = chartData.length > 0 ? total / chartData.length : 0;
               
               return (
                 <div key={key} className="p-3 rounded-lg bg-gray-50 dark:bg-gray-900">
@@ -302,7 +312,7 @@ export function StackedHorizontalBarChart({
                       </Badge>
                     </div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
-                      {material.category} • {material.functionalUnit}
+                      {material.materialType} • {material.meta?.unit ?? 'unit'}
                     </p>
                     <p className="text-2xl font-bold mt-2">
                       {material.total.toFixed(1)} <span className="text-sm font-normal">kg CO₂e total</span>
@@ -312,8 +322,9 @@ export function StackedHorizontalBarChart({
                   {/* Phase Breakdown */}
                   <div className="space-y-2">
                     {Object.entries(PHASE_LABELS).map(([key, label]) => {
-                      const value = material[key.toLowerCase().replace(/-/g, '_') as keyof Material] as number || 0;
-                      const percentage = (value / material.total) * 100;
+                      const phaseValues = getChartPhases(material);
+                      const value = phaseValues[key as keyof typeof PHASE_LABELS] ?? 0;
+                      const percentage = material.total > 0 ? (value / material.total) * 100 : 0;
                       
                       return (
                         <div key={key}>
@@ -364,11 +375,11 @@ export function StackedHorizontalBarChart({
                     Cost Difference:
                   </p>
                   <p className="text-2xl font-bold text-green-700 dark:text-green-300">
-                    {selectedMaterials[0].cost > selectedMaterials[1].cost ? '-' : '+'}
-                    ${Math.abs(selectedMaterials[0].cost - selectedMaterials[1].cost).toFixed(2)}
+                    {(selectedMaterials[0].cost?.capex ?? 0) > (selectedMaterials[1].cost?.capex ?? 0) ? '-' : '+'}
+                    ${Math.abs((selectedMaterials[0].cost?.capex ?? 0) - (selectedMaterials[1].cost?.capex ?? 0)).toFixed(2)}
                   </p>
                   <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                    per {selectedMaterials[0].functionalUnit}
+                    per {selectedMaterials[0].meta?.unit ?? 'unit'}
                   </p>
                 </div>
               </div>
