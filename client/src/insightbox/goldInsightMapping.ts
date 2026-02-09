@@ -4,7 +4,7 @@
  * No AI, no inference — explicit mapping only.
  */
 
-export type GoldInsightContextId = "airtight_envelope";
+export type GoldInsightContextId = "airtight_envelope" | "mechanicals_core";
 
 export interface GoldInsightEntry {
   /** Filename without .md, used in URL and to load content */
@@ -29,6 +29,28 @@ const CONTEXT_TO_SLUGS: Record<GoldInsightContextId, GoldInsightEntry[]> = {
       title: "Oversized HVAC in Tight Homes: Why \"Bigger\" Fails",
     },
   ],
+  mechanicals_core: [
+    {
+      slug: "Load_Calculation_Manual_J_vs_Rule_of_Thumb_Sizing",
+      title: "Load Calculation (Manual J) vs Rule-of-Thumb Sizing",
+    },
+    {
+      slug: "Duct_Sealing_and_Commissioning_vs_Install_and_Forget",
+      title: "Duct Sealing & Commissioning vs Install-and-Forget",
+    },
+    {
+      slug: "Heat_Pump_Plus_Solar_vs_Gas_Plus_Grid",
+      title: "Heat Pump + Solar vs Gas + Grid",
+    },
+    {
+      slug: "Zoning_Systems_When_They_Help_and_When_They_Backfire",
+      title: "Zoning Systems: When They Help and When They Backfire",
+    },
+    {
+      slug: "Comfort_Complaints_When_Math_Was_Right_but_House_Feels_Wrong",
+      title: "Comfort Complaints: When the Math Was Right but the House Feels Wrong",
+    },
+  ],
 };
 
 /**
@@ -38,4 +60,15 @@ export function getGoldInsightsForContext(
   contextId: GoldInsightContextId
 ): GoldInsightEntry[] {
   return CONTEXT_TO_SLUGS[contextId] ?? [];
+}
+
+/**
+ * Returns the display title for a Gold InsightBox slug from any context, or undefined if not found.
+ */
+export function getGoldInsightTitleBySlug(slug: string): string | undefined {
+  for (const entries of Object.values(CONTEXT_TO_SLUGS)) {
+    const found = entries.find((e) => e.slug === slug);
+    if (found) return found.title;
+  }
+  return undefined;
 }

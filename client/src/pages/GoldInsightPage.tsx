@@ -6,7 +6,7 @@
 import { useRoute } from "wouter";
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "wouter";
-import { getGoldInsightsForContext } from "@/insightbox/goldInsightMapping";
+import { getGoldInsightTitleBySlug } from "@/insightbox/goldInsightMapping";
 
 type Params = { slug: string };
 
@@ -64,11 +64,10 @@ export default function GoldInsightPage() {
   const slug = params?.slug ?? "";
   const { content, loading } = useGoldContent(slug);
 
-  const title = useMemo(() => {
-    const entries = getGoldInsightsForContext("airtight_envelope");
-    const found = entries.find((e) => e.slug === slug);
-    return found?.title ?? formatSlugAsTitle(slug);
-  }, [slug]);
+  const title = useMemo(
+    () => getGoldInsightTitleBySlug(slug) ?? formatSlugAsTitle(slug),
+    [slug]
+  );
 
   if (!match) return null;
 

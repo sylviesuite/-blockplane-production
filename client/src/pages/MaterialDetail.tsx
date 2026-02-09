@@ -29,6 +29,19 @@ function isEnvelopeRelatedMaterial(material: LocalMaterial): boolean {
   );
 }
 
+function isMechanicalRelatedMaterial(material: LocalMaterial): boolean {
+  const c = material.category.toLowerCase();
+  const bt = material.context?.buildingType?.toLowerCase() ?? "";
+  const tags = (material.tags ?? []).map((t) => t.toLowerCase());
+  const mechanicalCategories = ["hvac", "mechanical", "ventilation", "heating", "cooling", "duct"];
+  const mechanicalTags = ["heat pump", "furnace", "boiler", "erv", "hrv", "duct", "ventilation", "hvac"];
+  return (
+    mechanicalCategories.some((k) => c.includes(k)) ||
+    mechanicalTags.some((k) => tags.some((t) => t.includes(k))) ||
+    mechanicalCategories.some((k) => bt.includes(k))
+  );
+}
+
 function useMaterialParams() {
   const [match, params] = useRoute<MaterialParams>("/materials/:id");
   return match ? params : null;
@@ -457,6 +470,14 @@ function getComparisonLabel(
               <RelatedGoldInsights
                 contextId="airtight_envelope"
                 heading="Why this matters — high-performance envelope"
+              />
+            </div>
+          )}
+          {isMechanicalRelatedMaterial(material) && (
+            <div className="mt-6">
+              <RelatedGoldInsights
+                contextId="mechanicals_core"
+                heading="Related insights — mechanical systems & comfort"
               />
             </div>
           )}
