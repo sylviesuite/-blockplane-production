@@ -21,20 +21,20 @@ const MATCH_RULES: CanonicalMatchRule[] = [
     id: "insight-001",
     match: (ctx) =>
       ctx.type === "comparison" &&
-      ctx.materialIds?.includes("rammed_earth") &&
-      ctx.materialIds?.includes("hempcrete") &&
-      ctx.materialIds?.includes("wood_framing_2x6") === true,
+      (ctx.materialIds?.includes("rammed_earth") ?? false) &&
+      (ctx.materialIds?.includes("hempcrete") ?? false) &&
+      (ctx.materialIds?.includes("wood_framing_2x6") ?? false),
   },
   {
     id: "insight-002",
     match: (ctx) =>
       ctx.type === "comparison" &&
-      ctx.materialIds?.includes("fiberglass_batt_insulation") &&
-      ctx.materialIds?.includes("dense_pack_cellulose") === true,
+      (ctx.materialIds?.includes("fiberglass_batt_insulation") ?? false) &&
+      (ctx.materialIds?.includes("dense_pack_cellulose") ?? false),
   },
   {
     id: "insight-003",
-    match: (ctx) => ctx.type === "comparison" && ctx.tags?.includes("windows") === true,
+    match: (ctx) => ctx.type === "comparison" && (ctx.tags?.includes("windows") ?? false),
   },
 ];
 
