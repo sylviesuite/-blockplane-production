@@ -17,7 +17,7 @@ Both improve thermal performance and reduce thermal bridging, but they differ si
 ### Lifecycle Impact (LIS)
 
 **Embodied energy & carbon**
-- Rigid foams are petrochemical products with **high embodied energy** and, in some cases, high global warming potential (especially XPS).
+- Rigid foams are petrochemical products with **high embodied energy** and, in some cases, high global warming potential (especially XPS). For polyiso, reference values are ~100 MJ/kg embodied energy, ~0.027 W/m·K thermal conductivity, ~6.5 R per inch (values can vary with temperature).
 - Mineral wool has higher manufacturing energy than fiberglass but **lower climate impact than most rigid foams** when normalized per assembly performance.
 
 **Longevity**

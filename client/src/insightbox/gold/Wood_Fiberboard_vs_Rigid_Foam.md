@@ -21,7 +21,7 @@ Both strategies cut thermal bridging and boost R-value. The key differences show
   - Manufacturing energy and climate impact vary:
     - **EPS:** lower embodied energy, pentane blowing agent.
     - **XPS:** higher embodied energy with historically high-GWP blowing agents.
-    - **Polyiso:** moderate embodied energy, but foil facers add complexity and impact.
+    - **Polyiso:** density ~30 kg/m³, λ ~0.027 W/m·K, R-value ~6.5 per inch; embodied energy ~100 MJ/kg (range ~90–110). Foil facers add complexity; R-value can drop in cold conditions.
   - Overall **higher carbon intensity per unit of R** than wood fiberboard.
 
 **Transport & installation**

@@ -12,10 +12,15 @@ import { Button } from "@/components/ui/button";
 import { InsightBox } from "@/insightbox/v2/InsightBox";
 import type { InsightContext } from "@/insightbox/v2/types";
 import { localMaterials } from "@/data/materials";
+import { fullMaterialsFromSeed } from "@/data/materialsFull";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { RelatedGoldInsights } from "@/components/RelatedGoldInsights";
 import type { LocalMaterial } from "@/data/materials";
+
+/** Full catalog for lookup and alternatives (explorer + detail). */
+const catalogMaterials: LocalMaterial[] =
+  fullMaterialsFromSeed?.length > 0 ? fullMaterialsFromSeed : localMaterials;
 
 type MaterialParams = { id: string };
 
@@ -173,7 +178,7 @@ export default function MaterialDetail() {
 
   const material =
     materialKey &&
-    localMaterials.find((item) => {
+    catalogMaterials.find((item) => {
       const normalizedKey = materialKey.toLowerCase();
       return (
         item.id === materialKey ||
@@ -201,7 +206,7 @@ export default function MaterialDetail() {
 
   const betterAlternatives =
     material
-      ? localMaterials
+      ? catalogMaterials
           .filter(
             (candidate) =>
               candidate.id !== material.id &&

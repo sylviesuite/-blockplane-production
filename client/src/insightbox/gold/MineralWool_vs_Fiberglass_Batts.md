@@ -7,7 +7,7 @@ Both mineral wool and fiberglass batts keep embodied energy well below foam alte
 ## Lifecycle Impact (LIS perspective)
 
 ### Embodied Energy & Carbon
-- Fiberglass batts generally record lower embodied energy per R-value because they are spun from recycled glass cullet at lower temperatures and packaged in compact bales; this keeps LIS and carbon around the low 30s per m² (for R-21 wall cavities) when transportation is within 200 miles.
+- Reference values for fiberglass batts: density ~20 kg/m³ (range ~12–30), thermal conductivity ~0.04 W/m·K (~0.03–0.05), R-value ~3 per inch (~2.5–3.5 per inch), embodied energy ~20 MJ per functional unit (functional unit as defined in source). Fiberglass batts are spun from recycled glass cullet at lower temperatures and packaged in compact bales; when transportation is within a typical range, LIS and carbon sit in a moderate band—exact values depend on the defined functional unit and manufacturer EPDs.
 - Mineral wool requires higher-temperature melting (around 1,400 °C) and binding with phenol/formaldehyde resins, so LIS typically sits ~5–8 points higher for the same R-value. If sourced from EU/US manufacturers that use renewable electricity in the melt loop, that penalty shrinks, but it never quite reaches fiberglass’s baseline.
 
 ### Longevity & Replacement Risk

@@ -31,7 +31,7 @@ Use these as the only numeric inputs; do not invent others.
 ## Comparison context (qualitative only; use only the numbers above)
 
 - **vs compressed earth blocks:** Conventional masonry has much higher embodied energy (~2300 MJ/m³ vs ~750 MJ/m³ for CEB) and much higher compressive strength (~14 MPa vs ~3 MPa). Thermal conductivity is higher (~1.2 W/m·K vs ~0.60 W/m·K), so conventional block is poorer insulation and is usually paired with insulation; both provide thermal mass.
-- **vs fired clay brick:** Conventional masonry has lower embodied energy than fired brick (~3315 MJ/m³), but higher than CEB. Strength and durability are high; moisture and detailing remain important for both.
+- **vs fired clay brick:** Conventional masonry has lower embodied energy than fired brick (~3 MJ/kg, ~6000 MJ/m³ at ~2000 kg/m³), but higher than CEB. Strength and durability are high; moisture and detailing remain important for both.
 
 ---
 
