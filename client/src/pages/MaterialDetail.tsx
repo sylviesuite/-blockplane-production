@@ -19,6 +19,21 @@ import type { LocalMaterial } from "@/data/materials";
 
 type MaterialParams = { id: string };
 
+function getWhyThisMattersTitle(
+  contextId: "airtight_envelope" | "mechanicals_core" | "risk_health_durability",
+  material?: { category?: string }
+): string {
+  if (contextId === "mechanicals_core") return "Why this matters — mechanical comfort";
+  if (contextId === "risk_health_durability") return "Why this matters — health & long-term durability";
+  if (contextId === "airtight_envelope") {
+    const c = (material?.category ?? "").toLowerCase();
+    if (c.includes("insulation")) return "Why this matters — airtight insulation";
+    if (c.includes("wall") || c.includes("assembly")) return "Why this matters — wall assemblies & air control";
+    return "Why this matters — high-performance envelope";
+  }
+  return "Related insights";
+}
+
 function isEnvelopeRelatedMaterial(material: LocalMaterial): boolean {
   const c = material.category.toLowerCase();
   return (
@@ -482,7 +497,7 @@ function getComparisonLabel(
             <div className="mt-6">
               <RelatedGoldInsights
                 contextId="airtight_envelope"
-                heading="Why this matters — high-performance envelope"
+                heading={getWhyThisMattersTitle("airtight_envelope", material)}
               />
             </div>
           )}
@@ -490,7 +505,7 @@ function getComparisonLabel(
             <div className="mt-6">
               <RelatedGoldInsights
                 contextId="mechanicals_core"
-                heading="Related insights — mechanical systems & comfort"
+                heading={getWhyThisMattersTitle("mechanicals_core")}
               />
             </div>
           )}
@@ -498,7 +513,7 @@ function getComparisonLabel(
             <div className="mt-6">
               <RelatedGoldInsights
                 contextId="risk_health_durability"
-                heading="Why this matters — health & long-term durability"
+                heading={getWhyThisMattersTitle("risk_health_durability")}
               />
             </div>
           )}
