@@ -17,7 +17,7 @@ Both strategies improve thermal performance by reducing thermal bridging, but th
   - Manufacturing energy varies by type:
     - **EPS:** lower embodied energy, pentane blowing agent.
     - **XPS:** higher embodied energy; historically high-GWP blowing agents.
-    - **Polyiso:** moderate embodied energy, foil facers add complexity.
+    - **Polyiso:** reference values density ~30 kg/m³ (range ~28–32), thermal conductivity ~0.027 W/m·K (~0.025–0.03), R-value ~6.5 per inch (~6–7); embodied energy ~100 MJ/kg (range ~90–110). Foil facers add complexity. R-value can drop at cold temperatures.
   - Overall **higher carbon intensity** than mineral wool.
 - **Mineral Wool Boards**
   - Made from basalt rock or recycled steel slag.

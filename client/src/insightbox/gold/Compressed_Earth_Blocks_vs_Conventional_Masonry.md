@@ -2,13 +2,13 @@
 
 ### At a glance
 
-**Compressed earth blocks (CEBs):** modular units from soil, stabilizer, and compression—no firing. Dry density ~1900 kg/m³, compressive strength ~3 MPa (typical range 2–4 MPa; code minimums near 2–2.5 MPa), thermal conductivity ~0.60 W/m·K, embodied energy ~750 MJ/m³ (~0.40 MJ/kg). **Conventional masonry (CMU):** normal-weight concrete block to ASTM C90. Density ~2300 kg/m³ (typical 2200–2400), compressive strength ~14 MPa (common 13–20 MPa, code minimums around 13–14 MPa), thermal conductivity ~1.2 W/m·K (dense block typically 1.1–1.3), embodied energy ~2300 MJ/m³ (1.0 MJ/kg). CEBs have much lower embodied energy than both CMU and fired clay brick (~3315 MJ/m³); CMU is stronger than CEB but conducts more heat and is usually paired with insulation.
+**Compressed earth blocks (CEBs):** modular units from soil, stabilizer, and compression—no firing. Dry density ~1900 kg/m³, compressive strength ~3 MPa (typical range 2–4 MPa; code minimums near 2–2.5 MPa), thermal conductivity ~0.60 W/m·K, embodied energy ~750 MJ/m³ (~0.40 MJ/kg). **Conventional masonry (CMU):** normal-weight concrete block to ASTM C90. Density ~2300 kg/m³ (typical 2200–2400), compressive strength ~14 MPa (common 13–20 MPa, code minimums around 13–14 MPa), thermal conductivity ~1.2 W/m·K (dense block typically 1.1–1.3), embodied energy ~2300 MJ/m³ (1.0 MJ/kg). CEBs have much lower embodied energy than both CMU and fired clay brick (~3 MJ/kg, on the order of ~6000 MJ/m³ at ~2000 kg/m³); CMU is stronger than CEB but conducts more heat and is usually paired with insulation.
 
 ---
 
 ### Lifecycle Impact (LIS)
 
-CEBs avoid firing and heavy processing, so embodied energy is much lower: ~750 MJ/m³ vs ~2300 MJ/m³ for conventional masonry and ~3315 MJ/m³ for fired clay brick. That difference flows through to lower embodied carbon when the energy mix is similar. Conventional masonry sits between CEB and fired brick on embodied energy; real LIS for both depends on transport, production, and (for CEB) stabilizer type.
+CEBs avoid firing and heavy processing, so embodied energy is much lower: ~750 MJ/m³ vs ~2300 MJ/m³ for conventional masonry and ~6000 MJ/m³ for fired clay brick (~3 MJ/kg at ~2000 kg/m³). That difference flows through to lower embodied carbon when the energy mix is similar. Conventional masonry sits between CEB and fired brick on embodied energy; real LIS for both depends on transport, production, and (for CEB) stabilizer type.
 
 ---
 

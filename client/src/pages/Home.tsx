@@ -4,6 +4,9 @@ import { FloatingParticles } from '@/components/FloatingParticles';
 import { Button } from '@/components/ui/button';
 import { Search, GitCompare, FileText, Database, Layers, CheckCircle } from 'lucide-react';
 
+/** Copy-level constant for material count (reflects real inventory). Update when seed grows. */
+const MATERIAL_COUNT_COPY = "85+";
+
 export default function Home() {
   const scrollToHowItWorks = () => {
     document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
@@ -21,7 +24,7 @@ export default function Home() {
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Compare lifecycle impact, carbon footprint, and circularity scores for <span className="text-[#09FBD3] font-semibold">85+ building materials</span>—so you can specify with confidence, not guesswork.
+            Compare lifecycle impact, carbon footprint, and circularity scores across <span className="text-[#09FBD3] font-semibold">{MATERIAL_COUNT_COPY} real building materials</span> — so you can specify with confidence, not guesswork.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -101,8 +104,8 @@ export default function Home() {
               <div className="flex items-center justify-center mb-4">
                 <Database className="w-12 h-12 text-[#09FBD3]" />
               </div>
-              <div className="text-5xl font-bold text-white">85+</div>
-              <div className="text-xl text-gray-400">Building Materials</div>
+              <div className="text-5xl font-bold text-white">{MATERIAL_COUNT_COPY}</div>
+              <div className="text-xl text-gray-400">Real Building Materials</div>
               <div className="text-sm text-gray-500">With full lifecycle data</div>
             </div>
 

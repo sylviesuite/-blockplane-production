@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 import type { ReactNode } from "react";
 import { localMaterials } from "@/data/materials";
+import { fullMaterialsFromSeed } from "@/data/materialsFull";
 
 // MOCK TRPC SURROGATE - temporary data layer for frontend-only iteration.
+// Materials Explorer uses full seed inventory (85+) when available.
 export const IS_MOCK_TRPC = true;
 
 type TrpcProviderProps = {
@@ -68,7 +70,11 @@ const buildLifecycle = (lis: number, ris: number, cpi: number) => {
   return { lifecycle, lifecycleBreakdown: breakdown };
 };
 
-const enhanceMaterials = localMaterials.map((material, index) => {
+/** Full inventory for Materials Explorer (85+). Falls back to localMaterials if seed data unavailable. */
+const materialsForExplorer =
+  fullMaterialsFromSeed?.length > 0 ? fullMaterialsFromSeed : localMaterials;
+
+const enhanceMaterials = materialsForExplorer.map((material) => {
   const { lifecycle, lifecycleBreakdown } = buildLifecycle(material.lis, material.ris, material.cpi);
   const confidenceLevel: ConfidenceLevel =
     material.ris >= 70 ? "High" : material.ris >= 45 ? "Medium" : "Low";
@@ -84,7 +90,7 @@ const enhanceMaterials = localMaterials.map((material, index) => {
     risScore: material.ris,
     cpiScore: material.cpi,
     confidenceLevel,
-    isRegenerative: material.ris >= 50 ? 1 : 0,
+    isRegenerative: material.regenerative ? 1 : 0,
     lifecycle,
     lifecycleBreakdown,
     epdMetadata: [
