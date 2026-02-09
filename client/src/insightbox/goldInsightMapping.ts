@@ -4,7 +4,7 @@
  * No AI, no inference — explicit mapping only.
  */
 
-export type GoldInsightContextId = "airtight_envelope" | "mechanicals_core";
+export type GoldInsightContextId = "airtight_envelope" | "mechanicals_core" | "risk_health_durability";
 
 export interface GoldInsightEntry {
   /** Filename without .md, used in URL and to load content */
@@ -49,6 +49,24 @@ const CONTEXT_TO_SLUGS: Record<GoldInsightContextId, GoldInsightEntry[]> = {
     {
       slug: "Comfort_Complaints_When_Math_Was_Right_but_House_Feels_Wrong",
       title: "Comfort Complaints: When the Math Was Right but the House Feels Wrong",
+    },
+  ],
+  risk_health_durability: [
+    {
+      slug: "Garage_to_House_Air_Leakage_Quiet_Health_Risk",
+      title: "Garage-to-House Air Leakage: A Quiet Health Risk",
+    },
+    {
+      slug: "Thermal_Bridging_Small_Details_Big_Long_Term_Costs",
+      title: "Thermal Bridging: Small Details, Big Long-Term Costs",
+    },
+    {
+      slug: "Commissioning_Most_Underrated_Step_Performance_Homes",
+      title: "Commissioning: The Most Underrated Step in Performance Homes",
+    },
+    {
+      slug: "Moisture_Failures_in_Tight_Homes_Where_They_Actually_Start",
+      title: "Moisture Failures in Tight Homes: Where They Actually Start",
     },
   ],
 };

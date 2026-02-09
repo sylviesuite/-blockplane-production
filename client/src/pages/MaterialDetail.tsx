@@ -42,6 +42,19 @@ function isMechanicalRelatedMaterial(material: LocalMaterial): boolean {
   );
 }
 
+function isRiskRelatedMaterial(material: LocalMaterial): boolean {
+  if (isEnvelopeRelatedMaterial(material) || isMechanicalRelatedMaterial(material)) return true;
+  const c = material.category.toLowerCase();
+  const bt = material.context?.buildingType?.toLowerCase() ?? "";
+  const tags = (material.tags ?? []).map((t) => t.toLowerCase());
+  const riskKeywords = ["garage", "structural", "thermal bridge", "commissioning", "installation", "durability", "sheathing", "foundation", "roof"];
+  return (
+    riskKeywords.some((k) => c.includes(k)) ||
+    riskKeywords.some((k) => tags.some((t) => t.includes(k))) ||
+    riskKeywords.some((k) => bt.includes(k))
+  );
+}
+
 function useMaterialParams() {
   const [match, params] = useRoute<MaterialParams>("/materials/:id");
   return match ? params : null;
@@ -478,6 +491,14 @@ function getComparisonLabel(
               <RelatedGoldInsights
                 contextId="mechanicals_core"
                 heading="Related insights — mechanical systems & comfort"
+              />
+            </div>
+          )}
+          {isRiskRelatedMaterial(material) && (
+            <div className="mt-6">
+              <RelatedGoldInsights
+                contextId="risk_health_durability"
+                heading="Why this matters — health & long-term durability"
               />
             </div>
           )}
