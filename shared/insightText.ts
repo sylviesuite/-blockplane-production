@@ -31,7 +31,7 @@ export function buildHeuristicInsight(scores: InsightScores): InsightText {
     tone = "optimistic";
     bullets.push(
       "Low lifecycle impact",
-      "High RIS score",
+      "Strong durability and resilience (RIS)",
       "Strong durability and circularity profile"
     );
   } else if (quadrant === "transitional") {
@@ -39,7 +39,7 @@ export function buildHeuristicInsight(scores: InsightScores): InsightText {
     tone = "neutral";
     bullets.push(
       "Moderate LIS",
-      "Improving RIS factors",
+      "Improving durability and resilience (RIS)",
       "Good candidate for upgrades over time"
     );
   } else if (quadrant === "costly") {
@@ -54,7 +54,7 @@ export function buildHeuristicInsight(scores: InsightScores): InsightText {
     headline = "High impact—consider alternatives";
     tone = "caution";
     bullets.push(
-      "Low RIS score",
+      "Low durability and resilience (RIS)",
       "Weak Paris alignment",
       "Significant lifecycle emissions"
     );

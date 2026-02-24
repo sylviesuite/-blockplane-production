@@ -1,177 +1,89 @@
 ## InsightBox — Cork Board vs EPS Rigid Insulation
 
 ### At a glance
-This comparison contrasts **cork board insulation** with **EPS rigid foam**, two options for exterior or under-slab thermal control that represent different sustainability priorities.
 
-Cork board centers on bio-based inputs and moisture openness, while EPS leans on low cost, high R-value, and industry familiarity.
+This comparison looks at two options for **exterior or under-slab thermal control**:
+- **Cork board** — expanded cork granules pressed into rigid boards; 100% bio-based; vapor-open; moisture-tolerant; moderate R-value per inch; fire-resistant; carbon storage
+- **EPS (expanded polystyrene)** — petroleum-derived beads expanded and fused; pentane blowing agents; higher R-value per inch than cork; vapor-permeable when unfaced; low cost; industry-familiar
 
----
+Both serve as exterior or under-slab insulation. Differences show up in **embodied carbon, vapor openness, moisture behavior, fire performance, and cost**.
 
-### Thermal performance & moisture behavior
-- **EPS** delivers higher R-value per inch and resists bulk moisture when kept dry, but its vapor resistance and synthetic skin can trap incidental water if detailing is poor.
-- **Cork board** has moderate R-value but stays vapor-open, tolerate moisture swings, and maintains performance without high thermal bridging.
-
-Cork board also contributes acoustic damping, while EPS shines in compact, straightforward assemblies—especially below-grade or under slabs.
+**Core idea:**  
+Cork typically wins on **renewable origin, carbon storage, vapor openness, and fire behavior**; EPS wins on **first cost and R per inch**. Use cork where ecology and moisture tolerance matter; use EPS when budget and nominal R dominate.
 
 ---
 
-### Embodied carbon & material sourcing
-- **EPS** is petroleum-derived and typically uses pentane blowing agents, giving it a moderate embodied carbon that remains competitive because of efficient manufacturing.
-- **Cork** is 100% bio-based, often sourced from regional forestry by-products, and stores carbon for the life of the building.
+### Lifecycle Impact (LIS)
 
-While EPS remains cost-effective at scale, cork board is easier to reposition if assemblies change, and its clean chemistry simplifies renovation or demolition.
+**Embodied carbon & sourcing**
+- **Cork** is **100% bio-based**, often sourced from forestry by-products; it **stores biogenic carbon** for the life of the building. Low toxicity and clean end-of-life options (reuse, energy recovery). No blowing agents.
+- **EPS** is **petroleum-derived**; beads expanded with **pentane** (moderate GWP). Manufacturing is efficient, so embodied carbon stays **moderate** versus other foams; recycling streams remain limited and often contaminated.
 
----
+**Blowing agents & long-term impact**
+- EPS relies on **pentane or CO₂**; gases either escape early with limited impact or stay locked—long-term carbon cost is smaller than XPS-style HFCs. Cork has **no blowing agents** and no long-term off-gassing from insulation chemistry.
 
-### Durability & end-of-life considerations
-- **Cork** resists fire, molds slowly when kept dry, and can be recycled or safely landfilled with minimal off-gassing.
-- **EPS** resists rot and pests but can melt or deform under heat, and recycling options remain limited; mechanical damage to panels also affects thermal continuity.
-
-Both materials support long service life, but cork’s repairability and reusability push its regenerative score upward when assemblies stay dry and well-vented.
+> **LIS takeaway:**  
+> Cork typically scores **substantially better on lifecycle emissions** where carbon storage and renewable origin are valued. EPS offers **moderate embodied carbon** and higher R per inch at lower cost; it remains a practical choice when budget and availability dominate.
 
 ---
 
-### Cost context & practical tradeoffs
-- **EPS** remains the lowest-cost option upfront, with broad availability and easy handling for crews.
-- **Cork board** costs more and requires care to avoid damage, but it reduces reliance on HVAC recapitalization, and its premium can be offset by improved resilience.
+### Regenerative Impact (RIS)
 
-EPS works well when budgets are tight and assemblies stay dry; cork earns better CPI when moisture risk, fire safety, or occupant comfort dominate.
+**Moisture buffering & vapor openness**
+- **Cork** is **vapor-open and moisture-tolerant**; it can **buffer small moisture swings** and let assemblies dry. Lower risk of trapped moisture compared to foam-first systems; dimensionally stable when kept in appropriate use.
+- **EPS** has low water absorption when kept dry but is more vapor-resistant when faced; **mis-detailed assemblies** can slow drying. Performance depends on keeping it dry and protected; vapor-permeable when unfaced.
+
+**Fire behavior**
+- **Cork** is **naturally fire-resistant**; it chars rather than melts or drips and does not off-gas toxic smoke like many foams.
+- **EPS** is **combustible**; it can deform under heat and typically requires careful detailing in fire zones and protection (e.g. thermal barrier) per code.
+
+**Durability & end of life**
+- Cork resists mold when kept dry, can be **recycled or safely landfilled** with minimal off-gassing, and is **easier to reposition or reuse** if assemblies change. EPS resists rot and pests but **recycling remains limited**; mechanical damage affects thermal continuity; panels are less easily reused.
+
+> **RIS takeaway:**  
+> Cork often ranks higher for **fire behavior, vapor openness, moisture buffering, and end-of-life alignment**. EPS is a better fit where **cost, R per inch, and code-familiar details** are priorities and moisture/fire risk are managed.
 
 ---
 
-### Summary takeaway
-Choose **EPS** when the priority is low first cost, high nominal R-value, and a well-understood installation workflow.
+### Cost & CPI (Cost Per Impact)
 
-Choose **cork board** when moisture tolerance, carbon storage, and long-term adaptability are key—even if the initial material cost is higher.
+**Up-front cost**
+- **EPS** is typically the **lowest-cost option** upfront, with broad availability and easy handling for most crews; many code-listed products and details.
+- **Cork board** **costs more** and can have **longer lead times** and less availability in some North American markets; it requires care to avoid damage during handling and install.
 
-BlockPlane awards cork more regenerative credit while still noting EPS’s practical strengths in typical North American projects.
-# Gold InsightBox — Cork Board vs EPS Rigid Insulation
+**Return on investment**
+- Cork’s premium can **pay off** when carbon storage, moisture tolerance, fire safety, or occupant comfort are valued—and when resilience or reduced HVAC recapitalization is part of the equation.
+- EPS **delivers better R-per-dollar** when budgets are tight and assemblies stay dry and well-detailed; it works well in compact, straightforward assemblies (e.g. below-grade, under slabs).
 
-## Summary Takeaway
+> **CPI takeaway:**  
+> EPS usually **wins on upfront cost and R per dollar**. Cork often delivers **better cost-per-impact** when **ecological impact, moisture tolerance, fire safety, or long-term adaptability** are priorities and higher initial cost is acceptable.
 
-Cork board and EPS both serve as exterior or under-slab insulation, but they sit on opposite ends of the sustainability spectrum. EPS optimizes for cost and availability, while cork optimizes for carbon storage, fire behavior, and end-of-life safety. For projects where ecological impact and material cleanliness matter, cork board often delivers qualitatively different value than foam.
+---
 
-## What’s Being Compared
+### Performance notes
 
-### Cork Board Insulation
+- **R-value per inch:** **EPS** typically delivers **higher R per inch** than cork. Cork has **moderate R-value per inch** (similar to many natural insulations); for the same nominal R, cork usually requires **greater thickness**. Both can support long service life when used within their limits.
+- **Moisture & drying:** **Cork** is **vapor-open** and helps assemblies dry while insulating; it tolerates moisture swings and maintains performance without relying on perfect vapor control. **EPS** resists bulk moisture when kept dry but can trap incidental water if detailing is poor; vapor-permeable unfaced EPS can allow some drying.
+- **Fire & durability:** Cork contributes **acoustic damping** and is **fire-resistant**; EPS is combustible and needs protection. Both support long life if kept dry and protected as required; cork’s repairability and reusability favor it in regenerative scoring.
 
-- Expanded cork granules pressed into rigid boards
-- 100% bio-based, often sourced from forestry by-products
-- Vapor-open, moisture-tolerant, and dimensionally stable
-- Examples: Amorim boards used in European high-performance builds
+---
 
-### EPS (Expanded Polystyrene) Rigid Insulation
+### Installation & risk
 
-- Petroleum-derived beads expanded and fused into boards
-- Commonly used under slabs and as exterior insulation
-- Variants include Type I–II, geofoam, and drainage boards
+- **Cork:** Heavier boards but straightforward to handle; works well in EIFS, exterior insulation, and select under-slab applications. **Risks:** sourcing, lead times, crew familiarity—mitigate with early specification and clear installation guidance.
+- **EPS:** Familiar to contractors; cuts easily but can be crushed. **Risks:** pests, solvents, and damage in exposed areas—mitigate with protection layers and robust detailing. Both require appropriate adhesives and continuity at joints.
 
-## Lifecycle & Carbon Impact (LIS)
+---
 
-### Cork Board
+### Summary Takeaway
 
-- Bio-based and renewable feedstock
-- Significant biogenic carbon storage
-- Low toxicity and clean end-of-life options (reuse, energy recovery)
+- **Cork board**:
+  - Choose when **carbon storage, vapor openness, moisture tolerance, fire safety, or long-term adaptability** are priorities
+  - 100% bio-based; vapor-open; moisture-tolerant; fire-resistant; cleaner end-of-life. Higher upfront cost; moderate R per inch; greater thickness for same R
 
-### EPS
+- **EPS**:
+  - Choose when **budget and availability dominate**, or when **higher R per inch** and a well-understood, code-proven workflow are needed
+  - Lowest first cost; higher R per inch; broad supply. Moisture, pest, and protection detailing must be managed; combustible—detail for fire zones
 
-- Fossil-derived polymer chemistry
-- Moderate embodied carbon
-- Limited and often contaminated recycling streams
-
-### LIS Signal
-
-Cork typically scores substantially better on lifecycle emissions, especially where carbon storage is valued.
-
-## Regenerative & Resilience Considerations (RIS)
-
-### Cork Board
-
-- Naturally fire-resistant; chars rather than melts or drips
-- Does not off-gas toxic smoke like many foams
-- Vapor-open and able to buffer small moisture swings
-
-### EPS
-
-- Combustible; requires careful detailing in fire zones
-- Can deform under high heat
-- Limited moisture buffering; performance depends on keeping it dry
-
-### RIS Signal
-
-Cork board ranks higher for fire behavior, indoor air quality potential, and ecological alignment.
-
-## Thermal Performance Reality
-
-### Cork Board
-
-- Moderate R-value per inch (similar to many natural insulations)
-- Stable performance across time and temperature
-- Functions as both insulation and acoustic layer
-
-### EPS
-
-- Higher R-value per inch than cork
-- Thermal performance remains stable if kept dry and protected
-- Well-characterized behavior in standard details
-
-### Key Trade-off
-
-EPS wins on pure R-per-dollar; cork wins on carbon, ecology, and multi-function.
-
-## Moisture & Assembly Behavior
-
-### Cork Board
-
-- Vapor-open and moisture-tolerant
-- Helps assemblies dry while still insulating
-- Lower risk of trapped moisture compared to foam-first systems
-
-### EPS
-
-- Low water absorption but not immune
-- Often paired with drainage or membrane layers
-- Can slow drying if mis-detailed
-
-## Cost & Constructability
-
-### Cork Board
-
-- Higher cost and less available in many North American markets
-- Heavier boards but straightforward to handle
-- Works well in EIFS, exterior insulation, and select under-slab applications
-
-### EPS
-
-- Low cost, ubiquitous supply
-- Familiar to contractors
-- Many code-listed products and details
-
-## Failure Modes & Risk
-
-### Cork Board
-
-- Risk: sourcing, lead times, and crew familiarity
-- Mitigation: early specification and clear installation guidance
-
-### EPS
-
-- Risk: pests, solvents, and damage in exposed areas
-- Mitigation: protection layers and robust detailing
-
-## Decision Guidance
-
-- **Choose Cork Board if**:
-  * Carbon and ecological impact are top priorities
-  * Vapor-open, low-toxicity assemblies are desired
-  * Higher upfront cost is acceptable for long-term alignment with regenerative goals
-
-- **Choose EPS if**:
-  * Budget and availability dominate
-  * A widely understood, code-proven solution is needed
-  * Moisture, pest, and protection detailing can be managed carefully
-
-## BlockPlane Lens
-
-In BlockPlane scoring, cork board tends to land in a High-RIS / Low-LIS tier, especially in deep sustainability projects. EPS typically scores Transitional—functional and affordable, but it needs strategic use to align with long-term carbon and material-health goals.
+**Builder's rule of thumb:**  
+> *Cork buys carbon storage, vapor openness, and fire behavior. EPS buys R per dollar and familiarity—use it where that’s enough.*

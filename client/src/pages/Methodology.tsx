@@ -26,25 +26,17 @@ export default function Methodology() {
         <hr />
         <h3>### Regenerative Impact Score (RIS)</h3>
         <p>
-          RIS estimates a material’s <strong>potential contribution to regenerative outcomes</strong> — meaning its ability to move beyond harm reduction toward restoration or renewal.
+          Regenerative Impact Score (RIS) is a <strong>durability and resilience heuristic</strong>.
         </p>
         <p>
-          RIS focuses on <em>relative potential</em>, not guaranteed outcomes.
+          RIS looks at <strong>moisture behavior, repairability, and how forgiving the assembly is when something goes wrong</strong>.
         </p>
-        <p>RIS may consider indicators such as:</p>
-        <ul>
-          <li>carbon sequestration or long-term carbon storage (where applicable)</li>
-          <li>circularity and end-of-life reintegration</li>
-          <li>durability and resistance to premature replacement</li>
-          <li>alignment with bio-based or low-toxicity material systems</li>
-        </ul>
         <p>RIS is expressed on a <strong>0–100 comparative scale</strong>.</p>
         <p><strong>Important limitations:</strong></p>
         <p>RIS is not a performance, safety, or compliance rating. It does not evaluate:</p>
         <ul>
           <li>structural capacity</li>
           <li>fire resistance</li>
-          <li>moisture behavior</li>
           <li>installation quality</li>
           <li>regional construction practices</li>
         </ul>

@@ -11,17 +11,17 @@ interface WelcomeModalProps {
 const ONBOARDING_STEPS = [
   {
     title: "Welcome to BlockPlane",
-    description: "Compare building materials by their environmental impact and regenerative potential.",
+    description: "Compare building materials by their environmental impact and RIS (durability and resilience).",
     image: "🌿",
     details: [
       "View lifecycle carbon emissions (LIS)",
-      "Assess regenerative impact (RIS)",
+      "Assess durability and resilience (RIS)",
       "Compare cost-performance (CPI)",
     ],
   },
   {
     title: "Understanding the Quadrants",
-    description: "Materials are classified into four categories based on their LIS and RIS scores.",
+    description: "Materials are classified into four categories based on their LIS and RIS (durability and resilience) scores.",
     image: "📊",
     details: [
       "Regenerative: Low impact + High regeneration (Best)",

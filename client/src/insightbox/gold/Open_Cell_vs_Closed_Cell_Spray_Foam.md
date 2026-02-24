@@ -2,98 +2,83 @@
 
 ### At a glance
 
-This comparison looks at **open-cell spray polyurethane foam (ocSPF)** versus **closed-cell spray polyurethane foam (ccSPF)** for walls, roofs, and tricky air-sealing locations.
+This comparison looks at two site-applied spray foam options:
+- **Open-cell foam (ocSPF)** — lower density, vapor-permeable, lower R per inch; less material per volume
+- **Closed-cell foam (ccSPF)** — higher density, vapor-resistant, higher R per inch; can add structural stiffness
 
-Both are site-mixed petrochemical foams that deliver strong air-sealing. The real differences show up in **density, R-value per inch, moisture behavior, and long-term risk**.
+Both are petrochemical foams that seal air effectively. Differences show up in **embodied impact, R per inch, moisture behavior, and cost**.
+
+**Core idea:**  
+Open-cell usually has lower embodied impact and cost; closed-cell delivers more R per inch and can act as air + vapor control in one layer—use it where space or moisture conditions justify the premium.
 
 ---
 
 ### Lifecycle Impact (LIS)
 
-**Embodied energy & carbon**
+**Embodied impact & material intensity**
+- Closed-cell: **higher density**, more **material per inch**; historically **high-GWP blowing agents** (varies by product and era); often **among the highest embodied carbon per inch of R** in common insulations.
+- Open-cell: **lower density**, less material per volume; **lower R per inch** but typically **lower embodied impact and material intensity** than closed-cell. Still petrochemical and energy-intensive compared to cellulose or mineral wool.
 
-- **Closed-Cell Foam**
-  - Higher density and more material per inch.
-  - Historically used **high-GWP blowing agents** (varies by product and era).
-  - Typically **highest embodied carbon per inch of R** in common insulation choices.
-- **Open-Cell Foam**
-  - Lower density; uses less material for the same volume.
-  - Lower R-value per inch but usually **lower embodied impact** than closed-cell.
-  - Still petrochemical and energy intensive compared to cellulose or mineral wool.
+**Thermal performance & install**
+- Closed-cell delivers **more R per inch**; open-cell needs greater thickness for the same R. Both arrive as components, are mixed on-site with heated equipment, and need specialized rigs and trained crews; install is energy-intensive. Both are bonded to framing and sheathing—demolition and recovery are difficult; typically mixed construction waste.
 
-**Transport & installation**
-
-- Both arrive as chemical components in drums and are mixed on-site with heated equipment.
-- Both require **specialized rigs, trained crews, and careful quality control**.
-- Installation is energy-intensive and can generate waste during trimming.
-
-**End of life**
-
-- Both foams are **bonded to framing and sheathing**, making selective demolition and material recovery difficult.
-- Typically become mixed construction waste with limited recycling options.
-
-> **LIS verdict:**  
-> **Open-cell foam has a lower lifecycle burden** than closed-cell, but both are high-impact compared to bio-based or mineral insulations.
+> **LIS takeaway:**  
+> Open-cell typically has **lower lifecycle burden** than closed-cell (density, blowing agents, material intensity per R). Both are high-impact compared to bio-based or mineral options.
 
 ---
 
 ### Regenerative Impact (RIS)
 
-**Moisture & drying behavior**
+**Moisture & vapor**
+- Open-cell: **vapor-permeable**; assemblies can **dry through the foam**. Air barrier but not a vapor barrier; can absorb some moisture—keep out of bulk-water paths.
+- Closed-cell: **vapor-resistant**; can act as air and vapor control in one layer. Useful as a combined water/air/vapor barrier where appropriate, but can **trap moisture** if placement or drying paths are wrong.
 
-- **Open-Cell Foam**
-  - Vapor-permeable; can allow assemblies to **dry through the foam**.
-  - Acts as an air barrier but not a true vapor barrier.
-  - Can absorb and hold some moisture; must be kept out of bulk-water paths.
-- **Closed-Cell Foam**
-  - **Vapor-resistant**; can act as both air and vapor control layer.
-  - Useful where you need a **combined water, air, and vapor barrier**, but can also **trap moisture** if placed incorrectly.
-  - Adds some structural stiffness to assemblies.
+**Structural & fire**
+- Closed-cell **adds stiffness** to assemblies (e.g. shear, racking); open-cell does not. Both rely on isocyanate chemistry—**installer health risks** if PPE and ventilation are poor. Fire performance varies by product and thickness; closed-cell is often used where a thermal barrier or ignition barrier is required—check codes and listings.
 
-**Flexibility, repair, and health**
+**Repair & reversibility**
+- Both make **later changes** (wiring, plumbing) more invasive. Open-cell is easier to cut and remove for repairs; closed-cell’s rigidity makes small mistakes harder to fix after cure.
 
-- Both foams:
-  - Rely on isocyanate chemistry with **installer health risks** if PPE and ventilation are poor.
-  - Create assemblies that are **hard to modify later** (wiring/plumbing changes are more invasive).
-- Open-cell is easier to cut and remove if repairs are needed.
-- Closed-cell’s rigidity makes small mistakes harder to fix after curing.
+**Risk if misapplied**
+- Closed-cell can **trap moisture** and stress assemblies when drying paths are ignored or dew point is wrong. Open-cell in **bulk-water paths** (e.g. below-grade, flood zone) can absorb water and lose R; keep out of direct wetting.
 
-> **RIS verdict:**  
-> **Open-cell foam scores slightly higher** on regenerative metrics due to vapor permeability and easier reversibility. Closed-cell excels only where a robust, single-layer control strategy is absolutely necessary and very carefully detailed.
+> **RIS takeaway:**  
+> Open-cell often scores better on **vapor permeability, drying, and reversibility**. Closed-cell fits where **air/vapor/structural control in one layer** is needed and detailing is careful; misapplied, both can increase moisture or durability risk.
 
 ---
 
 ### Cost & CPI (Cost Per Impact)
 
-**Up-front cost**
+**Cost per R & up-front**
+- Open-cell: **lower cost per filled cavity** and **lower cost per R** where cavity depth allows; often competitive with other high-performance options when air-sealing is counted.
+- Closed-cell: **highest installed cost per inch** and per R; often used thin to meet code or as a flash-and-batt layer.
 
-- **Closed-Cell Foam**
-  - **Highest installed cost per inch**.
-  - Often used thinly to meet code or as a “flash-and-batt” layer.
-- **Open-Cell Foam**
-  - Lower cost per filled cavity than closed-cell.
-  - Often competitive with other high-performance assemblies when air-sealing benefits are counted.
+**When the closed-cell premium pays off**
+- Closed-cell’s **higher R per inch** pays off in **space-constrained locations** (rim joists, narrow cavities, low-slope roofs) or where a single-layer vapor/structural benefit is required. Open-cell often delivers strong performance at lower cost where cavity depth allows and vapor openness is acceptable.
 
-**Energy savings & payback**
+> **CPI takeaway:**  
+> Open-cell typically has **better cost per R** and lower upfront cost. Closed-cell tends to pay off where **space is tight or vapor/structural conditions** justify the premium.
 
-- Both can dramatically reduce air leakage when installed correctly.
-- Closed-cell’s higher R per inch helps in **space-constrained locations** (rim joists, narrow cavities, low-slope roofs).
-- Open-cell can achieve strong performance at lower cost where cavity depth is available.
+---
 
-> **CPI verdict:**  
-> **Open-cell foam usually delivers better cost-per-impact** when foam is already being used. Closed-cell only makes sense where **space is tight or moisture conditions demand it**.
+### Performance notes
+
+- Blowing-agent GWP and embodied carbon vary by product and vintage; check EPDs. For closed-cell, **dew point and drying paths** matter—incorrect placement can trap moisture. Verify drying direction (interior or exterior) for the assembly.
+
+### Installation & risk
+
+- Both need **trained crews, PPE, and ventilation**; isocyanate exposure is a real risk. Quality depends on temperature, humidity, and application technique; trimming generates waste. Closed-cell mistakes are harder to correct after cure; open-cell is easier to cut and patch.
 
 ---
 
 ### Summary Takeaway
 
-- **If you’re already in foam territory:**
-  - Default to **open-cell spray foam** for most assemblies where you want air control and can allow vapor to move.
-- **Reserve closed-cell for:**
-  - **Rim joists, below-grade, flood or high-exposure zones, and extreme space constraints** where a thin, robust water/air/vapor layer is required and detailing is carefully engineered.
-- **Design guidance:**
-  - Use spray foam as a **surgical tool**, not a blanket approach.
-  - Double-check dew point and drying paths whenever closed-cell is part of the design.
+- **Open-cell foam**:
+  - When **vapor openness, drying, and lower embodied impact** matter; air control with vapor-permeable layer
+  - Lower cost per R and per filled cavity; easier to repair or modify
+- **Closed-cell foam**:
+  - When **R per inch, vapor control, or structural contribution** are required (e.g. rim joists, below-grade, tight cavities, flood zones)
+  - Higher cost per R; dew point and drying paths must be designed
 
 **Builder’s rule of thumb:**  
-> *If you must use foam, start with open-cell. Reach for closed-cell only when the building physics truly leave you no other choice.*
+> *Open-cell for vapor openness and lower embodied impact; closed-cell when R per inch, vapor control, or structural benefit are required by design or code.*

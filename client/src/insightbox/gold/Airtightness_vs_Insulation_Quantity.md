@@ -2,75 +2,68 @@
 
 ### At a glance
 
-This comparison examines whether it is more effective to invest in **greater airtightness** or simply add **more insulation** in residential buildings.
+This comparison looks at two common upgrade paths:
+- **Improving airtightness** (continuous barrier, detailing)
+- **Adding more insulation** (thicker assemblies, more material)
 
-Both reduce energy use, but they act on different failure modes. Insulation slows heat flow; airtightness stops uncontrolled air movement that carries heat and moisture. In real buildings, air leakage often dominates performance losses long before insulation levels are maxed out.
+Both reduce energy use. Insulation slows heat flow; airtightness stops uncontrolled air movement that carries heat and moisture. In many buildings, leakage limits performance before insulation levels do.
 
-**Common misconception**
-- "If I just add more insulation, performance will follow."
-
-**Reality**
-- Past a certain point, **air leakage becomes the limiting factor**, and additional insulation delivers diminishing returns.
+**Core idea:**  
+Insulation only works when air isn’t bypassing it.  
+Tighten the envelope first; then insulation pays off.
 
 ---
 
 ### Lifecycle Impact (LIS)
 
-**Embodied impact**
-- Improving airtightness typically relies on **tapes, membranes, gaskets, and detailing**, which add relatively little embodied carbon compared to large increases in insulation thickness.
-- Adding insulation—especially petrochemical foams or high-density mineral products—can significantly increase embodied energy and CO₂ per marginal R-value gained.
-
-**Operational performance**
-- Air leakage drives heating and cooling losses, especially in cold and mixed climates.
-- A moderately insulated but airtight building often outperforms a highly insulated but leaky one over its service life.
-
-**Durability**
-- Airtight assemblies reduce moisture transport into walls and roofs, lowering long-term risk of condensation and material degradation.
+**Embodied impact trade-off**
+- Airtightness relies on **tapes, membranes, gaskets, and detailing** — small amounts of material compared to big jumps in insulation thickness.
+- Adding insulation (especially foams or dense mineral products) increases **embodied energy and carbon per marginal R-value**.
 
 > **LIS takeaway:**  
-> Improving airtightness usually delivers **more lifecycle benefit per unit of added material impact** than simply increasing insulation thickness.
+> Air-sealing materials typically add **less embodied impact per unit of performance gain** than adding insulation material.
 
 ---
 
 ### Regenerative Impact (RIS)
 
-**Resilience & durability**
-- Airtight buildings maintain interior comfort longer during power outages ("passive survivability").
-- Reduced moisture migration protects framing, insulation, and finishes over decades.
+**Moisture control & durability**
+- Less **moisture migration** into assemblies protects framing, insulation, and finishes over time.
 
-**Material efficiency**
-- Airtightness allows designers to **right-size insulation**, avoiding unnecessary material extraction.
-- Fewer materials, longer service life, and lower replacement rates align with regenerative principles.
-
-**System compatibility**
-- Airtightness improves the effectiveness of **ERVs/HRVs**, heat pumps, and low-temperature heating systems.
-- Leaky buildings undermine even the best mechanical systems.
+**Resilience during power loss**
+- Airtight buildings **hold comfort longer during outages** (passive survivability).
 
 > **RIS takeaway:**  
-> Airtightness supports **durability, resilience, and material restraint**, all core regenerative goals.
+> Airtightness supports **moisture control, durability, and resilience during power loss**.
 
 ---
 
 ### Cost & CPI (Cost Per Impact)
 
-**Up-front cost**
-- Airtightness improvements often cost **less than large insulation upgrades**, especially when integrated early in design and construction.
-- Tapes and membranes are inexpensive compared to thick foam or specialty insulation.
-
-**Cost-per-performance**
-- Airtightness delivers **predictable performance gains** across climates.
-- Extra insulation without airtightness can yield inconsistent results depending on workmanship and weather exposure.
+**Cost per performance**
+- Airtightness usually costs **less than big insulation upgrades** when planned early; tapes, membranes, and detailing labor compare favorably to thick foam or extra cavity fill.
+- Tightening the envelope often gives **predictable comfort gains per dollar**; extra insulation in a leaky assembly often does not. Blower door testing measures leakage; R-value alone does not predict real-world performance.
 
 > **CPI takeaway:**  
-> Dollar for dollar, airtightness almost always produces **better cost-per-impact** than adding insulation beyond code-minimum levels.
+> Where **leakage dominates losses**, air sealing typically delivers **more comfort per dollar** than adding R. Where the envelope is already tight, adding insulation to meet thermal targets is the next step.
+
+---
+
+### Performance notes
+
+- Blower door testing and targets (e.g. ACH50) make airtightness measurable; R-value alone does not predict real-world performance.
+
+### Installation & risk
+
+- Airtightness needs a **continuous barrier** (sheathing, membranes, tapes, gaskets) and trade coordination; one gap can undermine the strategy.
+- Right-size insulation after the envelope is tight; avoid overbuilding to compensate for leaks.
 
 ---
 
 ### Summary Takeaway
 
-- **Start with airtightness.**
-- Use insulation to meet thermal targets, not to compensate for leaks.
-- Once a building is reasonably airtight, additional insulation becomes more valuable and more durable.
+- **Invest in airtightness first** when **leakage dominates losses** (blower door and observation guide the call).
+- **Add insulation** when the **enclosure is already tight**, to meet thermal targets.
 
 **Builder's rule of thumb:**  
-> *A tight building with "enough" insulation beats a leaky building with "a lot" of insulation — every time.*
+> *Seal first when leakage is the weak link. Add R when air control is already solid.*

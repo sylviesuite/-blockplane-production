@@ -311,7 +311,7 @@ const materialRecommendations = enhanceMaterials.slice(0, 3).map((material) => (
   costDelta: -Math.max(0, parseFloat(material.costPerUnit) * 0.1),
   risDelta: Math.round(material.risScore * 0.1),
   summary: `${material.name} offers a cleaner lifecycle and higher RIS lift.`,
-  reasons: ["Lower carbon impact", "Higher regenerative score"],
+  reasons: ["Lower carbon impact", "Higher durability and resilience (RIS)"],
   confidence: material.confidenceLevel === "High" ? 80 : material.confidenceLevel === "Medium" ? 60 : 30,
 }));
 

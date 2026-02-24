@@ -7,12 +7,12 @@ Dense-pack cellulose and fiberglass batts can both meet code-minimum R-values on
 ## Lifecycle Impact (LIS perspective)
 
 ### Embodied Carbon
-- Cellulose is primarily recycled newsprint/paper blended with borate or ammonium sulfate treatments; embodied carbon is very low—often among the best-in-class of conventional insulations.
+- Cellulose is primarily recycled newsprint/paper blended with borate or ammonium sulfate treatments. Documented values: density ~60 kg/m³ (50–80), thermal conductivity ~0.040 W/m·K (0.038–0.045), R-value ~3.5 per inch (3.2–3.8); embodied energy ~4.5 MJ/kg (4–5 MJ/kg), GWP ~0.19 kg CO₂e/kg (0.15–0.20)—among the best-in-class of conventional insulations.
 - Fiberglass batts require melting sand and recycled glass at high temperatures; embodied energy and carbon are significantly higher per unit of R even when recycled cullet is used.
 
 ### Transport & Density
-- Cellulose is denser per R-value but ships compacted and is blown in on site, which keeps transport carbon manageable (typically <5 kg CO₂e/m² for regional suppliers).
-- Fiberglass is mostly air in the bag, so even rail-shipped bulk packages carry more CO₂ per R because of larger volumes per unit of insulation.
+- Cellulose is denser per R-value but ships compacted and is blown in on site, which keeps transport carbon manageable for regional suppliers (density ~60 kg/m³ typical, range 50–80; see MATERIAL_cellulose_TODO.md for documented GWP and ranges).
+ - Fiberglass is mostly air in the bag, so even rail-shipped bulk packages carry more CO₂ per R because of larger volumes per unit of insulation.
 
 ### Net Effect
 - Dense-pack cellulose typically delivers a materially lower LIS than fiberglass batts for the same target R-value because of lower manufacture impact and better delivery of rated performance on site.
@@ -74,6 +74,7 @@ Dense-pack cellulose almost always beats fiberglass batts on LIS for the same no
 
 ## Notes & Uncertainty
 
+- **Data notes:** Cellulose numbers here come from recent manufacturer specs and EPDs; see Documentation/MATERIAL_cellulose_TODO.md for exact ranges and sources.
 - Regional manufacturing, blowing agents, and treatment chemistry can shift scores.
 - Moisture safety needs assembly-level evaluation (sheathing type, climate, air/vapor control).
 - Cost comparisons vary regionally; treat price as an input, not a constant.

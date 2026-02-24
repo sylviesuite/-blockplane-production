@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
@@ -23,10 +23,20 @@ import MaterialBrowser from "./pages/MaterialBrowser";
 import APIDocumentation from "./pages/APIDocumentation";
 import GoldInsightPage from "./pages/GoldInsightPage";
 
+/** In dev only: show demo material as default preview for smoother demos/screen recordings. */
+const DEMO_MATERIAL_ID = "spf-stud-wall";
+
+function DefaultRoute() {
+  if (process.env.NODE_ENV === "development") {
+    return <Redirect to={`/materials/${DEMO_MATERIAL_ID}`} />;
+  }
+  return <Home />;
+}
+
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={DefaultRoute} />
       <Route path="/insights/gold/:slug" component={GoldInsightPage} />
       <Route path={"/features"} component={Features} />
       <Route path={"/visuals"} component={Visuals} />

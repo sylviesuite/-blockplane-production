@@ -3,6 +3,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getInsightProvider } from "@/lib/ai/insightProvider";
 import type { InsightProvider } from "@/lib/ai/insightProviderTypes";
 import { Info } from "lucide-react";
+import { formatCPI } from "@shared/scoring";
 import { renderInsightStaticV2 } from "./v2/insightbox-v2.contract";
 import type { InsightBlock } from "./v2/insightbox-v2.contract";
 
@@ -27,6 +28,8 @@ type Status = "idle" | "loading" | "error";
 
 const formatNumber = (value: number | undefined, digits = 1) =>
   value !== undefined && Number.isFinite(value) ? value.toFixed(digits) : "—";
+// CPI uses shared formatter for coherence with MaterialDetail, CSV, PDF
+const formatCpiForSummary = (value: number | undefined) => formatCPI(value);
 
 const formatContextSummary = (context?: InsightBoxV2Props["context"]) => {
   if (!context) return "";
@@ -111,7 +114,7 @@ export function InsightBoxV2({
     const values = [
       `LIS ${formatNumber(lis)}`,
       `RIS ${formatNumber(ris)}`,
-      `CPI ${formatNumber(cpi, 2)}`,
+      `CPI ${formatCpiForSummary(cpi)}`,
     ]
       .filter(Boolean)
       .join(" • ");
@@ -296,8 +299,23 @@ export function InsightBoxV2({
                 </ul>
               </div>
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
-                  RIS drivers
+                <div className="flex items-center gap-1">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-slate-500 dark:text-slate-400">
+                    RIS drivers
+                  </p>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="text-slate-400 cursor-help">
+                        <Info className="h-3 w-3" />
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent sideOffset={5} className="max-w-xs">
+                      Regenerative Impact Score (RIS) is a durability and resilience heuristic. RIS looks at moisture behavior, repairability, and how forgiving the assembly is when something goes wrong.
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5">
+                  Durability • Moisture Behavior • Repairability • Failure Tolerance
                 </p>
                 <ul className="mt-1 space-y-1 text-xs">
                   {staticBlocks.ris_drivers.map((item: InsightBlock) => (

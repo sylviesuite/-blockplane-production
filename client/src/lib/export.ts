@@ -1,12 +1,13 @@
+import { formatCPI } from '@shared/scoring';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 export interface Material {
-  id: number;
+  id: number | string;
   name: string;
   category: string;
-  totalCarbon: number;
-  functionalUnit: string;
+  totalCarbon?: number;
+  functionalUnit?: string;
   risScores?: {
     ris: number;
     lis: number;
@@ -14,6 +15,21 @@ export interface Material {
   pricing?: {
     costPerUnit: number;
   };
+  /** Cost-Performance Index (2 decimals in exports) */
+  cpi?: number;
+  /** Top-level LIS/RIS when risScores not used */
+  lis?: number;
+  ris?: number;
+  /** Cost per unit when pricing not used */
+  cost?: number;
+  /** Benchmark reference label */
+  benchmarkReference?: string;
+  /** Insight summary for PDF (first material with this is used) */
+  insightSummary?: string;
+  /** Whether insight is static vs dynamic */
+  insightStatic?: boolean;
+  /** Better alternatives for PDF (first material with this is used) */
+  betterAlternatives?: { name: string; reason: string; cpi?: number }[];
 }
 
 /**
@@ -39,6 +55,46 @@ export async function exportChartToPNG(
   link.click();
 }
 
+/** Format number for export: no null, no raw floats. CPI uses formatCPI. */
+function fmtNum(value: number | undefined | null, decimals: number): string {
+  if (value == null || !Number.isFinite(value)) return '';
+  return Number(value).toFixed(decimals);
+}
+
+/** CPI column index in CSV row (for tests). */
+export const CSV_CPI_COLUMN_INDEX = 7;
+
+/**
+ * Build a single CSV row for a material (same logic as export). Used for CPI coherence tests.
+ */
+export function buildCSVRowForMaterial(m: Material): string[] {
+  const lis = m.risScores?.lis ?? m.lis;
+  const ris = m.risScores?.ris ?? m.ris;
+  const price = m.pricing?.costPerUnit ?? m.cost;
+  const carbon = m.totalCarbon ?? (m as any).carbon;
+  const cpiVal = m.cpi ?? (m as any).scores?.cpi;
+  return [
+    m.id ?? '',
+    `"${(m.name ?? (m as any).material ?? '').replace(/"/g, '""')}"`,
+    `"${(m.category ?? '').replace(/"/g, '""')}"`,
+    carbon != null && Number.isFinite(carbon) ? Number(carbon).toFixed(2) : '',
+    m.functionalUnit ?? 'm²',
+    fmtNum(lis, 1),
+    fmtNum(ris, 1),
+    formatCPI(cpiVal, { placeholder: '' }),
+    price != null && Number.isFinite(price) ? Number(price).toFixed(2) : '',
+    (m.benchmarkReference ?? '').replace(/"/g, '""'),
+  ];
+}
+
+/**
+ * CPI string written to the PDF table for a material (for CPI coherence tests).
+ */
+export function getPDFCpiString(m: Material): string {
+  const cpi = m.cpi ?? (m as any).scores?.cpi;
+  return formatCPI(cpi, { placeholder: '—' });
+}
+
 /**
  * Export materials data to CSV
  */
@@ -52,21 +108,14 @@ export function exportMaterialsToCSV(
     'Category',
     'Total Carbon (kg CO₂e)',
     'Functional Unit',
-    'RIS',
     'LIS',
-    'Cost per Unit ($)',
+    'RIS',
+    'CPI',
+    'Price per Unit ($)',
+    'Benchmark Reference',
   ];
 
-  const rows = materials.map(m => [
-    m.id,
-    m.name,
-    m.category,
-    m.totalCarbon.toFixed(2),
-    m.functionalUnit,
-    m.risScores?.ris || 0,
-    m.risScores?.lis || 0,
-    m.pricing?.costPerUnit.toFixed(2) || 'N/A',
-  ]);
+  const rows = materials.map(m => buildCSVRowForMaterial(m));
 
   const csvContent = [
     headers.join(','),
@@ -114,9 +163,13 @@ export async function exportComparisonToPDF(
   
   yPos += 8;
   pdf.setFontSize(10);
+  const carbonVal = (m: Material) => m.totalCarbon ?? (m as any).carbon;
+  const unit = (m: Material) => m.functionalUnit ?? 'm²';
   materials.forEach((m, idx) => {
+    const carbon = carbonVal(m);
+    const carbonStr = carbon != null && Number.isFinite(carbon) ? Number(carbon).toFixed(1) : 'N/A';
     pdf.text(
-      `${idx + 1}. ${m.name} (${m.category}) - ${m.totalCarbon.toFixed(1)} kg CO₂e per ${m.functionalUnit}`,
+      `${idx + 1}. ${m.name} (${m.category ?? ''}) - ${carbonStr} kg CO₂e per ${unit(m)}`,
       margin + 5,
       yPos
     );
@@ -157,7 +210,7 @@ export async function exportComparisonToPDF(
   yPos += 10;
 
   pdf.setFontSize(9);
-  const tableHeaders = ['Material', 'Carbon', 'RIS', 'LIS', 'Cost'];
+  const tableHeaders = ['Material', 'Carbon', 'LIS', 'RIS', 'CPI', 'Price ($)'];
   const colWidth = (pageWidth - 2 * margin) / tableHeaders.length;
 
   // Table header
@@ -168,13 +221,59 @@ export async function exportComparisonToPDF(
 
   // Table rows
   materials.forEach((m) => {
-    pdf.text(m.name.substring(0, 20), margin, yPos);
-    pdf.text(`${m.totalCarbon.toFixed(1)}`, margin + colWidth, yPos);
-    pdf.text(`${m.risScores?.ris || 0}`, margin + 2 * colWidth, yPos);
-    pdf.text(`${m.risScores?.lis || 0}`, margin + 3 * colWidth, yPos);
-    pdf.text(`$${m.pricing?.costPerUnit.toFixed(2) || 'N/A'}`, margin + 4 * colWidth, yPos);
+    const carbon = m.totalCarbon ?? (m as any).carbon;
+    const lis = m.risScores?.lis ?? m.lis;
+    const ris = m.risScores?.ris ?? m.ris;
+    const cpi = m.cpi ?? (m as any).scores?.cpi;
+    const price = m.pricing?.costPerUnit ?? m.cost;
+    pdf.text((m.name ?? '').substring(0, 18), margin, yPos);
+    pdf.text(carbon != null && Number.isFinite(carbon) ? Number(carbon).toFixed(1) : '—', margin + colWidth, yPos);
+    pdf.text(lis != null && Number.isFinite(lis) ? Number(lis).toFixed(1) : '—', margin + 2 * colWidth, yPos);
+    pdf.text(ris != null && Number.isFinite(ris) ? String(Math.round(Number(ris))) : '—', margin + 3 * colWidth, yPos);
+    pdf.text(cpi != null && Number.isFinite(cpi) ? Number(cpi).toFixed(2) : '—', margin + 4 * colWidth, yPos);
+    pdf.text(price != null && Number.isFinite(price) ? `$${Number(price).toFixed(2)}` : 'N/A', margin + 5 * colWidth, yPos);
     yPos += 6;
   });
+
+  // Insight summary (first material with insightSummary)
+  const withInsight = materials.find(m => m.insightSummary);
+  if (withInsight?.insightSummary) {
+    if (yPos + 30 > pageHeight - margin) {
+      pdf.addPage();
+      yPos = margin;
+    }
+    yPos += 8;
+    pdf.setFontSize(12);
+    pdf.text('Insight Summary', margin, yPos);
+    yPos += 6;
+    pdf.setFontSize(9);
+    const insightLines = pdf.splitTextToSize(withInsight.insightSummary, pageWidth - 2 * margin);
+    pdf.text(insightLines, margin, yPos);
+    yPos += insightLines.length * 5 + 4;
+    pdf.setFontSize(8);
+    pdf.text(`Source: ${withInsight.insightStatic === false ? 'dynamic' : 'static'}`, margin, yPos);
+    yPos += 8;
+  }
+
+  // Better Alternatives (first material with betterAlternatives)
+  const withAlts = materials.find(m => m.betterAlternatives?.length);
+  if (withAlts?.betterAlternatives?.length) {
+    if (yPos + 25 > pageHeight - margin) {
+      pdf.addPage();
+      yPos = margin;
+    }
+    yPos += 6;
+    pdf.setFontSize(12);
+    pdf.text('Better Alternatives', margin, yPos);
+    yPos += 6;
+    pdf.setFontSize(9);
+    withAlts.betterAlternatives!.forEach(alt => {
+      const cpiStr = alt.cpi != null && Number.isFinite(alt.cpi) ? ` (CPI ${formatCPI(alt.cpi)})` : '';
+      pdf.text(`${alt.name}${cpiStr}: ${alt.reason}`, margin + 2, yPos);
+      yPos += 5;
+    });
+    yPos += 4;
+  }
 
   // Footer
   pdf.setFontSize(8);
