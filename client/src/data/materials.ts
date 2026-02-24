@@ -56,6 +56,7 @@ export const localMaterials: LocalMaterial[] = [
       buildingType: "Insulation / Infill",
     },
   },
+  // DEMO_MATERIAL: single clean demo flow for builders (price, LIS, RIS, CPI, Better Alternatives, InsightBox v2).
   {
     id: "spf-stud-wall",
     name: "2×6 SPF Stud Wall (Baseline Assembly)",

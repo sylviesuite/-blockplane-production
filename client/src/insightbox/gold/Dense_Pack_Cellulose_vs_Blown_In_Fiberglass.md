@@ -2,103 +2,80 @@
 
 ### At a glance
 
-This comparison looks at **dense-pack cellulose** versus **blown-in fiberglass** for wall cavities and enclosed assemblies.
+This comparison looks at two common cavity-fill options:
+- **Dense-pack cellulose** — recycled paper fiber, borate-treated, installed at high density
+- **Blown-in fiberglass** — glass fiber, blown to lower density
 
-Both are commonly used in new construction and retrofits. The differences show up in **air control, embodied impact, moisture behavior, and real-world performance consistency**.
+Both are used in new construction and retrofits. Differences show up in **air control, embodied impact, moisture behavior, and cost**.
+
+**Core idea:**  
+Cellulose adds air resistance and moisture buffering in one layer; fiberglass insulates only and depends on other layers for air control.
 
 ---
 
 ### Lifecycle Impact (LIS)
 
-**Embodied energy & carbon**
+**Embodied impact**
+- Dense-pack cellulose: **recycled paper fiber** with borate treatment; low manufacturing energy, often regional; acts as a **biogenic carbon store** for the life of the building.
+- Blown-in fiberglass: sand and recycled glass; **higher embodied energy** (melt process); no carbon storage.
 
-- **Dense-Pack Cellulose**
-  - Made primarily from **recycled paper fiber** with borate treatment.
-  - Very low manufacturing energy; often produced regionally.
-  - Acts as a **biogenic carbon store**, locking carbon into the building for decades.
-- **Blown-In Fiberglass**
-  - Made from sand and recycled glass.
-  - Higher melt temperatures than cellulose → **higher embodied energy**.
-  - No carbon storage benefit.
+**Operational performance**
+- Both ship compressed and install with similar equipment; installation energy is low. Cellulose is denser per cavity (slightly higher transport weight). Cellulose can be vacuumed out at end of life; fiberglass is harder to reclaim cleanly.
 
-**Transport & installation**
-
-- Both materials ship compressed and are blown with similar equipment.
-- Cellulose is denser and heavier per cavity, slightly increasing transport weight.
-- Installation energy is low for both.
-
-**End of life**
-
-- **Cellulose** can be vacuumed out and landfilled with relatively low impact.
-- **Fiberglass** is harder to reclaim cleanly and typically becomes mixed waste.
-
-> **LIS verdict:**  
-> **Dense-pack cellulose has a clear lifecycle advantage**, driven by recycled content, carbon storage, and low manufacturing energy.
+> **LIS takeaway:**  
+> Dense-pack cellulose typically has **lower embodied impact** than blown-in fiberglass — recycled content, carbon storage, and low manufacturing energy.
 
 ---
 
 ### Regenerative Impact (RIS)
 
-**Air control & performance**
+**Moisture & durability**
+- Cellulose: **hygroscopic** — absorbs, redistributes, and releases moisture within safe ranges; supports vapor-open assemblies. Resists settling when dense-packed correctly.
+- Fiberglass: does not buffer moisture; air movement through the cavity can carry moisture to cold surfaces. Susceptible to settling if not installed carefully.
 
-- **Dense-Pack Cellulose**
-  - Installed at high density, it **reduces air movement within cavities**.
-  - Helps limit convective looping and thermal bypass.
-  - More forgiving of minor detailing imperfections.
-- **Blown-In Fiberglass**
-  - Highly air-permeable.
-  - Performance depends heavily on **separate air-sealing layers** being flawless.
-  - Susceptible to settling if not installed carefully.
+**Air control & retrofit**
+- Cellulose at high density **reduces air movement in the cavity**; limits convective looping and is more forgiving of minor detailing. Easier to vacuum out and reuse in retrofits.
+- Fiberglass is highly air-permeable; performance depends on **separate air-sealing layers** being done right.
 
-**Moisture behavior**
-
-- **Cellulose**
-  - Hygroscopic: can absorb, redistribute, and release small amounts of moisture.
-  - Supports vapor-open assemblies when kept within safe moisture ranges.
-- **Fiberglass**
-  - Does not buffer moisture.
-  - Air movement through the insulation can carry moisture to cold surfaces.
-
-**Durability & adaptability**
-
-- Dense-pack cellulose resists settling when properly installed.
-- Both materials can be removed for repairs, but cellulose is easier to reclaim and reuse during retrofits.
-
-> **RIS verdict:**  
-> **Dense-pack cellulose scores higher** for air control, moisture buffering, and resilience in real-world assemblies.
+> **RIS takeaway:**  
+> Dense-pack cellulose often offers **better moisture buffering, air control in the cavity, and retrofit friendliness** than blown-in fiberglass.
 
 ---
 
 ### Cost & CPI (Cost Per Impact)
 
 **Up-front cost**
+- Blown-in fiberglass: often **lowest-cost cavity fill**; fast install, crews widely available.
+- Dense-pack cellulose: usually higher cost (material density, install time); needs trained installers to hit density targets.
 
-- **Blown-In Fiberglass**
-  - Often the **lowest-cost cavity insulation**.
-  - Fast installation with widely available crews.
-- **Dense-Pack Cellulose**
-  - Slightly higher cost due to material density and installation time.
-  - Requires trained installers to hit proper density targets.
+**Return on investment**
+- Cellulose combines insulation and air resistance in one layer, so heating and cooling loads can drop without relying only on membranes and tapes.
+- Fiberglass tends to pay off when **budget is tight and air-sealing is already robust**; it performs only when air control elsewhere is excellent.
 
-**Value over time**
+> **CPI takeaway:**  
+> Cellulose typically delivers **better cost-per-impact** where air control and insulation are both goals; fiberglass often wins on **upfront cost** when air-sealing is already in place.
 
-- Cellulose’s air-restricting behavior can reduce heating and cooling loads without relying solely on membranes and tapes.
-- Fiberglass can perform well **only when paired with excellent air-sealing** and quality control.
+---
 
-> **CPI verdict:**  
-> **Cellulose delivers better cost-per-impact** by combining insulation and air-control benefits in one material, even if upfront costs are modestly higher.
+### Performance notes
+
+- Cellulose performance depends on **installed density** (target specs matter); fiberglass performance depends on limiting settling and on air-sealing quality elsewhere. Neither replaces a continuous air barrier when the assembly requires one.
+
+### Installation & risk
+
+- Dense-pack needs the right equipment and technique to avoid overpacking (framing stress) or underpacking (settling, reduced R). Blown-in fiberglass needs careful weight/depth to limit settling. Both require dry cavities and good sequencing.
 
 ---
 
 ### Summary Takeaway
 
-- **Default choice for high-performance walls:**
-  - **Dense-pack cellulose**, especially in cold or mixed climates.
-- **When fiberglass is acceptable:**
-  - Budget-driven projects with **robust, verified air-sealing strategies**.
-- **Design guidance:**
-  - Treat insulation as part of an **air + moisture system**, not a standalone layer.
-  - If using fiberglass, air control must be handled elsewhere — perfectly.
+- **Dense-pack cellulose**:
+  - Preferred for high-performance walls, especially cold or mixed climates
+  - Adds air resistance and moisture buffering in one layer; lower embodied impact
+
+- **Blown-in fiberglass**:
+  - Acceptable when **budget is tight** and air-sealing is robust and verified
+  - Insulates only; air control must be handled elsewhere. Treat insulation as part of the air and moisture system, not a standalone layer.
 
 **Builder’s rule of thumb:**  
-> *Cellulose works with the wall. Fiberglass depends on everything else working perfectly.*
+> *Cellulose works with the wall. Fiberglass depends on everything else being done right.*

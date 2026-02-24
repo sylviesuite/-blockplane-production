@@ -14,8 +14,8 @@ Both are non-combustible and widely available, but they differ in **manufacturin
 
 - **Mineral Wool**
   - Made from **basalt rock or recycled steel slag**, melted and spun into fibers.
-  - Higher manufacturing temperatures → **higher embodied energy** than fiberglass.
-  - Often contains significant recycled industrial waste streams.
+  - Documented values for cavity mineral wool batts: density ≈40 kg/m³ (30–50), thermal conductivity λ ≈0.037 W/m·K (0.035–0.040), **roughly R-4 per inch** (3.8–4.3); embodied energy ≈18 MJ/kg (16–20 MJ/kg), or ≈700 MJ/m³ derived from those ranges.
+  - Higher manufacturing temperatures than fiberglass → **moderate embodied energy** in that band; often contains significant recycled industrial waste streams.
 - **Fiberglass**
   - Made from sand and recycled glass.
   - Lower melt temperatures than mineral wool → **lower embodied energy per unit**.

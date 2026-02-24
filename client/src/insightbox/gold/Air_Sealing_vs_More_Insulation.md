@@ -6,7 +6,7 @@ This comparison looks at two common upgrade strategies:
 - **Adding more insulation**
 - **Improving air sealing**
 
-Both reduce energy use, but they do it in very different ways — and one usually delivers far more value per dollar.
+Both reduce energy use in different ways; in many buildings, air sealing delivers more value per dollar than adding insulation alone.
 
 **Core idea:**  
 Insulation slows heat flow.  
@@ -30,7 +30,7 @@ In most buildings, air sealing comes first.
 - Adding insulation increases material volume, embodied energy, and installation labor.
 
 > **LIS takeaway:**  
-> Air sealing usually delivers **larger performance gains with less material impact** than adding more insulation alone.
+> Air sealing often delivers **larger performance gains with less material impact** than adding more insulation alone.
 
 ---
 
@@ -67,7 +67,18 @@ In most buildings, air sealing comes first.
 - It also reduces the amount of insulation needed to hit performance targets.
 
 > **CPI takeaway:**  
-> If you must choose, air sealing almost always provides **better impact per dollar** than adding insulation.
+> When choosing where to invest first, air sealing typically provides **better impact per dollar** than adding insulation.
+
+---
+
+### Performance notes
+
+- Blower door testing and thermal imaging help prioritize where sealing matters most; insulation R-value alone understates real-world loss when leakage is high.
+
+### Installation & risk
+
+- Air sealing depends on continuity (sealants, tapes, gaskets, membranes) and build sequence; gaps undermine results.
+- Adding insulation to a leaky assembly often yields diminishing returns and can mask moisture and draft issues.
 
 ---
 

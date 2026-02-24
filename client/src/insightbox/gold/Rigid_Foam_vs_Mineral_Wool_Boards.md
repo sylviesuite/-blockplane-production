@@ -16,7 +16,7 @@ Both strategies improve thermal performance by reducing thermal bridging, but th
   - Petrochemical-based insulation.
   - Manufacturing energy varies by type:
     - **EPS:** lower embodied energy, pentane blowing agent.
-    - **XPS:** higher embodied energy; historically high-GWP blowing agents.
+    - **XPS:** documented values density ≈35 kg/m³ (30–45), λ ≈0.030 W/m·K (0.029–0.036), R-5 per inch (R-4.5–5.6), embodied energy ≈90 MJ/kg (80–100); historically high-GWP blowing agents.
     - **Polyiso:** reference values density ~30 kg/m³ (range ~28–32), thermal conductivity ~0.027 W/m·K (~0.025–0.03), R-value ~6.5 per inch (~6–7); embodied energy ~100 MJ/kg (range ~90–110). Foil facers add complexity. R-value can drop at cold temperatures.
   - Overall **higher carbon intensity** than mineral wool.
 - **Mineral Wool Boards**

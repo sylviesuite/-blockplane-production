@@ -408,7 +408,7 @@ export default function MaterialDetailEnhanced() {
                   <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
                     <li>Carbon calculations follow EN 15804 standard</li>
                     <li>Lifecycle stages: A1-A3 (Production), A4 (Transport), A5 (Construction), B (Use), C1-C4 (End of Life)</li>
-                    <li>RIS (Regenerative Impact Score): 0-100 scale, higher = more regenerative</li>
+                    <li>RIS (Regenerative Impact Score): 0-100 scale, higher = better durability and resilience</li>
                     <li>LIS (Life Impact Score): 0-100 scale, lower = less environmental damage</li>
                     <li>Costs are regional averages and may vary by location and supplier</li>
                   </ul>

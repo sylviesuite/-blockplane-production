@@ -1,3 +1,5 @@
+import { formatCPI } from "@shared/scoring";
+
 export type InsightDriversV2 = {
   lis?: string[];
   ris?: string[];
@@ -68,10 +70,10 @@ const buildDriverStatements = (
   } else {
     if (value >= 60) {
       statements.push(`Positive: ${positive}`);
-      statements.push("Maintain regenerative practices to preserve this momentum.");
+      statements.push("Maintain moisture-resilient and repairable practices to preserve this momentum.");
     } else {
       statements.push(`Area to grow: ${negative}`);
-      statements.push("Opportunity: refresh program investments to help RIS improve.");
+      statements.push("Opportunity: improve moisture behavior, repairability, or failure tolerance to lift RIS.");
     }
   }
 
@@ -106,12 +108,12 @@ export function renderInsightStaticV2(input: any): any {
   const typedInput = input as InsightInputV2;
   const { materialName, lis, ris, cpi, drivers } = typedInput;
   const driverHint =
-    drivers?.lis?.[0] ?? drivers?.ris?.[0] ?? drivers?.cpi?.[0] ?? "the current lifecycle profile";
+    drivers?.lis?.[0] ?? drivers?.ris?.[0] ?? drivers?.cpi?.[0] ?? "its lifecycle profile";
 
   const lisTier = describeTier(lis, "LIS");
   const risTier = describeTier(ris, "RIS");
 
-  const takeaway = `${materialName || "This material"} sits in the ${lisTier} LIS tier with ${risTier} regenerative potential, driven by ${driverHint}.`;
+  const takeaway = `${materialName || "This material"} sits in the ${lisTier} LIS tier with ${risTier} durability and resilience, based on ${driverHint}.`;
   const lisDrivers = buildDriverStatements(
     "LIS",
     lis,
@@ -121,11 +123,11 @@ export function renderInsightStaticV2(input: any): any {
   const risDrivers = buildDriverStatements(
     "RIS",
     ris,
-    "higher regenerative strategies such as reclaimed content create lift.",
-    "limited regenerative inputs constrain overall potential."
+    "strong moisture behavior, repairability, and failure tolerance.",
+    "weaker moisture behavior or repairability constrain potential."
   );
-  const cpiExplainer = cpi
-    ? `CPI sits at ${cpi.toFixed(1)}, indicating ${describeTier(cpi, "CPI")} cost intensity for this specification.`
+  const cpiExplainer = cpi !== undefined && Number.isFinite(cpi)
+    ? `CPI sits at ${formatCPI(cpi)}, indicating ${describeTier(cpi, "CPI")} cost intensity for this specification.`
     : "CPI data unavailable; confirm cost estimates before committing.";
   const confidence = buildConfidenceNotes(lis, ris, cpi);
   const next_actions = buildNextActions(materialName);

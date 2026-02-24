@@ -333,7 +333,7 @@ export default function ProjectAnalysis() {
                   <div className="text-2xl font-bold">
                     {projectSummary.avgRIS.toFixed(0)}
                   </div>
-                  <p className="text-xs text-gray-600 mt-1">regenerative score</p>
+                  <p className="text-xs text-gray-600 mt-1">durability and resilience (RIS)</p>
                 </CardContent>
               </Card>
 

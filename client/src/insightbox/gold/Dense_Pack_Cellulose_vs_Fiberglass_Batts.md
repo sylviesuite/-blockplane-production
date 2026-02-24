@@ -1,75 +1,84 @@
 ## InsightBox — Dense-Pack Cellulose vs Fiberglass Batts
 
 ### At a glance
-This comparison looks at **dense-pack cellulose insulation** versus **fiberglass batt insulation** in wood-framed wall and roof assemblies. Both are familiar to builders, but they behave very differently on moisture, air control, and carbon.
 
-**Where they show up**
-- Dense-pack cellulose: retrofits and high-performance walls, often blown into cavities with netting.
-- Fiberglass batts: the default in many code-minimum homes, friction-fit in stud bays.
+This comparison looks at two common options for wood-framed walls and roofs:
+- **Dense-pack cellulose** — recycled paper fiber, blown at high density into cavities (often with netting)
+- **Fiberglass batts** — glass fiber, friction-fit in stud bays; default in many code-minimum homes
 
-**Quick read**
-- Cellulose usually wins on **carbon and air control**.
-- Fiberglass often wins on **lowest first cost**, but not on performance-per-dollar.
+Both are familiar to builders. They differ on **moisture, air control, embodied impact, and cost**.
+
+**Core idea:**  
+Cellulose adds air resistance and moisture buffering; batts insulate only and are vulnerable to gaps and convection. For the same R, cellulose usually wins on carbon and real-world performance; batts often win on first cost.
 
 ---
 
 ### Lifecycle Impact (LIS)
 
-**Embodied energy & carbon**
-- **Cellulose** is mostly recycled newsprint with a low-temperature manufacturing process. Embodied energy and CO₂ per R-value are **low to moderate**, and a portion of the carbon is **biogenic and stored** in the fibers during service life.
-- **Fiberglass batts** require melting sand and recycled glass at high temperatures. Embodied energy and CO₂ per R-value are **moderate to high**, especially in regions with fossil-heavy grids.
+**Embodied impact**
+- Dense-pack cellulose: mostly **recycled newsprint**, low-temperature process; embodied energy and CO₂ per R are **low to moderate**; **biogenic carbon** stored in the wall for service life.
+- Fiberglass batts: sand and recycled glass melted at high temperature; embodied energy and CO₂ per R are **moderate to high**, especially where grid is fossil-heavy.
 
-**Transport & packaging**
-- Both are relatively light, but **cellulose travels as dense bales** and expands on site; this is efficient per R-value shipped.
-- Batts are bulky and compress only slightly in transit; more truck volume per unit R.
+**Operational performance**
+- Cellulose ships as dense bales and expands on site (efficient per R); when dense-packed correctly it resists settling and **holds performance for decades**. Batts are bulky in transit and in the wall more vulnerable to **compression, gaps, and convection loops**, which erode real-world R over time.
 
-**Service life & durability**
-- When detailed correctly, dense-pack cellulose can **maintain performance for decades**, resisting settling in closed cavities.
-- Fiberglass batts are more vulnerable to **compression, gaps, and convection loops**, which quietly erode real-world R-value over time.
-
-**LIS takeaway**
-> For the same R-value, dense-pack cellulose typically delivers **lower embodied carbon** and **more reliable in-place performance** than fiberglass batts, especially in climate zones with significant heating loads.
+> **LIS takeaway:**  
+> For the same R-value, dense-pack cellulose typically delivers **lower embodied carbon** and **more reliable in-place performance** than fiberglass batts.
 
 ---
 
 ### Regenerative Impact (RIS)
 
-**Carbon storage**
-- Cellulose stores biogenic carbon in the wall for the life of the building. If kept dry and reused or downcycled at end of life, this is a **net positive** compared to mineral fibers.
-- Fiberglass provides no meaningful carbon storage; its value is only in operational energy savings.
+**Moisture & durability**
+- Cellulose: **hygroscopic** — can buffer small moisture events and redistribute safely in vapor-open assemblies; supports durability when detailed correctly.
+- Batts: almost no moisture buffering; condensation can sit against cold surfaces where air control is poor.
 
-**Health & IAQ**
-- Modern cellulose uses borate treatments for fire and pest resistance; these are generally considered low-toxicity when installed correctly, but installers should still wear PPE.
-- Fiberglass batts can shed **respirable fibers** during installation and if left exposed; this is a worker-safety and IAQ concern in leaky assemblies or unfinished spaces.
+**Air control**
+- Dense-pack at high density **reduces cavity air movement** and convective looping; more forgiving of minor detailing.
+- Batts are air-permeable; performance depends on **perfect fit and separate air-sealing**. Gaps and compression undermine R-value.
 
-**Moisture & resilience**
-- Dense-pack cellulose, in a ventilated and well-detailed assembly, can **buffer small moisture events** and redistribute moisture safely, especially with vapor-open sheathing and smart membranes.
-- Fiberglass batts have almost no moisture-buffering capacity and can hold condensation against cold surfaces, creating risk where air control is poor.
+**Health & install**
+- Cellulose uses borate treatment (fire, pest); low-toxicity when installed correctly; installers should wear PPE. Batts can shed **respirable fibers** during install or when exposed — a concern in leaky or unfinished assemblies.
 
-**RIS takeaway**
-> In resilient, vapor-open assemblies, cellulose supports **carbon storage, moisture buffering, and worker health** better than standard fiberglass batts.
+> **RIS takeaway:**  
+> Cellulose supports **moisture buffering, air control in the cavity, and durability** better than fiberglass batts in vapor-open, well-detailed assemblies.
 
 ---
 
 ### Cost & CPI (Cost Per Impact)
 
-**Material & labor**
-- Fiberglass batts usually win on **lowest material cost** and are familiar to every crew.
-- Dense-pack cellulose often has **higher installed cost per square foot** because it requires specialized equipment and trained crews, but it also delivers **better real-world performance per inch** when installed correctly.
+**Up-front cost**
+- Fiberglass batts: usually **lowest material cost**; every crew knows them.
+- Dense-pack cellulose: **higher installed cost** (specialized equipment, trained crews) but better real-world performance per inch when done right.
 
-**Cost-per-impact guidance**
-- For **budget-only projects** chasing code minimum, fiberglass batts may still be chosen.
-- For **clients pursuing comfort, quiet, and lower embodied carbon**, cellulose frequently offers **better value per unit of lifecycle impact**—especially when paired with air-tight detailing that the crew is already on site to do.
+**Return on investment**
+- For **code-minimum, budget-only** jobs, batts are often chosen.
+- For **comfort, quiet, and lower embodied carbon**, cellulose often delivers **better cost-per-impact** when paired with airtight detailing.
+
+> **CPI takeaway:**  
+> Batts often win on **upfront cost**; cellulose tends to win on **cost per performance** where clients care about comfort, durability, and carbon.
 
 ---
 
-### Summary Takeaway for Builders
+### Performance notes
 
-If you’re already setting up dense-pack equipment on site, cellulose is usually the **better default** for walls and roofs:
+- Cellulose performance depends on **installed density** (target specs); batts depend on fit and lack of compression or gaps. Neither replaces a continuous air barrier when the assembly needs one.
 
-- Lower embodied carbon than fiberglass batts  
-- Biogenic carbon storage in the assembly  
-- Stronger real-world R-value when combined with good air control  
-- Better alignment with high-performance and regenerative building goals  
+### Installation & risk
 
-Fiberglass batts remain a **low-cost, commodity option**, but they rarely win when the client cares about comfort, durability, and carbon. When in doubt, treat **dense-pack cellulose as your “good, better, best” baseline**, and reserve batts for only the most cost-constrained scenarios.
+- Dense-pack needs the right equipment and technique to avoid overpacking (framing stress) or underpacking (settling). Batts need careful cutting and placement to avoid gaps and compression. Both require dry cavities and correct sequencing.
+
+---
+
+### Summary Takeaway
+
+- **Dense-pack cellulose**:
+  - Better default for high-performance walls and roofs when equipment is on site
+  - Lower embodied carbon, biogenic storage, stronger real-world R with good air control
+
+- **Fiberglass batts**:
+  - Low-cost option for **code-minimum, budget-only** jobs
+  - Rarely win when the client cares about comfort, durability, and carbon; reserve for cost-constrained scenarios
+
+**Builder's rule of thumb:**  
+> *Cellulose works with the wall. Batts depend on perfect fit and everything else being done right.*

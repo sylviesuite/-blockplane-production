@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Info } from "lucide-react";
 import { RelatedGoldInsights } from "@/components/RelatedGoldInsights";
 import type { LocalMaterial } from "@/data/materials";
+import { formatCPI } from "@shared/scoring";
 
 /** Full catalog for lookup and alternatives (explorer + detail). */
 const catalogMaterials: LocalMaterial[] =
@@ -218,11 +219,11 @@ export default function MaterialDetail() {
             let reason = "Comparable performance";
             if (candidate.lis < material.lis) reason = "Lower lifecycle impact";
             else if (candidate.ris > material.ris)
-              reason = "Higher regenerative score";
+              reason = "Higher durability and resilience";
             else if (candidate.cpi < material.cpi)
               reason = "Better cost efficiency";
 
-            return { id: candidate.id, name: candidate.name, reason };
+            return { id: candidate.id, name: candidate.name, reason, cpi: candidate.cpi };
           })
           .slice(0, 2)
       : [];
@@ -244,7 +245,7 @@ export default function MaterialDetail() {
           }
           if (material.ris > 70) {
             notes.push(
-              "High RIS keeps regenerative goals on track even if alternatives exist.",
+              "High RIS reflects strong durability and resilience even if alternatives exist.",
             );
           }
           if (material.lis < 35) {
@@ -264,7 +265,7 @@ export default function MaterialDetail() {
     }
     if (material.ris > 60) {
       takeaways.push(
-        "Strong regenerative performance due to circular sourcing and recovery potential.",
+        "Strong durability and resilience from moisture behavior, repairability, and failure tolerance.",
       );
     }
     if (material.lis < 30) {
@@ -404,9 +405,9 @@ function getComparisonLabel(
           </div>
           <div className="mt-6 grid gap-6 md:grid-cols-3">
             {[
-              { label: "LIS", value: material.lis, color: "text-orange-600", helper: "Low lifecycle impact is better" },
-              { label: "RIS", value: material.ris, color: "text-emerald-600", helper: "Higher regenerative score" },
-              { label: "CPI", value: material.cpi, color: "text-blue-600", helper: "Lower cost-per-impact" },
+              { label: "LIS", value: material.lis, color: "text-orange-600", helper: "Low lifecycle impact is better", format: (v: number) => (Number.isFinite(v) ? v.toFixed(1) : "—") },
+              { label: "RIS", value: material.ris, color: "text-emerald-600", helper: "Regenerative Impact Score (RIS) is a durability and resilience heuristic.", format: (v: number) => (Number.isFinite(v) ? String(Math.round(v)) : "—") },
+              { label: "CPI", value: material.cpi, color: "text-blue-600", helper: "Lower cost-per-impact", format: (v: number) => formatCPI(v) },
             ].map((score) => (
               <Card key={score.label} className="border-slate-200">
                 <CardHeader>
@@ -425,7 +426,12 @@ function getComparisonLabel(
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className={`text-3xl font-bold ${score.color}`}>{score.value}</p>
+                  <p className={`text-3xl font-bold ${score.color}`}>{score.format(score.value)}</p>
+                  {score.label === "RIS" && (
+                    <p className="text-[11px] text-slate-500 mt-0.5">
+                      Durability • Moisture Behavior • Repairability • Failure Tolerance
+                    </p>
+                  )}
                   <p className="text-xs text-slate-500">
                     {score.label === "RIS" ? "Higher is better" : "Lower is better"}
                   </p>
@@ -460,7 +466,10 @@ function getComparisonLabel(
                     className="font-semibold text-slate-800 hover:underline"
                   >
                     {alt.name}
-                  </Link>{" "}
+                  </Link>
+                  {alt.cpi !== undefined && Number.isFinite(alt.cpi) && (
+                    <span className="ml-1 text-slate-500">(CPI {formatCPI(alt.cpi)})</span>
+                  )}{" "}
                   — {alt.reason}
                 </div>
               ))}

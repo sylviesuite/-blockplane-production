@@ -79,6 +79,20 @@ export function getRISTier(ris: number): RISTier {
 }
 
 /**
+ * Format CPI for display and export: 2 decimal places, or a placeholder when invalid/missing.
+ * Use placeholder '' for CSV (empty cell), default '—' for UI/PDF.
+ */
+export function formatCPI(
+  value: number | null | undefined,
+  options?: { placeholder?: string }
+): string {
+  if (value == null || !Number.isFinite(value)) {
+    return options?.placeholder ?? "—";
+  }
+  return Number(value).toFixed(2);
+}
+
+/**
  * Helper: Net Present Value of annual costs.
  */
 export function calculateNPV(annualCost: number, years: number, discountRate: number): number {
@@ -90,7 +104,9 @@ export function calculateNPV(annualCost: number, years: number, discountRate: nu
 }
 
 /**
- * Calculate Cost-Performance Index (CPI) as total lifecycle cost / total carbon.
+ * Calculate Cost-Performance Index (CPI): cost per unit of impact.
+ * CPI = total lifecycle cost (NPV) ÷ impact metric (total carbon, LIS-related).
+ * Uses existing MaterialCost fields; lower CPI = better cost efficiency per unit impact.
  */
 export function calculateCPI(
   totalCarbon: number,
