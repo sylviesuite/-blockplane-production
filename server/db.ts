@@ -110,26 +110,46 @@ async function supabaseFetch(path: string) {
   return res.json();
 }
 
+function deriveConfidenceLevel(score: number | null): "High" | "Medium" | "Low" | "None" {
+  if (score == null) return "None";
+  if (score >= 75) return "High";
+  if (score >= 50) return "Medium";
+  if (score >= 25) return "Low";
+  return "None";
+}
+
 function mapRow(r: any) {
+  const lisScore = r.lis_score ?? 0;
+  const risScore = r.ris_score ?? 0;
+  const dataQualityScore: number | null = r.data_quality_score ?? null;
   return {
     id: r.id as string,
     name: r.name,
     category: r.category ?? "Uncategorized",
+    subcategory: r.subcategory ?? null,
+    manufacturer: r.manufacturer ?? null,
     description: r.description ?? null,
     totalCarbon: String(r.total_carbon_cradle_to_gate ?? 0),
-    lisScore: r.lis_score ?? 0,
-    risScore: r.ris_score ?? 0,
+    lisScore,
+    risScore,
     functionalUnit: "m²",
-    costPerUnit: String(((r.lis_score ?? 0) * 0.8).toFixed(2)),
+    costPerUnit: String((lisScore * 0.8).toFixed(2)),
+    confidenceLevel: deriveConfidenceLevel(dataQualityScore),
+    dataQualityScore,
+    source: r.source ?? null,
+    sourceUrl: r.source_url ?? null,
+    lastVerified: r.last_verified ?? null,
+    isRegenerative: risScore > 70 ? 1 : 0,
     lifecycle: [] as any[],
     epdMetadata: [] as any[],
+    dataQuality: dataQualityScore != null ? JSON.stringify({ score: dataQualityScore }) : null,
   };
 }
 
 export async function getAllMaterials() {
   try {
     const rows = await supabaseFetch(
-      "materials_with_scores?select=id,name,category,description,lis_score,ris_score,total_carbon_cradle_to_gate&limit=300"
+      "materials_with_scores?select=id,name,category,subcategory,manufacturer,description,lis_score,ris_score,total_carbon_cradle_to_gate,data_quality_score,source,source_url,last_verified&limit=300"
     );
     // Deduplicate: first by ID (view join produces multiple rows per ID with different scores),
     // then by name+category (some materials were inserted twice with different UUIDs).
@@ -159,7 +179,7 @@ export async function getMaterialsByCategory(category: string) {
 export async function getMaterialById(id: string) {
   try {
     const rows = await supabaseFetch(
-      `materials_with_scores?id=eq.${encodeURIComponent(id)}&select=id,name,category,description,lis_score,ris_score,total_carbon_cradle_to_gate&limit=1`
+      `materials_with_scores?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,lis_score,ris_score,total_carbon_cradle_to_gate,data_quality_score,source,source_url,last_verified&limit=1`
     );
     if (!(rows as any[]).length) return undefined;
     return mapRow((rows as any[])[0]);
