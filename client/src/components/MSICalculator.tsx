@@ -43,13 +43,13 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
 
     // Find max values for normalization
     const maxCarbon = Math.max(...materials.map(m => m.total));
-    const maxCost = Math.max(...materials.map(m => m.cost));
+    const maxCost = Math.max(...materials.map(m => m.cost?.value ?? 0));
 
     // Calculate MSI for each material
     const withMSI: MaterialWithMSI[] = materials.map(m => {
-      const netImpact = m.ris - m.lis;
+      const netImpact = (m.ris ?? 0) - (m.lis ?? 0);
       const carbonNormalized = (m.total / maxCarbon) * 100;
-      const costNormalized = (m.cost / maxCost) * 100;
+      const costNormalized = ((m.cost?.value ?? 0) / maxCost) * 100;
 
       const msi = 
         (netImpact * impactWeight / 100) -
@@ -248,7 +248,7 @@ export function MSICalculator({ materials }: MSICalculatorProps) {
                     <div className="text-right text-xs">
                       <p className="text-gray-500">Net Impact: {material.netImpact > 0 ? '+' : ''}{material.netImpact}</p>
                       <p className="text-gray-500">Carbon: {material.total.toFixed(1)} kg</p>
-                      <p className="text-gray-500">Cost: ${material.cost.toFixed(0)}</p>
+                      <p className="text-gray-500">Cost: ${material.cost?.value.toFixed(0) ?? '—'}</p>
                     </div>
 
                     <div className="flex flex-col items-end gap-1">

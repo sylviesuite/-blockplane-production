@@ -22,13 +22,12 @@ import GlobalImpactDashboard from "./pages/GlobalImpactDashboard";
 import MaterialBrowser from "./pages/MaterialBrowser";
 import APIDocumentation from "./pages/APIDocumentation";
 import GoldInsightPage from "./pages/GoldInsightPage";
+import Assistant from "./pages/Assistant";
 
 /** In dev only: show demo material as default preview for smoother demos/screen recordings. */
-const DEMO_MATERIAL_ID = "spf-stud-wall";
-
 function DefaultRoute() {
   if (process.env.NODE_ENV === "development") {
-    return <Redirect to={`/materials/${DEMO_MATERIAL_ID}`} />;
+    return <Redirect to="/materials" />;
   }
   return <Home />;
 }
@@ -36,6 +35,7 @@ function DefaultRoute() {
 function Router() {
   return (
     <Switch>
+      <Route path="/home" component={Home} />
       <Route path={"/"} component={DefaultRoute} />
       <Route path="/insights/gold/:slug" component={GoldInsightPage} />
       <Route path={"/features"} component={Features} />
@@ -43,6 +43,7 @@ function Router() {
       <Route path={"/lifecycle"} component={Lifecycle} />
       <Route path={"/breakdown"} component={LifecycleBreakdown} />
       <Route path={"/analysis"} component={Analysis} />
+      <Route path="/assistant" component={Assistant} />
       <Route path={"/impact"} component={KPIDashboard} />
       <Route path="/materials/:id" component={MaterialDetail} />
       <Route path="/projects" component={ProjectAnalysis} />

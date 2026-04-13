@@ -66,7 +66,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
             <p><span className="font-medium">RIS:</span> {material.ris}</p>
             <p><span className="font-medium">LIS:</span> {material.lis}</p>
             <p><span className="font-medium">Carbon:</span> {material.total.toFixed(1)} kg CO₂e</p>
-            <p><span className="font-medium">Cost:</span> ${material.cost.toFixed(0)}/{material.functionalUnit}</p>
+            <p><span className="font-medium">Cost:</span> ${material.cost?.value.toFixed(0) ?? '—'}/${material.functionalUnit ?? ''}</p>
           </div>
         </div>
       );
@@ -157,7 +157,7 @@ export function QuadrantVisualization({ materials, onMaterialClick }: QuadrantVi
               {scatterData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`} 
-                  fill={getQuadrantColor(entry.y, entry.x)}
+                  fill={getQuadrantColor(entry.y ?? 0, entry.x ?? 0)}
                   r={8}
                 />
               ))}

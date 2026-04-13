@@ -44,7 +44,7 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
 
     // Find max values for normalization
     const maxCarbon = Math.max(...materials.map(m => m.total));
-    const maxCost = Math.max(...materials.map(m => m.cost));
+    const maxCost = Math.max(...materials.map(m => m.cost?.value ?? 0));
 
     // Create radar data structure
     const dimensions = [
@@ -63,11 +63,11 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
         
         switch (dim.key) {
           case 'ris':
-            value = material.ris;
+            value = material.ris ?? 0;
             break;
           case 'circular':
             // Circular potential = inverse of LIS (lower LIS = higher circular potential)
-            value = 100 - material.lis;
+            value = 100 - (material.lis ?? 0);
             break;
           case 'lowCarbon':
             // Normalize carbon (lower is better, so invert)
@@ -75,11 +75,11 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
             break;
           case 'costEfficiency':
             // Normalize cost (lower is better, so invert)
-            value = 100 - ((material.cost / maxCost) * 100);
+            value = 100 - (((material.cost?.value ?? 0) / maxCost) * 100);
             break;
           case 'lowImpact':
             // Low impact = inverse of LIS
-            value = 100 - material.lis;
+            value = 100 - (material.lis ?? 0);
             break;
         }
         
@@ -113,7 +113,7 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
                 chartElementId="comparison-radar-chart"
                 filename="material-comparison"
                 shareParams={{
-                  materials: selectedMaterials.map(m => m.id),
+                  materials: selectedMaterials.map(m => parseInt(m.id, 10)),
                 }}
               />
               <Button
@@ -187,7 +187,7 @@ export function MaterialComparison({ materials, maxComparisons = 4 }: MaterialCo
                     <p><span className="text-gray-500">Carbon:</span> {material.total.toFixed(1)} kg CO₂e</p>
                     <p><span className="text-gray-500">RIS:</span> {material.ris}</p>
                     <p><span className="text-gray-500">LIS:</span> {material.lis}</p>
-                    <p><span className="text-gray-500">Cost:</span> ${material.cost.toFixed(0)}/{material.functionalUnit}</p>
+                    <p><span className="text-gray-500">Cost:</span> ${material.cost?.value.toFixed(0) ?? '—'}/{material.functionalUnit ?? ''}</p>
                   </div>
                 </div>
               ))}

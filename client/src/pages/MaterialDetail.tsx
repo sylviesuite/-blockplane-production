@@ -18,6 +18,7 @@ import { Info } from "lucide-react";
 import { RelatedGoldInsights } from "@/components/RelatedGoldInsights";
 import type { LocalMaterial } from "@/data/materials";
 import { formatCPI } from "@shared/scoring";
+import { trpc } from "@/lib/trpc";
 
 /** Full catalog for lookup and alternatives (explorer + detail). */
 const catalogMaterials: LocalMaterial[] =
@@ -74,6 +75,10 @@ function isRiskRelatedMaterial(material: LocalMaterial): boolean {
     riskKeywords.some((k) => tags.some((t) => t.includes(k))) ||
     riskKeywords.some((k) => bt.includes(k))
   );
+}
+
+function isUUID(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 }
 
 function useMaterialParams() {
@@ -174,31 +179,70 @@ function getComparisonLabel(
 }
 
 export default function MaterialDetail() {
+  const [showScoreDetails, setShowScoreDetails] = useState(false);
   const params = useMaterialParams();
-  const materialKey = params?.id;
+  const materialKey = params?.id ?? '';
+  const looksLikeUUID = isUUID(materialKey);
 
-  const material =
-    materialKey &&
-    catalogMaterials.find((item) => {
-      const normalizedKey = materialKey.toLowerCase();
-      return (
-        item.id === materialKey ||
-        item.id.toLowerCase() === normalizedKey ||
-        item.name.toLowerCase() === normalizedKey
-      );
-    });
+  const { data: dbData, isLoading } = trpc.materials.getById.useQuery(
+    { id: materialKey },
+    { enabled: !!materialKey && looksLikeUUID }
+  );
 
-  console.log("MaterialDetail param + material", materialKey, Boolean(material));
+  // Map DB row to LocalMaterial shape
+  const dbMaterial: LocalMaterial | null = dbData
+    ? {
+        id: dbData.id,
+        name: dbData.name,
+        category: dbData.category ?? 'Uncategorized',
+        description: dbData.description ?? '',
+        carbonKgPerM2: parseFloat(dbData.totalCarbon),
+        costPerM2: parseFloat(dbData.costPerUnit),
+        ris: dbData.risScore ?? 0,
+        lis: dbData.lisScore ?? 0,
+        cpi: parseFloat(dbData.costPerUnit) / Math.max(parseFloat(dbData.totalCarbon), 0.01),
+        regenerative: (dbData.risScore ?? 0) > 60 && (dbData.lisScore ?? 0) < 40,
+        tags: [],
+      }
+    : null;
+
+  // Seed lookup for slug-based ids (legacy / InsightBox deep-links)
+  const seedMaterial: LocalMaterial | undefined = !looksLikeUUID && materialKey
+    ? catalogMaterials.find((item) => {
+        const normalizedKey = materialKey.toLowerCase();
+        return (
+          item.id === materialKey ||
+          item.id.toLowerCase() === normalizedKey ||
+          item.name.toLowerCase() === normalizedKey
+        );
+      }) ?? undefined
+    : undefined;
+
+  const material = dbMaterial ?? seedMaterial ?? null;
+
+  if (looksLikeUUID && isLoading) {
+    return <div className="p-8 text-center text-gray-400">Loading material…</div>;
+  }
 
   if (!material) {
     return (
-      <div className="p-8 text-center text-gray-600">
-        Material not found.
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
+        <Card className="max-w-md text-center">
+          <CardHeader>
+            <CardTitle className="text-2xl">Material Not Found</CardTitle>
+            <CardDescription>
+              We couldn&apos;t locate that material in the catalog.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/materials">
+              <Button>Back to catalog</Button>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }
-
-  const [showScoreDetails, setShowScoreDetails] = useState(false);
 
   const insightContext = buildInsightContextForMaterial(material.id);
   const comparisonLabel = getComparisonLabel(insightContext, material.name);
@@ -279,90 +323,6 @@ export default function MaterialDetail() {
       );
     }
   }
-
-  if (!material) {
-    return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
-        <Card className="max-w-md text-center">
-          <CardHeader>
-            <CardTitle className="text-2xl">Material Not Found</CardTitle>
-            <CardDescription>
-              We couldn&apos;t locate that material in the local catalog.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Link href="/materials">
-              <Button>Back to catalog</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-function buildInsightContextForMaterial(slug: string): InsightContext {
-  switch (slug) {
-    case "rammed-earth-hempcrete-wall":
-      return {
-        type: "comparison",
-        primaryId: "rammed_earth_hempcrete_wall",
-        secondaryId: "standard_2x6_wall",
-        materialIds: ["rammed_earth", "hempcrete", "wood_framing_2x6"],
-        tags: ["wall", "mass_wall"],
-      };
-    case "fiberglass-batt":
-    case "dense-pack-cellulose":
-      return {
-        type: "comparison",
-        primaryId: "fiberglass_batt_insulation",
-        secondaryId: "dense_pack_cellulose",
-        materialIds: ["fiberglass_batt_insulation", "dense_pack_cellulose"],
-        tags: ["insulation"],
-      };
-    case "double-pane-vinyl-window":
-    case "triple-pane-high-performance-window":
-      return {
-        type: "comparison",
-        primaryId: "double_pane_vinyl_windows",
-        secondaryId: "triple_pane_high_performance_windows",
-        materialIds: [
-          "double_pane_vinyl_windows",
-          "triple_pane_high_performance_windows",
-        ],
-        tags: ["windows"],
-      };
-    default:
-      return {
-        type: "material",
-        primaryId: slug,
-        materialIds: [slug],
-        tags: ["material"],
-      };
-  }
-}
-
-function getComparisonLabel(
-  context: InsightContext,
-  materialName: string,
-): string | null {
-  if (context.type !== "comparison" || !context.secondaryId) {
-    return null;
-  }
-
-  const nameMap: Record<string, string> = {
-    rammed_earth_hempcrete_wall: "Rammed Earth + Hempcrete Wall",
-    standard_2x6_wall: "2×6 SPF Stud Wall (Baseline Assembly)",
-    fiberglass_batt_insulation: "Fiberglass Batt Insulation",
-    dense_pack_cellulose: "Dense-Pack Cellulose",
-    double_pane_vinyl_windows: "Double-Pane Vinyl Window",
-    triple_pane_high_performance_windows: "Triple-Pane High-Performance Window",
-  };
-
-  const primaryName = nameMap[context.primaryId] ?? materialName;
-  const secondaryName = nameMap[context.secondaryId] ?? context.secondaryId;
-
-  return `${primaryName} → ${secondaryName}`;
-}
 
   return (
     <div className="min-h-screen bg-slate-50 pb-12">
