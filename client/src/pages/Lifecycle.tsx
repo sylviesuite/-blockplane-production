@@ -1,12 +1,73 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import BreakdownTable from '../components/BreakdownTable';
-import AIAssistant from '../components/AIAssistant';
 import ComparisonChart from '../components/ComparisonChart';
 import MaterialTypeFilters, { filterMaterialsByType } from '../components/MaterialTypeFilters';
 import { useMaterials } from '../hooks/useMaterials';
 import { exportMaterialsToCSV } from '../utils/exportCSV';
 import { Download } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import type { Material } from '../types';
+
+const PHASE_LABELS: Record<keyof Material['phases'], string> = {
+  pointOfOrigin: 'Point of Origin',
+  transport: 'Transport',
+  construction: 'Construction',
+  production: 'Production',
+  disposal: 'Disposal',
+};
+
+function dominantPhase(m: Material): string {
+  const p = m.phases;
+  const entries = (['pointOfOrigin', 'transport', 'construction', 'production', 'disposal'] as const).map(k => [k, p[k]] as const);
+  const best = entries.reduce((a, b) => (a[1] >= b[1] ? a : b));
+  return PHASE_LABELS[best[0]];
+}
+
+function AISummaryCard({ selectedMaterials }: { selectedMaterials: Material[] }) {
+  const { body, idsForAssistant } = useMemo(() => {
+    const n = selectedMaterials.length;
+    if (n < 2) {
+      return { body: 'Select at least two materials above to unlock an AI-style summary.', idsForAssistant: [] as string[] };
+    }
+    if (n > 2) {
+      const byTotal = [...selectedMaterials].sort((a, b) => b.total - a.total);
+      const topTwo = byTotal.slice(0, 2);
+      return {
+        body: 'AI summary will focus on the two selected materials with the highest total lifecycle impact.',
+        idsForAssistant: topTwo.map(m => m.id),
+      };
+    }
+    const [a, b] = selectedMaterials;
+    const totA = Math.round(a.total);
+    const totB = Math.round(b.total);
+    const phaseA = dominantPhase(a);
+    const phaseB = dominantPhase(b);
+    const line = `You're comparing ${a.name} and ${b.name}. Both total around ${totA} and ${totB} kg CO₂e. ${a.name} is higher in ${phaseA} while ${b.name} is higher in ${phaseB}.`;
+    return { body: line, idsForAssistant: [a.id, b.id] };
+  }, [selectedMaterials]);
+
+  const query = idsForAssistant.length > 0 ? `?mode=compare&materials=${idsForAssistant.join(',')}` : '';
+
+  return (
+    <div className="bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 h-full flex flex-col">
+      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-1">
+        AI Summary (Sylvie Intelligence)
+      </h3>
+      <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+        Powered by Sylvie Intelligence
+      </p>
+      <p className="text-sm text-slate-700 dark:text-slate-300 flex-1">
+        {body}
+      </p>
+      <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+        <Button asChild variant="outline" className="w-full sm:w-auto">
+          <Link to={`/assistant${query}`}>Ask the AI about this comparison</Link>
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export default function Lifecycle() {
   const { materials, loading, error } = useMaterials();
@@ -16,9 +77,7 @@ export default function Lifecycle() {
   // Filter materials by type
   const filteredMaterials = filterMaterialsByType(materials, activeFilter);
   
-  // Get selected materials for AI Assistant
   const selectedMaterials = filteredMaterials.filter(m => selectedMaterialIds.includes(m.id));
-  const materialsForAI = selectedMaterials.length > 0 ? selectedMaterials : filteredMaterials;
 
   if (loading) {
     return (
@@ -70,59 +129,39 @@ export default function Lifecycle() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-5">
         {/* Status Banner */}
-        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-emerald-800">
+        <div className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg p-3 mb-4">
+          <p className="text-sm text-slate-700 dark:text-slate-300">
             ✅ Connected to Supabase • {materials.length} materials loaded
             {activeFilter !== 'all' && (
-              <span className="ml-2">
-                • Filtered to {filteredMaterials.length} materials
-              </span>
-            )}
-            {selectedMaterialIds.length > 0 && (
-              <span className="ml-2 font-semibold">
-                • {selectedMaterialIds.length} selected for AI analysis
-              </span>
+              <span className="ml-2">• Filtered to {filteredMaterials.length} materials</span>
             )}
           </p>
         </div>
 
         {/* Material Type Filters */}
-        <MaterialTypeFilters 
+        <MaterialTypeFilters
           materials={materials}
           activeFilter={activeFilter}
           onFilterChange={(filter) => {
             setActiveFilter(filter);
-            setSelectedMaterialIds([]); // Clear selection when filter changes
+            setSelectedMaterialIds([]);
           }}
         />
 
-        {/* AI Assistant */}
-        <div className="mb-8">
-          <AIAssistant materials={materialsForAI} />
-          {selectedMaterialIds.length > 0 && (
-            <div className="mt-2 text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-3 py-2">
-              💡 AI is analyzing only the {selectedMaterialIds.length} selected material{selectedMaterialIds.length > 1 ? 's' : ''}. 
-              <button 
-                onClick={() => setSelectedMaterialIds([])}
-                className="ml-2 underline hover:text-emerald-900"
-              >
-                Clear selection
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Comparison Chart */}
-        {selectedMaterialIds.length >= 2 && (
-          <div className="mb-8">
+        {/* Chart + AI Summary: two columns on lg, stacked on small */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+          <div className="min-w-0">
             <ComparisonChart materials={selectedMaterials} />
           </div>
-        )}
+          <div className="min-w-0">
+            <AISummaryCard selectedMaterials={selectedMaterials} />
+          </div>
+        </div>
 
         {/* Breakdown Table */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-2xl font-bold text-slate-900">
@@ -154,7 +193,7 @@ export default function Lifecycle() {
         </div>
 
         {/* Info Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           <div className="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
             <h3 className="font-semibold text-gray-900 mb-2">Point of Origin (A1-A3)</h3>
             <p className="text-sm text-gray-600">

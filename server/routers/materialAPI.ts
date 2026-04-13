@@ -28,16 +28,8 @@ const materialSearchSchema = z.object({
   // Text search
   query: z.string().optional(),
   
-  // Category filters
-  categories: z.array(z.enum([
-    "Timber", 
-    "Steel", 
-    "Concrete", 
-    "Earth", 
-    "Insulation", 
-    "Composites", 
-    "Masonry"
-  ])).optional(),
+  // Category filters — accept any category string from the DB
+  categories: z.array(z.string()).optional(),
   
   // RIS/LIS filters
   minRIS: z.number().min(0).max(100).optional(),
@@ -271,21 +263,13 @@ export const materialAPIRouter = router({
    */
   getCategories: publicProcedure.query(async () => {
     const allMaterials = await getAllMaterials();
-    
-    const categories = [
-      "Timber",
-      "Steel", 
-      "Concrete",
-      "Earth",
-      "Insulation",
-      "Composites",
-      "Masonry"
-    ];
-    
-    return categories.map(category => ({
-      name: category,
-      count: allMaterials.filter(m => m.category === category).length,
-    }));
+    const counts = new Map<string, number>();
+    for (const m of allMaterials) {
+      counts.set(m.category, (counts.get(m.category) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count);
   }),
 
   /**

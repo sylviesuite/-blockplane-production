@@ -29,16 +29,16 @@ export function useMaterials(): UseMaterialsResult {
     functionalUnit: m.functionalUnit,
     total: parseFloat(m.totalCarbon),
     phases: {
-      pointOfOrigin: parseFloat(m.lifecycle.find(lc => lc.phase === 'A1-A3')?.value || '0'),
-      transport: parseFloat(m.lifecycle.find(lc => lc.phase === 'A4')?.value || '0'),
-      construction: parseFloat(m.lifecycle.find(lc => lc.phase === 'A5')?.value || '0'),
-      production: parseFloat(m.lifecycle.find(lc => lc.phase === 'B')?.value || '0'),
-      disposal: parseFloat(m.lifecycle.find(lc => lc.phase === 'C1-C4')?.value || '0'),
+      pointOfOrigin: parseFloat(m.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A1-A3')?.value || '0'),
+      transport: parseFloat(m.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A4')?.value || '0'),
+      construction: parseFloat(m.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A5')?.value || '0'),
+      production: parseFloat(m.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'B')?.value || '0'),
+      disposal: parseFloat(m.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'C1-C4')?.value || '0'),
     },
+    materialType: '',
     ris: m.risScore,
     lis: m.lisScore,
-    cost: parseFloat(m.costPerUnit),
-    currency: m.currency,
+    cost: { value: parseFloat(m.costPerUnit), unit: m.functionalUnit },
     description: m.description || '',
   }));
 
@@ -61,10 +61,9 @@ interface UseMaterialDetailResult {
  * Load single material with full details
  */
 export function useMaterialDetail(materialId: string | null): UseMaterialDetailResult {
-  const id = materialId ? parseInt(materialId, 10) : 0;
   const { data, isLoading, error, refetch } = trpc.materials.getById.useQuery(
-    { id },
-    { enabled: !!materialId && !isNaN(id) }
+    { id: materialId! },
+    { enabled: !!materialId }
   );
 
   let material: Material | null = null;
@@ -76,16 +75,16 @@ export function useMaterialDetail(materialId: string | null): UseMaterialDetailR
       functionalUnit: data.functionalUnit,
       total: parseFloat(data.totalCarbon),
       phases: {
-        pointOfOrigin: parseFloat(data.lifecycle.find(lc => lc.phase === 'A1-A3')?.value || '0'),
-        transport: parseFloat(data.lifecycle.find(lc => lc.phase === 'A4')?.value || '0'),
-        construction: parseFloat(data.lifecycle.find(lc => lc.phase === 'A5')?.value || '0'),
-        production: parseFloat(data.lifecycle.find(lc => lc.phase === 'B')?.value || '0'),
-        disposal: parseFloat(data.lifecycle.find(lc => lc.phase === 'C1-C4')?.value || '0'),
+        pointOfOrigin: parseFloat(data.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A1-A3')?.value || '0'),
+        transport: parseFloat(data.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A4')?.value || '0'),
+        construction: parseFloat(data.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'A5')?.value || '0'),
+        production: parseFloat(data.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'B')?.value || '0'),
+        disposal: parseFloat(data.lifecycle.find((lc: { phase: string; value: string }) => lc.phase === 'C1-C4')?.value || '0'),
       },
+      materialType: '',
       ris: data.risScore,
       lis: data.lisScore,
-      cost: parseFloat(data.costPerUnit),
-      currency: data.currency,
+      cost: { value: parseFloat(data.costPerUnit), unit: data.functionalUnit },
       description: data.description || '',
     };
   }

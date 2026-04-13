@@ -375,8 +375,8 @@ export function StackedHorizontalBarChart({
                     Cost Difference:
                   </p>
                   <p className="text-2xl font-bold text-green-700 dark:text-green-300">
-                    {(selectedMaterials[0].cost?.capex ?? 0) > (selectedMaterials[1].cost?.capex ?? 0) ? '-' : '+'}
-                    ${Math.abs((selectedMaterials[0].cost?.capex ?? 0) - (selectedMaterials[1].cost?.capex ?? 0)).toFixed(2)}
+                    {(selectedMaterials[0].cost?.value ?? 0) > (selectedMaterials[1].cost?.value ?? 0) ? '-' : '+'}
+                    ${Math.abs((selectedMaterials[0].cost?.value ?? 0) - (selectedMaterials[1].cost?.value ?? 0)).toFixed(2)}
                   </p>
                   <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                     per {selectedMaterials[0].meta?.unit ?? 'unit'}

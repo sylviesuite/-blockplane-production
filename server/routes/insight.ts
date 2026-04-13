@@ -7,7 +7,7 @@ import {
   buildInsightScores,
   buildStaticInsightText,
 } from "@shared/scoring";
-import { callClaudeForInsight } from "../ai/claudeInsightClient";
+import { generateClaudeInsight as callClaudeForInsight } from "../ai/claudeInsightClient";
 
 export interface InsightRequestBody {
   lis: number;

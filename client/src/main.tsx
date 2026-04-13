@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink, TRPCClientError } from "@trpc/client";
+import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import superjson from "superjson";
 
 import { trpc } from "@/lib/trpc";
@@ -23,7 +23,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 };
 
 // ✅ Correct: create the tRPC *client* with createTRPCClient
-const trpcClient = createTRPCClient({
+const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: "/api/trpc",

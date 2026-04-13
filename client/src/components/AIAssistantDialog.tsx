@@ -31,9 +31,9 @@ export function AIAssistantDialog({
   const [question, setQuestion] = useState('');
   const [conversation, setConversation] = useState<Array<{ role: 'user' | 'assistant'; content: string }>>([]);
 
-  const askMutation = trpc.ai.ask.useMutation({
+  const askMutation = trpc.ai.chat.useMutation({
     onSuccess: (data) => {
-      setConversation(prev => [...prev, { role: 'assistant', content: data.answer }]);
+      setConversation(prev => [...prev, { role: 'assistant', content: String(data.answer) }]);
       setQuestion('');
     },
   });
@@ -58,7 +58,7 @@ export function AIAssistantDialog({
 
   const quickPrompts = material ? [
     `What are better alternatives to ${material.name}?`,
-    `Why is ${material.name} ${material.ris > 70 ? 'regenerative' : 'not very sustainable'}?`,
+    `Why is ${material.name} ${(material.ris ?? 0) > 70 ? 'regenerative' : 'not very sustainable'}?`,
     `What are the best use cases for ${material.name}?`,
     `How does ${material.name} compare to other ${material.category} materials?`,
   ] : [
@@ -112,7 +112,7 @@ export function AIAssistantDialog({
             </div>
           ))}
 
-          {askMutation.isLoading && (
+          {askMutation.isPending && (
             <div className="flex items-center gap-2 text-gray-500 mr-8">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span className="text-sm">AI is thinking...</span>
@@ -148,14 +148,14 @@ export function AIAssistantDialog({
             onChange={(e) => setQuestion(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleAsk()}
             placeholder="Ask a question..."
-            disabled={askMutation.isLoading}
+            disabled={askMutation.isPending}
           />
           <Button
             onClick={handleAsk}
-            disabled={!question.trim() || askMutation.isLoading}
+            disabled={!question.trim() || askMutation.isPending}
             size="icon"
           >
-            {askMutation.isLoading ? (
+            {askMutation.isPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Send className="w-4 h-4" />

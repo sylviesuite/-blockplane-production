@@ -17,11 +17,8 @@ export type RISComponents = {
 export type RISTier = "Gold" | "Silver" | "Bronze" | "Problematic";
 
 export type MaterialCost = {
-  capex: number;              // $/m²
-  maintPerYear: number;       // $/m²/year
-  energyPerYear: number;      // $/m²/year
-  salvageValue: number;       // $/m²
-  lifespanYears: number;
+  value: number;              // $/m²
+  unit: string;               // e.g. "m²", "kg", "tonne"
 };
 
 export type MaterialScores = {
@@ -66,4 +63,18 @@ export type Material = {
 
   // Multi-impact data (for advanced analysis)
   impacts?: ImpactCategories;
+
+  // Flat score accessors (mirror scores.ris / scores.lis for component convenience)
+  ris?: number;
+  lis?: number;
+
+  // Classification & display
+  category?: string;
+  functionalUnit?: string;
+
+  // Extended material properties
+  embodiedEnergy_MJ_per_kg?: number;
+  co2_kg_per_kg?: number;
+  notes?: string;
+  description?: string;
 };

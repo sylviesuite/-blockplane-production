@@ -19,7 +19,7 @@ export default function BudgetOptimizer() {
   const [budget, setBudget] = useState<string>("50000");
   const [optimizationResults, setOptimizationResults] = useState<any>(null);
 
-  const { data: materials, isLoading } = trpc.materials.list.useQuery();
+  const { data: materials, isLoading } = trpc.materials.getAll.useQuery();
 
   const handleOptimize = () => {
     if (!materials || materials.length === 0) {

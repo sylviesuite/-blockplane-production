@@ -43,6 +43,11 @@ export function Header() {
               Analysis
             </Button>
           </Link>
+          <Link href="/assistant">
+            <Button variant="outline" size="sm" className="gap-2 ml-2">
+              Ask AI
+            </Button>
+          </Link>
         </nav>
 
         <Button

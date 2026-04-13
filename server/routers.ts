@@ -14,6 +14,10 @@ import { impactRouter } from './routers/impact';
 import { publicAPIRouter } from './routers/publicAPI';
 import { supplierRouter } from './routers/supplier';
 import { materialAPIRouter } from './routers/materialAPI';
+import { selectRelevantMemories } from './ai/memoryGate';
+
+const MEMORY_BEHAVIOR_RULE =
+  'Use prior context only when it clearly improves the current answer. Do not pull old topics into unrelated conversations. Prefer a clean answer to the current question over forcing in unrelated past context.';
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -30,7 +34,7 @@ export const appRouter = router({
     }),
   }),
 
-  // AI Assistant for material analysis
+  // AI Assistant for material analysis (WhisperLeaf-style: active context always; long-term memory only when relevant)
   ai: router({
     chat: publicProcedure
       .input(z.object({
@@ -46,33 +50,57 @@ export const appRouter = router({
             disposal: z.number(),
           }),
         })).optional(),
+        recentTurns: z.array(z.object({
+          role: z.enum(['user', 'assistant']),
+          content: z.string(),
+        })).optional(),
+        memoryResults: z.array(z.object({
+          content: z.string(),
+          score: z.number().optional(),
+        })).optional(),
       }))
       .mutation(async ({ input }) => {
-        const { question, materials } = input;
-        
-        // Build context from materials data
-        let context = '';
+        const { question, materials, recentTurns = [], memoryResults = [] } = input;
+
+        // Active context: current-conversation turns (always included)
+        const activeContextMessages: Array<{ role: 'user' | 'assistant'; content: string }> = recentTurns.map(
+          (t) => ({ role: t.role as 'user' | 'assistant', content: t.content })
+        );
+
+        // Long-term memory: only inject when relevance is above threshold
+        const relevantMemories = selectRelevantMemories(memoryResults);
+        const longTermBlock =
+          relevantMemories.length > 0
+            ? `\n\nRelevant prior context (use only if it clearly improves your answer):\n${relevantMemories.map((m) => `- ${m.content}`).join('\n')}`
+            : '';
+
+        // Build system message: expertise + materials in view + behavior rule + gated long-term memory
+        let materialsBlock = '';
         if (materials && materials.length > 0) {
-          context = `\n\nCurrent materials in view:\n`;
-          materials.forEach(m => {
-            context += `- ${m.name}: ${m.total} kg CO₂e total\n`;
-            context += `  Point of Origin: ${m.phases.pointOfOrigin}, Transport: ${m.phases.transport}, Construction: ${m.phases.construction}, Production: ${m.phases.production}, Disposal: ${m.phases.disposal}\n`;
+          materialsBlock = `\n\nCurrent materials in view:\n`;
+          materials.forEach((m) => {
+            materialsBlock += `- ${m.name}: ${m.total} kg CO₂e total\n`;
+            materialsBlock += `  Point of Origin: ${m.phases.pointOfOrigin}, Transport: ${m.phases.transport}, Construction: ${m.phases.construction}, Production: ${m.phases.production}, Disposal: ${m.phases.disposal}\n`;
           });
         }
-        
+
+        const systemContent = [
+          'You are an expert in sustainable building materials and lifecycle carbon analysis. You help users understand embodied carbon, lifecycle phases (A1-A3 production, A4 transport, A5 construction, B maintenance, C1-C4 disposal), and material sustainability. Provide clear, concise answers focused on actionable insights.',
+          MEMORY_BEHAVIOR_RULE,
+          materialsBlock,
+          longTermBlock,
+        ]
+          .filter(Boolean)
+          .join('');
+
         const response = await invokeLLM({
           messages: [
-            {
-              role: 'system',
-              content: `You are an expert in sustainable building materials and lifecycle carbon analysis. You help users understand embodied carbon, lifecycle phases (A1-A3 production, A4 transport, A5 construction, B maintenance, C1-C4 disposal), and material sustainability. Provide clear, concise answers focused on actionable insights.${context}`,
-            },
-            {
-              role: 'user',
-              content: question,
-            },
+            { role: 'system', content: systemContent },
+            ...activeContextMessages,
+            { role: 'user', content: question },
           ],
         });
-        
+
         return {
           answer: response.choices[0].message.content || 'I apologize, but I could not generate a response.',
         };
@@ -95,7 +123,7 @@ export const appRouter = router({
 
     // Get single material by ID
     getById: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.string() }))
       .query(async ({ input }) => {
         return await getMaterialById(input.id);
       }),

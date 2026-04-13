@@ -1,156 +1,108 @@
-import { Link } from 'wouter';
-import MinimalFooter from '@/components/MinimalFooter';
-import { FloatingParticles } from '@/components/FloatingParticles';
-import { Button } from '@/components/ui/button';
-import { Search, GitCompare, FileText, Database, Layers, CheckCircle } from 'lucide-react';
+import { Link } from "wouter";
+import MinimalFooter from "@/components/MinimalFooter";
+import { FloatingParticles } from "@/components/FloatingParticles";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Database, Layers, GitCompare } from "lucide-react";
 
-/** Copy-level constant for material count (reflects real inventory). Update when seed grows. */
-const MATERIAL_COUNT_COPY = "85+";
+const MVP_CARDS = [
+  {
+    href: "/materials",
+    title: "Material Database",
+    body: "Browse a vetted catalog of building materials with transparent embodied carbon, LIS/RIS scores, and cost-per-impact.",
+    cta: "Browse materials →",
+    icon: Database,
+    accent: "from-[#09FBD3] to-[#07C9B3]",
+    borderHover: "hover:border-[#09FBD3]/50",
+  },
+  {
+    href: "/lifecycle",
+    title: "Lifecycle Breakdown",
+    body: "See where the impact actually happens—from point of origin through transport, construction, use, and end-of-life—for each material.",
+    cta: "View lifecycle chart →",
+    icon: Layers,
+    accent: "from-[#FF8E4A] to-[#FF6B35]",
+    borderHover: "hover:border-[#FF8E4A]/50",
+  },
+  {
+    href: "/analysis",
+    title: "Compare & Visualize Materials",
+    body: "Put materials side-by-side in LIS/RIS quadrants, compare CPI, and explore trade-offs with interactive charts.",
+    cta: "Open comparison tools →",
+    icon: GitCompare,
+    accent: "from-[#09FBD3] to-[#FF8E4A]",
+    borderHover: "hover:border-[#09FBD3]/50",
+  },
+];
 
 export default function Home() {
-  const scrollToHowItWorks = () => {
-    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section - Architect-First Messaging */}
-      <section className="relative flex flex-col items-center justify-center overflow-hidden min-h-screen py-20">
+      {/* Hero — compact so hero + cards fit above the fold on desktop */}
+      <section className="relative flex flex-col items-center justify-center overflow-hidden py-10 md:py-12">
         <FloatingParticles />
-        
-        <div className="relative z-10 container text-center px-4 max-w-5xl">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
-            Stop Second-Guessing<br />Material Choices
+        <div className="relative z-10 container text-center px-4 max-w-4xl">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            Choose Your Path to Clarity
           </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Compare lifecycle impact, carbon footprint, and circularity scores across <span className="text-[#09FBD3] font-semibold">{MATERIAL_COUNT_COPY} real building materials</span> — so you can specify with confidence, not guesswork.
+          <p className="text-base md:text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            BlockPlane helps builders, architects, and sustainability teams compare materials by carbon, cost, and long-term resilience—without becoming a data scientist. Start with a single material, then zoom out to lifecycle phases and cross-material comparisons.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/features">
-              <Button 
-                size="lg"
-                className="relative overflow-hidden bg-gradient-to-r from-[#09FBD3] to-[#FF8E4A] text-black font-semibold text-lg px-8 py-6 h-auto hover:shadow-[0_0_40px_rgba(9,251,211,0.6)] transition-all duration-300"
-              >
-                Explore Materials
+        </div>
+      </section>
+
+      {/* Primary cards */}
+      <section className="relative py-8 md:py-10 bg-slate-900/50">
+        <div className="container px-4 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-4 md:gap-6">
+            {MVP_CARDS.map((card) => {
+              const Icon = card.icon;
+              return (
+                <Link key={card.href} href={card.href}>
+                  <Card
+                    className={`h-full cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:shadow-xl bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 ${card.borderHover}`}
+                  >
+                    <CardHeader className="pb-2">
+                      <div
+                        className={`w-10 h-10 rounded-lg bg-gradient-to-br ${card.accent} flex items-center justify-center mb-3`}
+                      >
+                        <Icon className="w-5 h-5 text-black" />
+                      </div>
+                      <CardTitle className="text-white text-lg">{card.title}</CardTitle>
+                      <CardDescription className="text-gray-300 leading-relaxed text-sm">
+                        {card.body}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <span className="text-sm font-semibold text-[#09FBD3]">{card.cta}</span>
+                    </CardContent>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Builder's Assistant entry — slim banner below cards */}
+      <section className="border-t border-slate-700/50 bg-slate-800/40">
+        <div className="container px-4 max-w-5xl mx-auto py-4 md:py-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h3 className="text-sm font-semibold text-white">Need a second opinion?</h3>
+              <p className="text-sm text-gray-400 mt-0.5">
+                Ask the AI Builder&apos;s Assistant to walk you through LIS, RIS, CPI, and better material choices.
+              </p>
+            </div>
+            <Link href="/assistant">
+              <Button variant="outline" size="sm" className="border-slate-600 text-slate-200 hover:bg-slate-700/50 shrink-0">
+                Ask the AI →
               </Button>
             </Link>
-            
-            <Button 
-              size="lg"
-              variant="outline"
-              onClick={scrollToHowItWorks}
-              className="bg-transparent border-2 border-white/30 text-white font-semibold text-lg px-8 py-6 h-auto hover:bg-white/10 hover:border-white/50 transition-all duration-300"
-            >
-              See How It Works
-            </Button>
           </div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="relative py-20 bg-slate-900/50">
-        <div className="container px-4 max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-white text-center mb-4">
-            How It Works
-          </h2>
-          <p className="text-xl text-gray-400 text-center mb-16 max-w-2xl mx-auto">
-            Three simple steps to make informed material decisions
-          </p>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Step 1 */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700/50 hover:border-[#09FBD3]/50 transition-all duration-300">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#09FBD3] to-[#07C9B3] flex items-center justify-center mb-6">
-                <Search className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">1. Search</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Find materials by type, performance requirements, or project needs. Filter by category, carbon threshold, or circularity score.
-              </p>
-            </div>
-
-            {/* Step 2 */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700/50 hover:border-[#FF8E4A]/50 transition-all duration-300">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FF8E4A] to-[#FF6B35] flex items-center justify-center mb-6">
-                <GitCompare className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">2. Compare</h3>
-              <p className="text-gray-300 leading-relaxed">
-                See side-by-side lifecycle data, embodied carbon, durability scores, and cost implications. Understand trade-offs clearly.
-              </p>
-            </div>
-
-            {/* Step 3 */}
-            <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-8 border border-slate-700/50 hover:border-[#09FBD3]/50 transition-all duration-300">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#09FBD3] to-[#FF8E4A] flex items-center justify-center mb-6">
-                <FileText className="w-8 h-8 text-black" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">3. Specify</h3>
-              <p className="text-gray-300 leading-relaxed">
-                Export reports, comparison charts, and AI-powered recommendations for your project specifications and stakeholder presentations.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof / Stats Section */}
-      <section className="relative py-20 bg-slate-950">
-        <div className="container px-4 max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="flex items-center justify-center mb-4">
-                <Database className="w-12 h-12 text-[#09FBD3]" />
-              </div>
-              <div className="text-5xl font-bold text-white">{MATERIAL_COUNT_COPY}</div>
-              <div className="text-xl text-gray-400">Real Building Materials</div>
-              <div className="text-sm text-gray-500">With full lifecycle data</div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-center mb-4">
-                <Layers className="w-12 h-12 text-[#FF8E4A]" />
-              </div>
-              <div className="text-5xl font-bold text-white">7</div>
-              <div className="text-xl text-gray-400">Material Categories</div>
-              <div className="text-sm text-gray-500">Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry</div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-center mb-4">
-                <CheckCircle className="w-12 h-12 text-[#09FBD3]" />
-              </div>
-              <div className="text-5xl font-bold text-white">100%</div>
-              <div className="text-xl text-gray-400">Transparent Data</div>
-              <div className="text-sm text-gray-500">Carbon, circularity, durability, cost</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="relative py-20 bg-gradient-to-b from-slate-950 to-slate-900">
-        <FloatingParticles />
-        <div className="relative z-10 container px-4 max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Make Clearer Material Decisions?
-          </h2>
-          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-            Join architects who are specifying with confidence, backed by transparent lifecycle data.
-          </p>
-          <Link href="/features">
-            <Button 
-              size="lg"
-              className="relative overflow-hidden bg-gradient-to-r from-[#09FBD3] to-[#FF8E4A] text-black font-semibold text-lg px-10 py-6 h-auto hover:shadow-[0_0_40px_rgba(9,251,211,0.6)] transition-all duration-300"
-            >
-              Start Exploring
-            </Button>
-          </Link>
-        </div>
-      </section>
-      
       <MinimalFooter />
     </div>
   );
