@@ -137,9 +137,11 @@ export default function Home() {
         <div className="container text-center px-4 max-w-3xl">
 
           {/* Dominant headline */}
-          <h1 className="font-black tracking-tight leading-none mb-1 uppercase">
-            <span className="block text-5xl md:text-7xl text-white">Benchmark</span>
-            <span className="block text-7xl md:text-9xl text-transparent bg-clip-text bg-gradient-to-r from-[#09FBD3] to-[#FF8E4A]">
+          <h1 className="font-black leading-none mb-1">
+            <span className="block text-6xl md:text-8xl text-white tracking-[0.15em] uppercase">
+              BENCHMARK
+            </span>
+            <span className="block text-8xl md:text-[10rem] tracking-[0.1em] text-transparent bg-clip-text bg-gradient-to-r from-[#09FBD3] to-[#FF8E4A]">
               2000
             </span>
           </h1>
