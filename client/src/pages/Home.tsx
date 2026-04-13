@@ -19,7 +19,7 @@ function HouseIllustration() {
     <svg
       viewBox="0 0 500 300"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full max-w-lg mx-auto select-none"
+      className="w-full max-w-3xl mx-auto select-none"
       aria-hidden="true"
     >
       <defs>
@@ -146,19 +146,29 @@ export default function Home() {
             </span>
           </h1>
 
+          {/* Quiet subtitle */}
+          <p className="text-sm text-slate-500 tracking-widest uppercase mt-3 mb-6">
+            A 2,000 sq ft reference home
+          </p>
+
           {/* Description */}
-          <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mt-5 mb-2 leading-relaxed">
+          <p className="text-base md:text-lg text-slate-400 max-w-2xl mx-auto mb-1 leading-relaxed">
             A 2,000 sq ft code-built North American home — the reference point
             behind every LIS, RIS, and CPI score in BlockPlane.
           </p>
-          <p className="text-sm text-slate-500 max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sm text-slate-500 max-w-xl mx-auto mb-2 leading-relaxed">
             Most projects start close to this. Small changes move these numbers quickly.
           </p>
 
           {/* House illustration */}
-          <div className="mb-8 px-2">
+          <div className="mb-4 px-2">
             <HouseIllustration />
           </div>
+
+          {/* Connective line */}
+          <p className="text-xs text-slate-500 text-center mb-5">
+            This configuration produces the baseline scores below.
+          </p>
 
           {/* Score tiles */}
           <div className="grid grid-cols-3 gap-3 md:gap-5 max-w-xl mx-auto mb-3">
