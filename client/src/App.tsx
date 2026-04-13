@@ -45,7 +45,7 @@ function Router() {
       <Route path={"/analysis"} component={Analysis} />
       <Route path="/assistant" component={Assistant} />
       <Route path={"/impact"} component={KPIDashboard} />
-      <Route path="/materials/:id" component={MaterialDetail} />
+      <Route path="/materials/:id" component={MaterialDetailEnhanced} />
       <Route path="/projects" component={ProjectAnalysis} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/budget-optimizer" component={BudgetOptimizer} />

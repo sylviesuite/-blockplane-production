@@ -234,7 +234,7 @@ export const materialAPIRouter = router({
    * Includes lifecycle data, EPD metadata, and confidence information
    */
   getById: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const material = await getMaterialById(input.id);
       
@@ -278,7 +278,7 @@ export const materialAPIRouter = router({
    */
   getRecommendations: publicProcedure
     .input(z.object({
-      materialId: z.number(),
+      materialId: z.string(),
       maxResults: z.number().min(1).max(10).default(5),
       prioritizeCarbon: z.boolean().default(true),
       prioritizeCost: z.boolean().default(false),
@@ -338,9 +338,11 @@ export const materialAPIRouter = router({
         };
       });
       
-      // Sort by score (descending) and take top results
+      // Sort by score (descending), keep only genuine improvements, take top results
       scored.sort((a, b) => b.score - a.score);
-      const topRecommendations = scored.slice(0, input.maxResults);
+      const topRecommendations = scored
+        .filter(rec => rec.carbonSavings > 0 || rec.risDelta > 0)
+        .slice(0, input.maxResults);
       
       // Add recommendation reasons
       return topRecommendations.map(rec => {
