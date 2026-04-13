@@ -475,9 +475,6 @@ export default function MaterialDetailEnhanced() {
                           {rec.risDelta > 0 && (
                             <span className="text-purple-400">+{rec.risDelta} RIS</span>
                           )}
-                          {rec.lisDelta < 0 && (
-                            <span className="text-orange-400">{rec.lisDelta} LIS</span>
-                          )}
                         </div>
                       </div>
                     </Link>

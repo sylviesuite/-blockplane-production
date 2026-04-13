@@ -40,7 +40,7 @@ export function FloatingParticles() {
         speedX: (Math.random() - 0.5) * 0.3,
         speedY: (Math.random() - 0.5) * 0.3,
         color: colors[Math.floor(Math.random() * colors.length)],
-        opacity: Math.random() * 0.5 + 0.2,
+        opacity: (Math.random() * 0.5 + 0.2) * 0.8,
       });
     }
 
