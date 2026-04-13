@@ -338,10 +338,15 @@ export const materialAPIRouter = router({
         };
       });
       
-      // Sort by score (descending), keep only genuine improvements, take top results
+      // Sort by score (descending), keep only genuine improvements, take top results.
+      // Rules: neither RIS nor carbon may regress, and at least one must strictly improve.
       scored.sort((a, b) => b.score - a.score);
       const topRecommendations = scored
-        .filter(rec => rec.carbonSavings > 0 || rec.risDelta > 0)
+        .filter(rec =>
+          rec.risDelta >= 0 &&
+          rec.carbonSavings >= 0 &&
+          (rec.risDelta > 0 || rec.carbonSavings > 0)
+        )
         .slice(0, input.maxResults);
       
       // Add recommendation reasons
