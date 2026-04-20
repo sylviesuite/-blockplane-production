@@ -140,6 +140,7 @@ export function InsightBoxV2({
     if (status === "loading") return;
     setStatus("loading");
     setError(null);
+    setMode("ai");
 
     try {
       const response = await provider.generateMaterialInsight({
