@@ -368,14 +368,21 @@ export function InsightBoxV2({
         <div className="flex flex-col gap-2">
           <button
             type="button"
-            disabled
-            className="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm opacity-60 cursor-not-allowed"
+            onClick={handleGenerate}
+            disabled={status === "loading"}
+            className={`inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition ${
+              status === "loading"
+                ? "opacity-60 cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
+                : "bg-emerald-600 text-white hover:bg-emerald-500"
+            }`}
           >
-            Generate Insight
+            {status === "loading" ? "Generating…" : "Generate Insight"}
           </button>
-          <p className="text-xs text-muted-foreground">
-            AI-generated insights are coming soon. This version shows curated static insights.
-          </p>
+          {!aiDisplayText && status !== "loading" && (
+            <p className="text-xs text-muted-foreground">
+              AI-generated insights use Claude to interpret this material's LIS, RIS, and CPI scores.
+            </p>
+          )}
         </div>
       </div>
 

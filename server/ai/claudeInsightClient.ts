@@ -4,8 +4,9 @@ import type { InsightScores } from "@shared/scoring";
 import type { InsightText, InsightTone } from "@shared/insightText";
 import { buildHeuristicInsight } from "@shared/insightText";
 
-const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
-const CLAUDE_MODEL =
+// Read at call time so dotenv is guaranteed to have run before these are needed.
+const getClaudeApiKey = () => process.env.CLAUDE_API_KEY;
+const getClaudeModel = () =>
   process.env.CLAUDE_MODEL ?? "claude-3-5-sonnet-latest";
 
 export type InsightSource =
@@ -35,6 +36,8 @@ export async function generateClaudeInsight(
   input: AIInsightInput
 ): Promise<AIInsightResult> {
   const { materialName, scores } = input;
+  const CLAUDE_API_KEY = getClaudeApiKey();
+  const CLAUDE_MODEL = getClaudeModel();
 
   // Always compute heuristic first (this never fails)
   const heuristic = buildHeuristicInsight(scores);

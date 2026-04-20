@@ -8,7 +8,6 @@ import { claudeProvider } from "@/lib/ai/providers/claudeProvider";
 import { openaiProvider } from "@/lib/ai/providers/openaiProvider";
 
 const hasOpenAiKey = Boolean(import.meta.env.VITE_OPENAI_API_KEY);
-const hasClaudeKey = Boolean(import.meta.env.VITE_ANTHROPIC_API_KEY);
 
 const providerPreference = (import.meta.env.VITE_AI_PROVIDER as AIProviderName | undefined) ?? "mock";
 
@@ -35,7 +34,8 @@ const providerMap: Record<AIProviderName, InsightProvider> = {
 
 const resolvedProviderName: AIProviderName = (() => {
   if (providerPreference === "openai" && hasOpenAiKey) return "openai";
-  if (providerPreference === "claude" && hasClaudeKey) return "claude";
+  // claudeProvider proxies to /api/insight — no client-side key needed
+  if (providerPreference === "claude") return "claude";
   return "mock";
 })();
 

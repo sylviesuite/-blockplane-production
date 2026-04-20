@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { InsightBoxV2 } from "@/components/insights/InsightBoxV2";
 import { InsightBox } from "@/insightbox/v2/InsightBox";
 import type { InsightContext } from "@/insightbox/v2/types";
 import { localMaterials } from "@/data/materials";
@@ -464,8 +465,14 @@ export default function MaterialDetail() {
             )}
             <div className="border-t border-slate-200/80"></div>
           </div>
-          <div className="rounded-3xl border border-slate-200 bg-white/90 p-6 mt-6 shadow-lg shadow-slate-900/5">
-            <InsightBox context={insightContext} />
+          <div className="mt-6">
+            <InsightBoxV2
+              materialId={material.id}
+              materialName={material.name}
+              lis={material.lis}
+              ris={material.ris}
+              cpi={material.cpi}
+            />
           </div>
           {isEnvelopeRelatedMaterial(material) && (
             <div className="mt-6">

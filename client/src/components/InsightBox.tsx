@@ -62,7 +62,17 @@ export function InsightBox({
           throw new Error("Insight API failed");
         }
         const payload = await res.json();
-        setAiInsight(payload.insightText ?? null);
+        const raw = payload.insightText;
+        // Normalize: AI path returns {headline,body,bullets}; static returns {short,details}
+        const normalized: import("@shared/scoring").InsightText | null = raw
+          ? {
+              short: raw.short ?? raw.headline ?? "",
+              details: raw.details ?? [raw.body, ...(raw.bullets ?? [])].filter(Boolean).join(" • "),
+              source: (raw.source === "ai" ? "ai" : "static") as import("@shared/scoring").InsightSource,
+              model: raw.model,
+            }
+          : null;
+        setAiInsight(normalized);
       } catch (err) {
         if ((err as Error).name !== "AbortError") {
           setError("AI insight unavailable right now.");
@@ -169,7 +179,7 @@ export function InsightBox({
       {effectiveInsight && (
         <div className="mt-5 text-sm text-slate-700 dark:text-slate-300">
           <p className="font-semibold">{effectiveInsight.short}</p>
-          {effectiveInsight.details && <p>{effectiveInsight.details}</p>}
+          {effectiveInsight.details && <p className="mt-1">{effectiveInsight.details}</p>}
         </div>
       )}
     </div>
