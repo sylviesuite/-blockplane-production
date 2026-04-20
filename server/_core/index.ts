@@ -1,4 +1,10 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
+const _dir = dirname(fileURLToPath(import.meta.url));
+loadEnv({ path: resolve(_dir, "../../.env") });
+
 import express from "express";
 import { createServer } from "http";
 import net from "net";
