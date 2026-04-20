@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { Header } from "@/components/Header";
+import { InsightBoxV2 } from "@/components/insights/InsightBoxV2";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
@@ -273,16 +274,14 @@ export default function MaterialDetailEnhanced() {
             </div>
           </div>
 
-          {/* InsightBox — builder-facing "Why this matters" */}
-          <div className="border-l-2 border-emerald-500/70 bg-slate-800/40 rounded-r-lg pl-3 pr-3 py-2">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Lightbulb className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-emerald-400/80">
-                InsightBox
-              </span>
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed">{insightText}</p>
-          </div>
+          {/* InsightBox — AI-powered "Why this matters" */}
+          <InsightBoxV2
+            materialId={material.id}
+            materialName={material.name}
+            lis={material.lisScore}
+            ris={material.risScore}
+            cpi={parseFloat(material.costPerUnit)}
+          />
         </div>
       </div>
 
