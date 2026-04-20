@@ -19,7 +19,7 @@ function HouseIllustration() {
     <svg
       viewBox="0 0 500 300"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full max-w-3xl mx-auto select-none"
+      className="w-full max-w-none mx-auto select-none"
       aria-hidden="true"
     >
       <defs>
@@ -156,14 +156,18 @@ export default function Home() {
             A 2,000 sq ft code-built North American home — the reference point
             behind every LIS, RIS, and CPI score in BlockPlane.
           </p>
-          <p className="text-sm text-slate-500 max-w-xl mx-auto mb-2 leading-relaxed">
+          <p className="text-sm text-slate-500 max-w-xl mx-auto mb-0 leading-relaxed">
             Most projects start close to this. Small changes move these numbers quickly.
           </p>
 
-          {/* House illustration */}
-          <div className="mb-4 px-2">
-            <HouseIllustration />
-          </div>
+        </div>
+
+        {/* House illustration — wider than text column for 20% size increase */}
+        <div className="w-full max-w-[57.6rem] mx-auto px-2 mb-2">
+          <HouseIllustration />
+        </div>
+
+        <div className="container text-center px-4 max-w-3xl">
 
           {/* Connective line */}
           <p className="text-xs text-slate-500 text-center mb-5">
