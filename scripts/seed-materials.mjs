@@ -16,9 +16,16 @@
  */
 
 import { drizzle } from "drizzle-orm/mysql2";
+import mysql from "mysql2/promise";
 import { materials, lifecycleValues, risScores, pricing, epdMetadata } from "../drizzle/schema.js";
 
-const db = drizzle(process.env.DATABASE_URL);
+if (!process.env.DATABASE_URL) {
+  console.error("Missing DATABASE_URL");
+  process.exit(1);
+}
+
+const pool = mysql.createPool(process.env.DATABASE_URL);
+const db = drizzle(pool);
 
 const materialsData = [
   // ============================================================================
