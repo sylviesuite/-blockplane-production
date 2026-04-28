@@ -2,7 +2,7 @@ import type { InsightProvider, MaterialInsightInput } from "@/lib/ai/insightProv
 
 export const claudeProvider: InsightProvider = {
   async generateMaterialInsight(input: MaterialInsightInput) {
-    const res = await fetch("/api/insight", {
+    const res = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/insight`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

@@ -19,6 +19,7 @@ import {
 import { Link } from "wouter";
 import { Header } from "@/components/Header";
 import { InsightBoxV2 } from "@/components/insights/InsightBoxV2";
+import AuthGate from "@/components/AuthGate";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
@@ -274,14 +275,16 @@ export default function MaterialDetailEnhanced() {
             </div>
           </div>
 
-          {/* InsightBox — AI-powered "Why this matters" */}
-          <InsightBoxV2
-            materialId={material.id}
-            materialName={material.name}
-            lis={material.lisScore}
-            ris={material.risScore}
-            cpi={parseFloat(material.costPerUnit)}
-          />
+          {/* InsightBox — AI-powered "Why this matters" (auth-gated) */}
+          <AuthGate message="Sign in to unlock AI-powered insights for this material.">
+            <InsightBoxV2
+              materialId={material.id}
+              materialName={material.name}
+              lis={material.lisScore}
+              ris={material.risScore}
+              cpi={parseFloat(material.costPerUnit)}
+            />
+          </AuthGate>
         </div>
       </div>
 
