@@ -40,6 +40,27 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* ── House hotspot pulse animations ─────────────────────────────────────────── */
+@keyframes hotspot-ping {
+  0%        { opacity: 0.85; transform: scale(0.3); }
+  80%, 100% { opacity: 0;    transform: scale(1.8); }
+}
+
+@keyframes hotspot-dot-pulse {
+  0%, 100% { opacity: 1;   }
+  50%      { opacity: 0.4; }
+}
+
+.hotspot-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hotspot-ping 2.2s ease-out infinite;
+}
+
+.hotspot-dot {
+  animation: hotspot-dot-pulse 2.2s ease-in-out infinite;
+}
+
 :root {
   /* Lovable cyan/orange gradient colors */
   --cyan: 187 100% 51%; /* #09FBD3 */

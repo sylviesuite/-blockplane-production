@@ -24,7 +24,17 @@ interface FilterPanelProps {
   onReset: () => void;
 }
 
-const CATEGORIES = ['Timber', 'Steel', 'Concrete', 'Earth'];
+const CATEGORIES = [
+  'insulation',
+  'structural',
+  'walls',
+  'engineered_wood',
+  'roofing',
+  'flooring',
+  'mechanical',
+  'coatings',
+  'windows',
+];
 
 export function FilterPanel({ filters, onFiltersChange, onReset }: FilterPanelProps) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -112,16 +122,17 @@ export function FilterPanel({ filters, onFiltersChange, onReset }: FilterPanelPr
           {/* Categories */}
           <div className="space-y-2">
             <Label>Categories</Label>
-            <div className="flex flex-wrap gap-2">
+            <div className="space-y-2">
               {CATEGORIES.map((category) => (
-                <Badge
+                <Button
                   key={category}
                   variant={filters.categories.includes(category) ? 'default' : 'outline'}
-                  className="cursor-pointer"
+                  size="sm"
                   onClick={() => toggleCategory(category)}
+                  className="w-full justify-start"
                 >
                   {category}
-                </Badge>
+                </Button>
               ))}
             </div>
           </div>
@@ -223,24 +234,24 @@ export function applyFilters(materials: any[], filters: FilterState): any[] {
     }
 
     // RIS range
-    const ris = material.risScores?.ris || 0;
+    const ris = material.ris ?? 0;
     if (ris < filters.risRange[0] || ris > filters.risRange[1]) {
       return false;
     }
 
     // LIS range
-    const lis = material.risScores?.lis || 0;
+    const lis = material.lis ?? 0;
     if (lis < filters.lisRange[0] || lis > filters.lisRange[1]) {
       return false;
     }
 
     // Carbon max
-    if (material.totalCarbon > filters.carbonMax) {
+    if (material.total > filters.carbonMax) {
       return false;
     }
 
     // Cost range
-    const cost = material.pricing?.costPerUnit || 0;
+    const cost = material.cost?.value ?? 0;
     if (cost < filters.costRange[0] || (filters.costRange[1] < 1000 && cost > filters.costRange[1])) {
       return false;
     }

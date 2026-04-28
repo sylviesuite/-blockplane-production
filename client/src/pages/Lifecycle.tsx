@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'wouter';
 import BreakdownTable from '../components/BreakdownTable';
 import ComparisonChart from '../components/ComparisonChart';
 import MaterialTypeFilters, { filterMaterialsByType } from '../components/MaterialTypeFilters';

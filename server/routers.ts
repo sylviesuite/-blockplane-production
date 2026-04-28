@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { z } from "zod";
+import { supabaseSignIn, supabaseSignUp, upsertUserRow, setSessionCookie, insertBetaSignup } from "./lib/auth";
 import { getAllMaterials, getMaterialsByCategory, getMaterialById } from './db';
 import { logAnalyticsEvent, getKPIMetrics, getTopAlternatives } from './analytics-db';
 import { findAlternatives, getRecommendationSummary } from './recommendations';
@@ -25,12 +26,49 @@ export const appRouter = router({
   swapAssistant: swapAssistantRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+
+    login: publicProcedure
+      .input(z.object({ email: z.string().email(), password: z.string().min(1) }))
+      .mutation(async ({ ctx, input }) => {
+        const { user } = await supabaseSignIn(input.email, input.password);
+        await upsertUserRow({ openId: user.id, email: user.email, name: user.email.split("@")[0] });
+        await setSessionCookie(ctx.res, ctx.req, user.id, user.email.split("@")[0], user.email);
+        return { success: true } as const;
+      }),
+
+    register: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(8),
+        name: z.string().min(1).max(100),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const result = await supabaseSignUp(input.email, input.password);
+        await upsertUserRow({ openId: result.user.id, email: result.user.email, name: input.name });
+        if (result.access_token) {
+          await setSessionCookie(ctx.res, ctx.req, result.user.id, input.name, result.user.email);
+          return { success: true, requiresConfirmation: false } as const;
+        }
+        // Email confirmation enabled in Supabase — account created, session deferred
+        return { success: true, requiresConfirmation: true } as const;
+      }),
+
+    betaSignup: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        name: z.string().max(100).optional(),
+        role: z.string().max(100).optional(),
+        org: z.string().max(255).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        await insertBetaSignup(input);
+        return { success: true } as const;
+      }),
+
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+      return { success: true } as const;
     }),
   }),
 

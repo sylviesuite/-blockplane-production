@@ -4,6 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { Redirect, Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { AuthProvider } from "./contexts/AuthContext";
 
 import Home from "./pages/Home";
 import Features from "./pages/Features";
@@ -23,12 +24,13 @@ import MaterialBrowser from "./pages/MaterialBrowser";
 import APIDocumentation from "./pages/APIDocumentation";
 import GoldInsightPage from "./pages/GoldInsightPage";
 import Assistant from "./pages/Assistant";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import BetaSignup from "./pages/BetaSignup";
+import CarbonCalculator from "./pages/CarbonCalculator";
+import AuthGate from "./components/AuthGate";
 
-/** In dev only: show demo material as default preview for smoother demos/screen recordings. */
 function DefaultRoute() {
-  if (process.env.NODE_ENV === "development") {
-    return <Redirect to="/materials" />;
-  }
   return <Home />;
 }
 
@@ -45,14 +47,28 @@ function Router() {
       <Route path={"/analysis"} component={Analysis} />
       <Route path="/assistant" component={Assistant} />
       <Route path={"/impact"} component={KPIDashboard} />
+      <Route path="/calculator" component={CarbonCalculator} />
       <Route path="/materials/:id" component={MaterialDetailEnhanced} />
-      <Route path="/projects" component={ProjectAnalysis} />
-      <Route path="/admin" component={AdminDashboard} />
-      <Route path="/budget-optimizer" component={BudgetOptimizer} />
-      <Route path="/swap-assistant" component={MaterialSwapAssistant} />
-      <Route path="/global-impact" component={GlobalImpactDashboard} />
+      <Route path="/projects">
+        {() => <AuthGate redirect><ProjectAnalysis /></AuthGate>}
+      </Route>
+      <Route path="/admin">
+        {() => <AuthGate redirect><AdminDashboard /></AuthGate>}
+      </Route>
+      <Route path="/budget-optimizer">
+        {() => <AuthGate redirect><BudgetOptimizer /></AuthGate>}
+      </Route>
+      <Route path="/swap-assistant">
+        {() => <AuthGate redirect><MaterialSwapAssistant /></AuthGate>}
+      </Route>
+      <Route path="/global-impact">
+        {() => <AuthGate redirect><GlobalImpactDashboard /></AuthGate>}
+      </Route>
       <Route path="/materials" component={MaterialBrowser} />
       <Route path="/api-docs" component={APIDocumentation} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/beta" component={BetaSignup} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -68,10 +84,12 @@ function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="dark" switchable>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

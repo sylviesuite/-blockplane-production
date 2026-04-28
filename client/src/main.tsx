@@ -7,7 +7,6 @@ import superjson from "superjson";
 import { trpc } from "@/lib/trpc";
 import { UNAUTHED_ERR_MSG } from "@shared/const";
 import App from "./App";
-import { getLoginUrl } from "./const";
 import "./index.css";
 
 const queryClient = new QueryClient();
@@ -15,18 +14,17 @@ const queryClient = new QueryClient();
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
   if (typeof window === "undefined") return;
-
-  const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
-  if (!isUnauthorized) return;
-
-  window.location.href = getLoginUrl();
+  if (error.message !== UNAUTHED_ERR_MSG) return;
+  // Don't redirect if already on an auth page
+  if (["/login", "/signup", "/beta"].includes(window.location.pathname)) return;
+  window.location.href = "/login";
 };
 
 // ✅ Correct: create the tRPC *client* with createTRPCClient
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: "/api/trpc",
+      url: `${import.meta.env.VITE_API_URL ?? ""}/api/trpc`,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {

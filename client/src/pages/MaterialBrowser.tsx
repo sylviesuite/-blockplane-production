@@ -117,15 +117,15 @@ export default function MaterialBrowser() {
       <Header />
       {/* Header */}
       <div className="bg-slate-900/90 border-b border-slate-800">
-        <div className="container py-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Material Database</h1>
+        <div className="container py-4">
+          <h1 className="text-4xl font-bold text-white mb-1">Material Database</h1>
           <p className="text-lg text-slate-200">
             Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
           </p>
         </div>
       </div>
 
-      <div className="container py-8">
+      <div className="container py-5">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
             <div className="lg:col-span-1">
