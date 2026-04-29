@@ -78,29 +78,42 @@ async function startServer() {
   // Diagnostic endpoint — checks env vars and Supabase reachability
   app.get("/api/diag", async (req, res) => {
     const supabaseUrl = process.env.SUPABASE_URL;
-    const hasAnonKey = !!process.env.SUPABASE_ANON_KEY;
+    const anonKey = process.env.SUPABASE_ANON_KEY ?? "";
     const hasServiceKey = !!process.env.SUPABASE_SERVICE_KEY;
     const hasJwtSecret = !!process.env.JWT_SECRET;
+    // Show last 12 chars so user can verify which key is loaded without exposing full value
+    const anonKeyTail = anonKey ? `...${anonKey.slice(-12)}` : "NOT_SET";
+    const serviceKeyTail = process.env.SUPABASE_SERVICE_KEY
+      ? `...${process.env.SUPABASE_SERVICE_KEY.slice(-12)}`
+      : "NOT_SET";
     let supabaseReachable = false;
     let supabaseError: string | null = null;
-    if (supabaseUrl) {
+    let supabaseAuthResponse: string | null = null;
+    if (supabaseUrl && anonKey) {
       try {
         const r = await fetch(`${supabaseUrl}/auth/v1/settings`, {
-          headers: { apikey: process.env.SUPABASE_ANON_KEY ?? "" },
+          headers: { apikey: anonKey },
         });
-        supabaseReachable = r.ok || r.status < 500;
-        if (!r.ok) supabaseError = `HTTP ${r.status}`;
+        supabaseReachable = true;
+        if (!r.ok) {
+          const body = await r.text().catch(() => "");
+          supabaseError = `HTTP ${r.status}: ${body.slice(0, 120)}`;
+        } else {
+          supabaseAuthResponse = "OK";
+        }
       } catch (e: any) {
         supabaseError = e?.message ?? String(e);
         if (e?.cause) supabaseError += ` (cause: ${e.cause?.message ?? e.cause})`;
       }
     }
     res.json({
-      supabaseUrl: supabaseUrl ? supabaseUrl.slice(0, 50) : "NOT_SET",
-      hasAnonKey,
+      supabaseUrl: supabaseUrl ? supabaseUrl.slice(0, 60) : "NOT_SET",
+      anonKeyTail,
+      serviceKeyTail,
       hasServiceKey,
       hasJwtSecret,
       supabaseReachable,
+      supabaseAuthResponse,
       supabaseError,
     });
   });
