@@ -44,6 +44,7 @@ const ALLOWED_ORIGINS = [
   "https://symphonious-lamington-8c9851.netlify.app",
   "https://blockplanemetric.com",
   "https://www.blockplanemetric.com",
+  "https://app.blockplanemetric.com",
   ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
 ];
 
