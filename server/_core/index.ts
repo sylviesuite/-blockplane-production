@@ -74,6 +74,36 @@ async function startServer() {
   registerOAuthRoutes(app);
   registerInsightRoutes(app);
   registerChatRoutes(app);
+
+  // Diagnostic endpoint — checks env vars and Supabase reachability
+  app.get("/api/diag", async (req, res) => {
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const hasAnonKey = !!process.env.SUPABASE_ANON_KEY;
+    const hasServiceKey = !!process.env.SUPABASE_SERVICE_KEY;
+    const hasJwtSecret = !!process.env.JWT_SECRET;
+    let supabaseReachable = false;
+    let supabaseError: string | null = null;
+    if (supabaseUrl) {
+      try {
+        const r = await fetch(`${supabaseUrl}/auth/v1/settings`, {
+          headers: { apikey: process.env.SUPABASE_ANON_KEY ?? "" },
+        });
+        supabaseReachable = r.ok || r.status < 500;
+        if (!r.ok) supabaseError = `HTTP ${r.status}`;
+      } catch (e: any) {
+        supabaseError = e?.message ?? String(e);
+        if (e?.cause) supabaseError += ` (cause: ${e.cause?.message ?? e.cause})`;
+      }
+    }
+    res.json({
+      supabaseUrl: supabaseUrl ? supabaseUrl.slice(0, 50) : "NOT_SET",
+      hasAnonKey,
+      hasServiceKey,
+      hasJwtSecret,
+      supabaseReachable,
+      supabaseError,
+    });
+  });
   // tRPC API
   app.use(
     "/api/trpc",

@@ -43,7 +43,18 @@ export const appRouter = router({
         name: z.string().min(1).max(100),
       }))
       .mutation(async ({ ctx, input }) => {
-        const result = await supabaseSignUp(input.email, input.password);
+        let result: Awaited<ReturnType<typeof supabaseSignUp>>;
+        try {
+          result = await supabaseSignUp(input.email, input.password);
+        } catch (err: any) {
+          console.error("[auth.register] supabaseSignUp failed:", {
+            message: err?.message,
+            cause: err?.cause,
+            supabaseUrl: process.env.SUPABASE_URL ? process.env.SUPABASE_URL.slice(0, 40) : "NOT_SET",
+            hasAnonKey: !!process.env.SUPABASE_ANON_KEY,
+          });
+          throw err;
+        }
         await upsertUserRow({ openId: result.user.id, email: result.user.email, name: input.name });
         if (result.access_token) {
           await setSessionCookie(ctx.res, ctx.req, result.user.id, input.name, result.user.email);
