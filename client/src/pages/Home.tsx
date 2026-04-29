@@ -773,17 +773,17 @@ export default function Home() {
                 Project analysis, budget optimizer, material swap assistant, AI insights, and global impact dashboard.
               </p>
               {user ? (
-                <a href="https://app.blockplanemetric.com" target="_blank" rel="noopener noreferrer">
+                <Link href="/projects">
                   <Button size="sm" className="mt-2 w-full bg-[#FF8E4A]/20 border border-[#FF8E4A]/40 text-[#FF8E4A] hover:bg-[#FF8E4A]/30">
                     Open projects →
                   </Button>
-                </a>
+                </Link>
               ) : (
-                <a href="https://app.blockplanemetric.com" target="_blank" rel="noopener noreferrer">
+                <Link href="/signup">
                   <Button size="sm" className="mt-2 w-full bg-[#09FBD3]/10 border border-[#09FBD3]/30 text-[#09FBD3] hover:bg-[#09FBD3]/20">
                     Create free account →
                   </Button>
-                </a>
+                </Link>
               )}
             </div>
           </div>

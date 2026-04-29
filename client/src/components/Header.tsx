@@ -66,12 +66,12 @@ export function Header() {
               </Button>
             </>
           ) : (
-            <a href="https://app.blockplanemetric.com" target="_blank" rel="noopener noreferrer">
+            <Link href="/login">
               <Button variant="ghost" size="sm" className="gap-2">
                 <LogIn className="h-4 w-4" />
                 Sign in
               </Button>
-            </a>
+            </Link>
           )}
 
           {toggleTheme && (
