@@ -7,7 +7,7 @@ import { buildHeuristicInsight } from "@shared/insightText";
 // Read at call time so dotenv is guaranteed to have run before these are needed.
 const getClaudeApiKey = () => process.env.CLAUDE_API_KEY;
 const getClaudeModel = () =>
-  process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6";
+  (process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6").trim().replace(/^["']|["']$/g, "");
 
 export type InsightSource =
   | "heuristic-only"
