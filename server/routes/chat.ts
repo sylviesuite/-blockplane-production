@@ -25,7 +25,7 @@ export function registerChatRoutes(app: Application) {
     }
 
     const apiKey = process.env.CLAUDE_API_KEY;
-    const model = process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6";
+    const model = (process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6").trim().replace(/^["']|["']$/g, "");
 
     if (!apiKey) {
       res.status(503).json({ error: "AI not configured on this server" });
