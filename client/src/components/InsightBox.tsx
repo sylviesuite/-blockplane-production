@@ -41,7 +41,7 @@ export function InsightBox({
       try {
         setLoading(true);
         setError(null);
-        const res = await fetch(`${import.meta.env.VITE_API_URL ?? ""}/api/insight`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL ?? "https://blockplane-production.onrender.com"}/api/insight`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,

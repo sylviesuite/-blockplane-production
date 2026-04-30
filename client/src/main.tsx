@@ -24,7 +24,7 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
-      url: `${import.meta.env.VITE_API_URL ?? ""}/api/trpc`,
+      url: `${import.meta.env.VITE_API_URL ?? "https://blockplane-production.onrender.com"}/api/trpc`,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {
