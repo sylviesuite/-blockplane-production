@@ -44,7 +44,10 @@
       "Bash(grep -v \"^$\")",
       "Bash(echo \"PID: $!\")",
       "WebFetch(domain:github.com)",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(xargs cat *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(git push *)"
     ]
   }
 }
