@@ -10,6 +10,7 @@ export default function BetaSignup() {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [org, setOrg] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const betaSignup = trpc.auth.betaSignup.useMutation({
@@ -19,6 +20,7 @@ export default function BetaSignup() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    if (honeypot) return;
     betaSignup.mutate({ email, name: name || undefined, role: role || undefined, org: org || undefined });
   }
 
@@ -92,6 +94,20 @@ export default function BetaSignup() {
               type="text"
               value={org}
               onChange={(e) => setOrg(e.target.value)}
+            />
+          </div>
+
+          {/* Honeypot: off-screen, invisible to humans, filled by bots */}
+          <div style={{ position: "absolute", left: "-9999px", width: "1px", height: "1px", overflow: "hidden" }} aria-hidden="true">
+            <label htmlFor="website">Website</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
             />
           </div>
 
