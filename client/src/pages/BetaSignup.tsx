@@ -126,6 +126,11 @@ export default function BetaSignup() {
             Sign in
           </Link>
         </p>
+        <p className="text-center text-sm text-muted-foreground">
+          <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+            Terms of Service
+          </Link>
+        </p>
       </div>
     </div>
   );
