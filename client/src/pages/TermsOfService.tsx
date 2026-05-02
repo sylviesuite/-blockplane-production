@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 const sections = [
   {
     title: "1. Acceptance of Terms",
-    body: "By accessing or using Block Plane ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.",
+    body: `By accessing or using Block Plane ("the Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.`,
   },
   {
     title: "2. Description of Service",
