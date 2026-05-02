@@ -28,9 +28,9 @@ export default function BetaSignup() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-sm space-y-4 text-center">
-          <h1 className="text-2xl font-bold">You're on the list</h1>
+          <h1 className="text-2xl font-bold">You're in.</h1>
           <p className="text-muted-foreground">
-            We'll be in touch as we roll out early access.
+            We're onboarding residential architects and designers first. We'll be in touch soon with your early access details.
           </p>
           <Link href="/">
             <Button variant="outline">Back to home</Button>
@@ -44,9 +44,9 @@ export default function BetaSignup() {
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-sm space-y-6">
         <div className="space-y-1 text-center">
-          <h1 className="text-2xl font-bold">Join the BlockPlane beta</h1>
+          <h1 className="text-2xl font-bold">Design greener homes from day one</h1>
           <p className="text-sm text-muted-foreground">
-            Get early access to enhanced features as we build them.
+            Block Plane is built for residential architects and designers. Compare embodied carbon trade-offs during early concept work — before materials are locked in. Built around a 2,000 sq ft family home benchmark you can shape to fit your vision.
           </p>
         </div>
 
