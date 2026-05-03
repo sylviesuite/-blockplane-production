@@ -1,6 +1,6 @@
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const AGENT_MODEL = "claude-sonnet-4-20250514";
-const QUERY_DELAY_MS = 10_000;
+const QUERY_DELAY_MS = 65_000;
 
 const SYSTEM_PROMPT = `You are a building materials research assistant. Search the web to find ONE specific, real building material product sourced or commonly used in Northern Michigan. Return ONLY a valid JSON object with no other text, no markdown, and no code fences.
 
@@ -9,7 +9,7 @@ Required fields:
   "name": "specific product name, e.g. Michigan White Pine Dimensional Lumber 2x4",
   "category": "one of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping",
   "functionalUnit": "unit of measure, e.g. m³, m², kg, linear meter, unit",
-  "totalCarbon": number (kg CO₂e per functional unit),
+  "totalCarbon": number (kg CO₂e per functional unit, cradle to gate),
   "costPerUnit": number (USD per functional unit),
   "risScore": integer 0-100 (higher = more regenerative),
   "lisScore": integer 0-100 (higher = better lifecycle performance),
@@ -186,30 +186,45 @@ function safeNum(value: unknown): number {
   return isNaN(n) ? 0 : n;
 }
 
+function confidenceToScore(level: string): number {
+  if (level === "High") return 85;
+  if (level === "Medium") return 60;
+  return 30;
+}
+
+function confidenceToVerification(level: string): string {
+  return level === "High" ? "verified" : "unverified";
+}
+
 // ---------------------------------------------------------------------------
 // Database writes via Supabase REST
+// Real table names (inspected from Supabase):
+//   materials        — name, category, manufacturer, description, data_quality_score, source
+//   carbon_footprints — material_id, a1_a3_manufacturing, a4_transport, a5_installation,
+//                       b1_b7_use_phase, c1_c4_end_of_life, total_carbon_cradle_to_gate,
+//                       total_carbon_cradle_to_grave, functional_unit, source, verification_status
+//   lis_ris_scores   — material_id, lis_score, ris_score, baseline_region,
+//                       calculation_version, calculation_date
 // ---------------------------------------------------------------------------
 
 async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; skipped: boolean }> {
   const name = data.name.slice(0, 255);
 
-  // Insert material, ignoring duplicate names
   const inserted = await supabaseRest("/rest/v1/materials", {
     method: "POST",
     headers: { Prefer: "return=representation,resolution=ignore-duplicates" },
     body: JSON.stringify({
       name,
-      category: data.category,
-      functionalUnit: (data.functionalUnit ?? "m²").slice(0, 50),
-      totalCarbon: safeNum(data.totalCarbon),
+      category: data.category.toLowerCase(),
+      manufacturer: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
       description: data.description ?? null,
-      confidenceLevel: data.confidenceLevel ?? "Low",
-      isRegenerative: data.isRegenerative === 1 ? 1 : 0,
+      data_quality_score: confidenceToScore(data.confidenceLevel),
+      source: data.source ? data.source.slice(0, 255) : null,
     }),
   });
 
-  // Resolve material ID — may be empty if duplicate was ignored
-  let materialId: number | string | null = null;
+  // Resolve UUID — may be empty array if duplicate was ignored
+  let materialId: string | null = null;
   if (Array.isArray(inserted) && inserted.length > 0) {
     materialId = inserted[0].id;
   } else {
@@ -222,52 +237,39 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
   if (!materialId) return { inserted: false, skipped: true };
 
   const wasNew = Array.isArray(inserted) && inserted.length > 0;
+  const totalCarbon = safeNum(data.totalCarbon);
+  const c1c4 = safeNum(data.c1c4);
 
-  // Lifecycle values
-  const phases = [
-    { phase: "A1-A3", value: safeNum(data.a1a3) },
-    { phase: "A4",    value: safeNum(data.a4) },
-    { phase: "A5",    value: safeNum(data.a5) },
-    { phase: "B",     value: safeNum(data.b) },
-    { phase: "C1-C4", value: safeNum(data.c1c4) },
-  ];
-  for (const row of phases) {
-    await supabaseRest("/rest/v1/lifecycleValues", {
-      method: "POST",
-      headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
-      body: JSON.stringify({ materialId, ...row }),
-    }).catch((e) => console.warn(`[MaterialResearchAgent] lifecycleValues insert skipped: ${e.message}`));
-  }
-
-  // Pricing
-  await supabaseRest("/rest/v1/pricing", {
-    method: "POST",
-    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
-    body: JSON.stringify({ materialId, costPerUnit: safeNum(data.costPerUnit), currency: "USD" }),
-  }).catch((e) => console.warn(`[MaterialResearchAgent] pricing insert skipped: ${e.message}`));
-
-  // RIS scores
-  await supabaseRest("/rest/v1/risScores", {
+  await supabaseRest("/rest/v1/carbon_footprints", {
     method: "POST",
     headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
     body: JSON.stringify({
-      materialId,
-      risScore: clampInt(data.risScore, 0, 100),
-      lisScore: clampInt(data.lisScore, 0, 100),
+      material_id: materialId,
+      a1_a3_manufacturing: safeNum(data.a1a3),
+      a4_transport: safeNum(data.a4),
+      a5_installation: safeNum(data.a5),
+      b1_b7_use_phase: safeNum(data.b),
+      c1_c4_end_of_life: c1c4,
+      total_carbon_cradle_to_gate: totalCarbon,
+      total_carbon_cradle_to_grave: totalCarbon + c1c4,
+      functional_unit: (data.functionalUnit ?? "m²").slice(0, 50),
+      source: data.source ? data.source.slice(0, 255) : null,
+      verification_status: confidenceToVerification(data.confidenceLevel),
     }),
-  }).catch((e) => console.warn(`[MaterialResearchAgent] risScores insert skipped: ${e.message}`));
+  }).catch((e) => console.warn(`[MaterialResearchAgent] carbon_footprints skipped: ${e.message}`));
 
-  // EPD metadata
-  await supabaseRest("/rest/v1/epdMetadata", {
+  await supabaseRest("/rest/v1/lis_ris_scores", {
     method: "POST",
     headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
     body: JSON.stringify({
-      materialId,
-      source: (data.source ?? "Web research").slice(0, 255),
-      manufacturer: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
-      region: (data.region ?? "Northern Michigan").slice(0, 100),
+      material_id: materialId,
+      lis_score: clampInt(data.lisScore, 0, 100),
+      ris_score: clampInt(data.risScore, 0, 100),
+      baseline_region: "Great Lakes",
+      calculation_version: "1.0",
+      calculation_date: new Date().toISOString().split("T")[0],
     }),
-  }).catch((e) => console.warn(`[MaterialResearchAgent] epdMetadata insert skipped: ${e.message}`));
+  }).catch((e) => console.warn(`[MaterialResearchAgent] lis_ris_scores skipped: ${e.message}`));
 
   return { inserted: wasNew, skipped: !wasNew };
 }
