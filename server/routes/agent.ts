@@ -13,14 +13,15 @@ export function registerAgentRoutes(app: Application) {
       return;
     }
 
-    try {
-      console.log("[AgentRoute] Starting material research agent");
-      const summary = await runMaterialResearchAgent();
-      console.log("[AgentRoute] Agent complete:", summary);
-      res.json({ ok: true, summary });
-    } catch (err: any) {
-      console.error("[AgentRoute] Agent failed:", err);
-      res.status(500).json({ error: err?.message ?? "Agent failed" });
-    }
+    // Respond immediately so the HTTP connection isn't held open for the full run (~22 min)
+    res.status(202).json({ ok: true, message: "Agent started — check Render logs for results" });
+
+    // Run asynchronously after response is sent
+    setImmediate(() => {
+      console.log("[AgentRoute] Starting material research agent (async)");
+      runMaterialResearchAgent()
+        .then((summary) => console.log("[AgentRoute] Agent complete:", JSON.stringify(summary)))
+        .catch((err) => console.error("[AgentRoute] Agent failed:", err));
+    });
   });
 }
