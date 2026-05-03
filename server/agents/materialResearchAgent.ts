@@ -1,15 +1,6 @@
-import { eq } from "drizzle-orm";
-import { getDb } from "../db";
-import {
-  epdMetadata,
-  lifecycleValues,
-  materials,
-  pricing,
-  risScores,
-} from "../../drizzle/schema";
-
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const AGENT_MODEL = "claude-sonnet-4-20250514";
+const QUERY_DELAY_MS = 10_000;
 
 const SYSTEM_PROMPT = `You are a building materials research assistant. Search the web to find ONE specific, real building material product sourced or commonly used in Northern Michigan. Return ONLY a valid JSON object with no other text, no markdown, and no code fences.
 
@@ -74,6 +65,38 @@ interface MaterialData {
   c1c4: number;
 }
 
+// ---------------------------------------------------------------------------
+// Supabase REST helper (same pattern as server/lib/auth.ts)
+// ---------------------------------------------------------------------------
+
+async function supabaseRest(
+  path: string,
+  options: RequestInit & { headers?: Record<string, string> } = {}
+): Promise<any> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) throw new Error("Supabase not configured");
+
+  const res = await fetch(`${url}${path}`, {
+    ...options,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...(options.headers ?? {}),
+    },
+  });
+
+  const text = await res.text();
+  if (!res.ok) throw new Error(`Supabase ${res.status}: ${text}`);
+  return text ? JSON.parse(text) : null;
+}
+
+// ---------------------------------------------------------------------------
+// Claude web search
+// ---------------------------------------------------------------------------
+
 async function callClaudeWithWebSearch(userQuery: string): Promise<string | null> {
   const apiKey = process.env.CLAUDE_API_KEY;
   if (!apiKey) throw new Error("CLAUDE_API_KEY not set");
@@ -129,9 +152,12 @@ async function callClaudeWithWebSearch(userQuery: string): Promise<string | null
   return null;
 }
 
+// ---------------------------------------------------------------------------
+// JSON parsing helpers
+// ---------------------------------------------------------------------------
+
 function extractJson(text: string): MaterialData | null {
   const raw = text.trim();
-  // Try bare JSON first, then extract from fenced block
   const candidates = [
     raw,
     raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""),
@@ -155,87 +181,100 @@ function clampInt(value: unknown, min: number, max: number): number {
   return Math.min(Math.max(n, min), max);
 }
 
-function safeDecimal(value: unknown): string {
+function safeNum(value: unknown): number {
   const n = parseFloat(String(value));
-  return isNaN(n) ? "0.00" : n.toFixed(2);
+  return isNaN(n) ? 0 : n;
 }
+
+// ---------------------------------------------------------------------------
+// Database writes via Supabase REST
+// ---------------------------------------------------------------------------
 
 async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; skipped: boolean }> {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
+  const name = data.name.slice(0, 255);
 
-  const categoryValues = [
-    "Timber", "Steel", "Concrete", "Earth", "Insulation", "Composites",
-    "Masonry", "Roofing", "Cladding", "Flooring", "Windows", "Mechanical",
-    "Finishes", "Foundation", "Landscaping",
-  ] as const;
-  type ValidCategory = typeof categoryValues[number];
-  const category = categoryValues.includes(data.category as ValidCategory)
-    ? (data.category as ValidCategory)
-    : "Timber";
+  // Insert material, ignoring duplicate names
+  const inserted = await supabaseRest("/rest/v1/materials", {
+    method: "POST",
+    headers: { Prefer: "return=representation,resolution=ignore-duplicates" },
+    body: JSON.stringify({
+      name,
+      category: data.category,
+      functionalUnit: (data.functionalUnit ?? "m²").slice(0, 50),
+      totalCarbon: safeNum(data.totalCarbon),
+      description: data.description ?? null,
+      confidenceLevel: data.confidenceLevel ?? "Low",
+      isRegenerative: data.isRegenerative === 1 ? 1 : 0,
+    }),
+  });
 
-  const confidenceValues = ["High", "Medium", "Low", "None"] as const;
-  type ValidConfidence = typeof confidenceValues[number];
-  const confidenceLevel = confidenceValues.includes(data.confidenceLevel as ValidConfidence)
-    ? (data.confidenceLevel as ValidConfidence)
-    : "Low";
-
-  await db.insert(materials).values({
-    name: data.name.slice(0, 255),
-    category,
-    functionalUnit: (data.functionalUnit ?? "m²").slice(0, 50),
-    totalCarbon: safeDecimal(data.totalCarbon),
-    description: data.description ?? null,
-    confidenceLevel,
-    isRegenerative: data.isRegenerative === 1 ? 1 : 0,
-  }).ignore();
-
-  const rows = await db
-    .select({ id: materials.id })
-    .from(materials)
-    .where(eq(materials.name, data.name.slice(0, 255)))
-    .limit(1);
-
-  const materialId = rows[0]?.id;
-  if (!materialId) return { inserted: false, skipped: true };
-
-  const phaseMap: Array<[typeof lifecycleValues.$inferInsert["phase"], number]> = [
-    ["A1-A3", data.a1a3],
-    ["A4", data.a4],
-    ["A5", data.a5],
-    ["B", data.b],
-    ["C1-C4", data.c1c4],
-  ];
-
-  for (const [phase, value] of phaseMap) {
-    await db.insert(lifecycleValues).values({
-      materialId,
-      phase,
-      value: safeDecimal(value),
-    }).ignore();
+  // Resolve material ID — may be empty if duplicate was ignored
+  let materialId: number | string | null = null;
+  if (Array.isArray(inserted) && inserted.length > 0) {
+    materialId = inserted[0].id;
+  } else {
+    const existing = await supabaseRest(
+      `/rest/v1/materials?name=eq.${encodeURIComponent(name)}&select=id&limit=1`
+    );
+    materialId = Array.isArray(existing) && existing.length > 0 ? existing[0].id : null;
   }
 
-  await db.insert(pricing).values({
-    materialId,
-    costPerUnit: safeDecimal(data.costPerUnit),
-    currency: "USD",
-  }).ignore();
+  if (!materialId) return { inserted: false, skipped: true };
 
-  await db.insert(risScores).values({
-    materialId,
-    risScore: clampInt(data.risScore, 0, 100),
-    lisScore: clampInt(data.lisScore, 0, 100),
-  }).ignore();
+  const wasNew = Array.isArray(inserted) && inserted.length > 0;
 
-  await db.insert(epdMetadata).values({
-    materialId,
-    source: (data.source ?? "Web research").slice(0, 255),
-    manufacturer: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
-    region: (data.region ?? "Northern Michigan").slice(0, 100),
-  }).ignore();
+  // Lifecycle values
+  const phases = [
+    { phase: "A1-A3", value: safeNum(data.a1a3) },
+    { phase: "A4",    value: safeNum(data.a4) },
+    { phase: "A5",    value: safeNum(data.a5) },
+    { phase: "B",     value: safeNum(data.b) },
+    { phase: "C1-C4", value: safeNum(data.c1c4) },
+  ];
+  for (const row of phases) {
+    await supabaseRest("/rest/v1/lifecycleValues", {
+      method: "POST",
+      headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
+      body: JSON.stringify({ materialId, ...row }),
+    }).catch((e) => console.warn(`[MaterialResearchAgent] lifecycleValues insert skipped: ${e.message}`));
+  }
 
-  return { inserted: true, skipped: false };
+  // Pricing
+  await supabaseRest("/rest/v1/pricing", {
+    method: "POST",
+    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
+    body: JSON.stringify({ materialId, costPerUnit: safeNum(data.costPerUnit), currency: "USD" }),
+  }).catch((e) => console.warn(`[MaterialResearchAgent] pricing insert skipped: ${e.message}`));
+
+  // RIS scores
+  await supabaseRest("/rest/v1/risScores", {
+    method: "POST",
+    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
+    body: JSON.stringify({
+      materialId,
+      risScore: clampInt(data.risScore, 0, 100),
+      lisScore: clampInt(data.lisScore, 0, 100),
+    }),
+  }).catch((e) => console.warn(`[MaterialResearchAgent] risScores insert skipped: ${e.message}`));
+
+  // EPD metadata
+  await supabaseRest("/rest/v1/epdMetadata", {
+    method: "POST",
+    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
+    body: JSON.stringify({
+      materialId,
+      source: (data.source ?? "Web research").slice(0, 255),
+      manufacturer: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
+      region: (data.region ?? "Northern Michigan").slice(0, 100),
+    }),
+  }).catch((e) => console.warn(`[MaterialResearchAgent] epdMetadata insert skipped: ${e.message}`));
+
+  return { inserted: wasNew, skipped: !wasNew };
 }
+
+// ---------------------------------------------------------------------------
+// Main export
+// ---------------------------------------------------------------------------
 
 export interface AgentSummary {
   queriesRun: number;
@@ -246,16 +285,19 @@ export interface AgentSummary {
 
 export async function runMaterialResearchAgent(): Promise<AgentSummary> {
   const summary: AgentSummary = { queriesRun: 0, inserted: 0, skipped: 0, errors: [] };
+  const entries = Object.entries(SEARCH_QUERIES);
 
-  for (const [category, query] of Object.entries(SEARCH_QUERIES)) {
+  for (let i = 0; i < entries.length; i++) {
+    const [category, query] = entries[i];
     summary.queriesRun++;
+
     try {
       console.log(`[MaterialResearchAgent] Researching: ${category}`);
       const rawText = await callClaudeWithWebSearch(query);
       if (!rawText) throw new Error("Empty response from Claude");
 
       const data = extractJson(rawText);
-      if (!data) throw new Error(`Could not parse JSON from response: ${rawText.slice(0, 120)}`);
+      if (!data) throw new Error(`Could not parse JSON: ${rawText.slice(0, 120)}`);
 
       data.category = category;
       const result = await insertMaterial(data);
@@ -270,6 +312,11 @@ export async function runMaterialResearchAgent(): Promise<AgentSummary> {
       const message = err?.message ?? String(err);
       console.error(`[MaterialResearchAgent] Error for ${category}:`, message);
       summary.errors.push({ category, error: message });
+    }
+
+    // Delay between queries to stay under the 30k token/min rate limit
+    if (i < entries.length - 1) {
+      await new Promise((resolve) => setTimeout(resolve, QUERY_DELAY_MS));
     }
   }
 
