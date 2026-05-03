@@ -23,7 +23,9 @@ Required fields:
   "a4": number (kg CO₂e, transport A4),
   "a5": number (kg CO₂e, installation A5),
   "b": number (kg CO₂e, use phase B),
-  "c1c4": number (kg CO₂e, end of life C1-C4)
+  "c1c4": number (kg CO₂e, end of life C1-C4),
+  "transportMethod": "e.g. truck, rail, ship, local",
+  "transportDistanceKm": number (estimated km from supplier to Northern Michigan job site)
 }`;
 
 const SEARCH_QUERIES: Record<string, string> = {
@@ -63,6 +65,8 @@ interface MaterialData {
   a5: number;
   b: number;
   c1c4: number;
+  transportMethod: string;
+  transportDistanceKm: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -270,6 +274,25 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       calculation_date: new Date().toISOString().split("T")[0],
     }),
   }).catch((e) => console.warn(`[MaterialResearchAgent] lis_ris_scores skipped: ${e.message}`));
+
+  await supabaseRest("/rest/v1/regional_data", {
+    method: "POST",
+    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
+    body: JSON.stringify({
+      material_id: materialId,
+      region: "Northern Michigan",
+      state_province: "MI",
+      country: "US",
+      supplier_name: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
+      price_per_unit: safeNum(data.costPerUnit),
+      currency: "USD",
+      unit: (data.functionalUnit ?? "m²").slice(0, 50),
+      transport_method: data.transportMethod ? data.transportMethod.slice(0, 100) : null,
+      transport_distance_km: data.transportDistanceKm ? Math.round(safeNum(data.transportDistanceKm)) : null,
+      availability_status: "available",
+      last_updated: new Date().toISOString().split("T")[0],
+    }),
+  }).catch((e) => console.warn(`[MaterialResearchAgent] regional_data skipped: ${e.message}`));
 
   return { inserted: wasNew, skipped: !wasNew };
 }
