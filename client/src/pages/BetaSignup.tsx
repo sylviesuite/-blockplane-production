@@ -14,7 +14,14 @@ export default function BetaSignup() {
   const [error, setError] = useState<string | null>(null);
 
   const betaSignup = trpc.auth.betaSignup.useMutation({
-    onError: (err) => setError(err.message),
+    onError: (err) => {
+      const msg = err.message.toLowerCase();
+      if (msg.includes("23505") || msg.includes("duplicate")) {
+        setError("You're already on the list! Head to Sign in below.");
+      } else {
+        setError(err.message);
+      }
+    },
   });
 
   function handleSubmit(e: React.FormEvent) {
