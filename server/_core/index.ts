@@ -18,6 +18,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { registerInsightRoutes } from "../routes/insight";
 import { registerChatRoutes } from "../routes/chat";
+import { registerAgentRoutes } from "../routes/agent";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -74,6 +75,7 @@ async function startServer() {
   registerOAuthRoutes(app);
   registerInsightRoutes(app);
   registerChatRoutes(app);
+  registerAgentRoutes(app);
 
   // Diagnostic endpoint — checks env vars and Supabase reachability
   app.get("/api/diag", async (req, res) => {
