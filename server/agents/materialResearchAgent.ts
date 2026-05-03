@@ -1,6 +1,6 @@
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const AGENT_MODEL = "claude-sonnet-4-20250514";
-const QUERY_DELAY_MS = 65_000;
+const QUERY_DELAY_MS = 90_000;
 
 const SYSTEM_PROMPT = `You are a building materials research assistant. Search the web to find ONE specific, real building material product sourced or commonly used in Northern Michigan. Return ONLY a valid JSON object with no other text, no markdown, and no code fences.
 
@@ -196,8 +196,8 @@ function confidenceToScore(level: string): number {
   return 30;
 }
 
-function confidenceToVerification(level: string): string {
-  return level === "High" ? "verified" : "unverified";
+function confidenceToVerification(_level: string): string {
+  return "unverified";
 }
 
 // ---------------------------------------------------------------------------
