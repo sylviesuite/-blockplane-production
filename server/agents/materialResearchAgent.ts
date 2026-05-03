@@ -197,7 +197,7 @@ function confidenceToScore(level: string): number {
 }
 
 function confidenceToVerification(_level: string): string {
-  return "unverified";
+  return "self_declared";
 }
 
 // ---------------------------------------------------------------------------
@@ -257,7 +257,7 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       total_carbon_cradle_to_gate: totalCarbon,
       total_carbon_cradle_to_grave: totalCarbon + c1c4,
       functional_unit: (data.functionalUnit ?? "m²").slice(0, 50),
-      source: data.source ? data.source.slice(0, 255) : null,
+      source: (data.source ?? "Web research").slice(0, 255),
       verification_status: confidenceToVerification(data.confidenceLevel),
     }),
   }).catch((e) => console.warn(`[MaterialResearchAgent] carbon_footprints skipped: ${e.message}`));
@@ -289,7 +289,7 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       unit: (data.functionalUnit ?? "m²").slice(0, 50),
       transport_method: data.transportMethod ? data.transportMethod.slice(0, 100) : null,
       transport_distance_km: data.transportDistanceKm ? Math.round(safeNum(data.transportDistanceKm)) : null,
-      availability_status: "available",
+      availability_status: "in_stock",
       last_updated: new Date().toISOString().split("T")[0],
     }),
   }).catch((e) => console.warn(`[MaterialResearchAgent] regional_data skipped: ${e.message}`));
@@ -311,6 +311,10 @@ export interface AgentSummary {
 export async function runMaterialResearchAgent(): Promise<AgentSummary> {
   const summary: AgentSummary = { queriesRun: 0, inserted: 0, skipped: 0, errors: [] };
   const entries = Object.entries(SEARCH_QUERIES);
+
+  // Initial delay to avoid rate limit hit from any recent API activity
+  console.log("[MaterialResearchAgent] Waiting 30s before first query...");
+  await new Promise((resolve) => setTimeout(resolve, 30_000));
 
   for (let i = 0; i < entries.length; i++) {
     const [category, query] = entries[i];
