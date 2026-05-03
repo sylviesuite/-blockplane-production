@@ -28,23 +28,89 @@ Required fields:
   "transportDistanceKm": number (estimated km from supplier to Northern Michigan job site)
 }`;
 
-const SEARCH_QUERIES: Record<string, string> = {
-  Timber: "Northern Michigan timber framing lumber dimensional lumber embodied carbon kg CO2e per m3 local supplier",
-  Steel: "Northern Michigan structural steel wide flange beam embodied carbon EPD kg CO2e per tonne supplier",
-  Concrete: "Northern Michigan ready mix concrete 4000 psi embodied carbon kg CO2e per m3 local batch plant",
-  Earth: "Northern Michigan rammed earth compressed earth block embodied carbon building material supplier",
-  Insulation: "Northern Michigan cellulose blown insulation embodied carbon kg CO2e per m2 local supplier",
-  Composites: "Northern Michigan fiber cement composite cladding panel embodied carbon kg CO2e per m2",
-  Masonry: "Northern Michigan concrete masonry unit CMU block embodied carbon kg CO2e per unit local supplier",
-  Roofing: "Northern Michigan asphalt shingle metal roofing embodied carbon kg CO2e per m2 local supplier",
-  Cladding: "Northern Michigan cedar wood siding cladding embodied carbon kg CO2e per m2 local supplier",
-  Flooring: "Northern Michigan hardwood maple oak flooring embodied carbon kg CO2e per m2 local mill",
-  Windows: "Northern Michigan triple pane window assembly embodied carbon kg CO2e per m2 local supplier",
-  Mechanical: "Northern Michigan heat pump HVAC system embodied carbon kg CO2e per unit local supplier",
-  Finishes: "Northern Michigan interior latex paint low VOC embodied carbon kg CO2e per liter supplier",
-  Foundation: "Northern Michigan insulated concrete form ICF foundation embodied carbon kg CO2e per m2",
-  Landscaping: "Northern Michigan native plant landscaping stone mulch embodied carbon kg CO2e per m2",
-};
+// 50 queries — ~3-4 per category, each targeting a distinct product angle
+const SEARCH_QUERIES: Array<{ category: string; query: string }> = [
+  // Timber (4)
+  { category: "Timber", query: "Northern Michigan white pine framing lumber 2x6 embodied carbon kg CO2e per m3 supplier Traverse City" },
+  { category: "Timber", query: "Michigan engineered LVL laminated veneer lumber beam embodied carbon EPD kg CO2e per m3" },
+  { category: "Timber", query: "Northern Michigan reclaimed barn wood salvaged timber embodied carbon building reuse supplier" },
+  { category: "Timber", query: "Michigan cross-laminated timber CLT panel mass timber embodied carbon kg CO2e per m3 manufacturer" },
+
+  // Steel (3)
+  { category: "Steel", query: "Northern Michigan structural steel wide flange W-beam embodied carbon EPD kg CO2e per tonne fabricator" },
+  { category: "Steel", query: "Michigan light gauge steel framing cold-formed steel stud embodied carbon kg CO2e per kg supplier" },
+  { category: "Steel", query: "Michigan rebar deformed steel reinforcing bar embodied carbon kg CO2e per tonne local supplier" },
+
+  // Concrete (4)
+  { category: "Concrete", query: "Northern Michigan ready-mix concrete 4000 psi embodied carbon kg CO2e per m3 local batch plant Petoskey" },
+  { category: "Concrete", query: "Michigan precast concrete panel wall system embodied carbon kg CO2e per m2 manufacturer" },
+  { category: "Concrete", query: "Northern Michigan insulating concrete forms ICF polystyrene embodied carbon kg CO2e per m2" },
+  { category: "Concrete", query: "Michigan fly ash supplementary cementitious material concrete mix embodied carbon reduction kg CO2e per m3" },
+
+  // Earth (3)
+  { category: "Earth", query: "Northern Michigan rammed earth wall construction embodied carbon kg CO2e per m3 contractor builder" },
+  { category: "Earth", query: "Michigan compressed stabilized earth block CSEB adobe brick embodied carbon kg CO2e per unit" },
+  { category: "Earth", query: "Michigan natural clay plaster earthen wall finish embodied carbon kg CO2e per m2 supplier" },
+
+  // Insulation (4)
+  { category: "Insulation", query: "Northern Michigan blown cellulose insulation recycled paper embodied carbon kg CO2e per m2 installer" },
+  { category: "Insulation", query: "Michigan mineral wool rockwool batts board insulation embodied carbon kg CO2e per m2 supplier" },
+  { category: "Insulation", query: "Northern Michigan closed-cell spray polyurethane foam insulation embodied carbon kg CO2e per m2" },
+  { category: "Insulation", query: "Michigan rigid EPS expanded polystyrene foam board insulation embodied carbon kg CO2e per m2" },
+
+  // Composites (3)
+  { category: "Composites", query: "Northern Michigan fiber cement board siding James Hardie HardiePlank embodied carbon kg CO2e per m2 supplier" },
+  { category: "Composites", query: "Michigan fiberglass composite structural panel FRP embodied carbon kg CO2e per m2 manufacturer" },
+  { category: "Composites", query: "Michigan wood-plastic composite WPC decking embodied carbon kg CO2e per m2 supplier Northern Michigan" },
+
+  // Masonry (4)
+  { category: "Masonry", query: "Northern Michigan concrete masonry unit CMU 8-inch block embodied carbon kg CO2e per unit local supplier" },
+  { category: "Masonry", query: "Michigan clay brick residential veneer embodied carbon kg CO2e per unit manufacturer Midwest" },
+  { category: "Masonry", query: "Northern Michigan fieldstone rubble stone masonry embodied carbon kg CO2e per m3 local quarry" },
+  { category: "Masonry", query: "Michigan split-face block decorative concrete masonry unit embodied carbon kg CO2e per m2" },
+
+  // Roofing (4)
+  { category: "Roofing", query: "Northern Michigan standing seam metal roof steel Galvalume embodied carbon kg CO2e per m2 installer" },
+  { category: "Roofing", query: "Michigan asphalt architectural shingle 30-year roofing embodied carbon kg CO2e per m2 supplier" },
+  { category: "Roofing", query: "Northern Michigan white cedar shake shingle roofing embodied carbon kg CO2e per m2 local mill" },
+  { category: "Roofing", query: "Michigan TPO thermoplastic polyolefin membrane flat roof embodied carbon kg CO2e per m2 supplier" },
+
+  // Cladding (3)
+  { category: "Cladding", query: "Northern Michigan white cedar bevel siding wood cladding embodied carbon kg CO2e per m2 local mill" },
+  { category: "Cladding", query: "Michigan board and batten pine siding vertical wood cladding embodied carbon kg CO2e per m2" },
+  { category: "Cladding", query: "Northern Michigan corrugated steel metal panel cladding Corten weathering steel embodied carbon kg CO2e per m2" },
+
+  // Flooring (3)
+  { category: "Flooring", query: "Northern Michigan hard maple hardwood flooring solid 3/4 inch embodied carbon kg CO2e per m2 local mill" },
+  { category: "Flooring", query: "Michigan white oak engineered hardwood flooring embodied carbon kg CO2e per m2 manufacturer" },
+  { category: "Flooring", query: "Michigan polished concrete floor slab residential embodied carbon kg CO2e per m2 contractor" },
+
+  // Windows (3)
+  { category: "Windows", query: "Northern Michigan triple-pane fiberglass window Pella Marvin embodied carbon kg CO2e per m2 supplier" },
+  { category: "Windows", query: "Michigan wood-clad double-pane window assembly embodied carbon kg CO2e per m2 manufacturer local" },
+  { category: "Windows", query: "Northern Michigan aluminum-clad wood window fixed picture window embodied carbon kg CO2e per m2" },
+
+  // Mechanical (4)
+  { category: "Mechanical", query: "Northern Michigan cold-climate air source heat pump Mitsubishi Bosch embodied carbon kg CO2e per unit installer" },
+  { category: "Mechanical", query: "Michigan ground-source geothermal heat pump system embodied carbon kg CO2e per unit contractor" },
+  { category: "Mechanical", query: "Northern Michigan wood pellet boiler biomass heating system embodied carbon kg CO2e per unit supplier" },
+  { category: "Mechanical", query: "Michigan heat recovery ventilator HRV energy recovery ventilation embodied carbon kg CO2e per unit supplier" },
+
+  // Finishes (3)
+  { category: "Finishes", query: "Northern Michigan zero-VOC interior latex paint Benjamin Moore Sherwin-Williams embodied carbon kg CO2e per liter" },
+  { category: "Finishes", query: "Michigan lime putty plaster interior wall finish embodied carbon kg CO2e per m2 supplier" },
+  { category: "Finishes", query: "Northern Michigan linseed oil wood finish natural oil penetrating sealer embodied carbon kg CO2e per liter" },
+
+  // Foundation (3)
+  { category: "Foundation", query: "Northern Michigan poured concrete frost wall foundation 8-inch wall embodied carbon kg CO2e per m2 contractor" },
+  { category: "Foundation", query: "Michigan grade beam slab on grade concrete foundation embodied carbon kg CO2e per m2 residential" },
+  { category: "Foundation", query: "Northern Michigan helical pier screw pile steel foundation embodied carbon kg CO2e per unit installer" },
+
+  // Landscaping (3)
+  { category: "Landscaping", query: "Northern Michigan native prairie grass seed mix landscaping embodied carbon kg CO2e per m2 local nursery" },
+  { category: "Landscaping", query: "Michigan natural limestone gravel permeable driveway paving embodied carbon kg CO2e per tonne local quarry" },
+  { category: "Landscaping", query: "Northern Michigan rain garden bioswale native plantings stormwater management embodied carbon kg CO2e per m2" },
+];
 
 interface MaterialData {
   name: string;
@@ -95,6 +161,48 @@ async function supabaseRest(
   const text = await res.text();
   if (!res.ok) throw new Error(`Supabase ${res.status}: ${text}`);
   return text ? JSON.parse(text) : null;
+}
+
+// ---------------------------------------------------------------------------
+// Job logging
+// ---------------------------------------------------------------------------
+
+async function createJobLog(): Promise<string | null> {
+  try {
+    const rows = await supabaseRest("/rest/v1/agent_job_logs", {
+      method: "POST",
+      headers: { Prefer: "return=representation" },
+      body: JSON.stringify({ status: "running" }),
+    });
+    return Array.isArray(rows) && rows.length > 0 ? rows[0].id : null;
+  } catch (e: any) {
+    console.warn("[MaterialResearchAgent] Could not create job log:", e.message);
+    return null;
+  }
+}
+
+async function finalizeJobLog(
+  jobId: string | null,
+  summary: AgentSummary,
+  status: "completed" | "failed"
+): Promise<void> {
+  if (!jobId) return;
+  try {
+    await supabaseRest(`/rest/v1/agent_job_logs?id=eq.${jobId}`, {
+      method: "PATCH",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        completed_at: new Date().toISOString(),
+        queries_run: summary.queriesRun,
+        inserted: summary.inserted,
+        skipped: summary.skipped,
+        errors: summary.errors,
+        status,
+      }),
+    });
+  } catch (e: any) {
+    console.warn("[MaterialResearchAgent] Could not finalize job log:", e.message);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -203,12 +311,15 @@ function confidenceToVerification(_level: string): string {
 // ---------------------------------------------------------------------------
 // Database writes via Supabase REST
 // Real table names (inspected from Supabase):
-//   materials        — name, category, manufacturer, description, data_quality_score, source
+//   materials         — name, category, manufacturer, description, data_quality_score, source
 //   carbon_footprints — material_id, a1_a3_manufacturing, a4_transport, a5_installation,
 //                       b1_b7_use_phase, c1_c4_end_of_life, total_carbon_cradle_to_gate,
 //                       total_carbon_cradle_to_grave, functional_unit, source, verification_status
-//   lis_ris_scores   — material_id, lis_score, ris_score, baseline_region,
+//   lis_ris_scores    — material_id, lis_score, ris_score, baseline_region,
 //                       calculation_version, calculation_date
+//   regional_data     — material_id, region, state_province, country, supplier_name,
+//                       price_per_unit, currency, unit, transport_method,
+//                       transport_distance_km, availability_status
 // ---------------------------------------------------------------------------
 
 async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; skipped: boolean }> {
@@ -310,18 +421,20 @@ export interface AgentSummary {
 
 export async function runMaterialResearchAgent(): Promise<AgentSummary> {
   const summary: AgentSummary = { queriesRun: 0, inserted: 0, skipped: 0, errors: [] };
-  const entries = Object.entries(SEARCH_QUERIES);
+
+  const jobId = await createJobLog();
+  console.log(`[MaterialResearchAgent] Job started — log id: ${jobId ?? "unavailable"}`);
 
   // Initial delay to avoid rate limit hit from any recent API activity
   console.log("[MaterialResearchAgent] Waiting 30s before first query...");
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
-  for (let i = 0; i < entries.length; i++) {
-    const [category, query] = entries[i];
+  for (let i = 0; i < SEARCH_QUERIES.length; i++) {
+    const { category, query } = SEARCH_QUERIES[i];
     summary.queriesRun++;
 
     try {
-      console.log(`[MaterialResearchAgent] Researching: ${category}`);
+      console.log(`[MaterialResearchAgent] [${i + 1}/${SEARCH_QUERIES.length}] ${category}: ${query.slice(0, 60)}...`);
       const rawText = await callClaudeWithWebSearch(query);
       if (!rawText) throw new Error("Empty response from Claude");
 
@@ -339,15 +452,19 @@ export async function runMaterialResearchAgent(): Promise<AgentSummary> {
       }
     } catch (err: any) {
       const message = err?.message ?? String(err);
-      console.error(`[MaterialResearchAgent] Error for ${category}:`, message);
+      console.error(`[MaterialResearchAgent] Error [${category}]:`, message);
       summary.errors.push({ category, error: message });
     }
 
     // Delay between queries to stay under the 30k token/min rate limit
-    if (i < entries.length - 1) {
+    if (i < SEARCH_QUERIES.length - 1) {
       await new Promise((resolve) => setTimeout(resolve, QUERY_DELAY_MS));
     }
   }
+
+  const finalStatus = summary.errors.length === SEARCH_QUERIES.length ? "failed" : "completed";
+  await finalizeJobLog(jobId, summary, finalStatus);
+  console.log(`[MaterialResearchAgent] Done — ${summary.inserted} inserted, ${summary.skipped} skipped, ${summary.errors.length} errors`);
 
   return summary;
 }
