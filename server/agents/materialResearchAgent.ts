@@ -28,88 +28,61 @@ Required fields:
   "transportDistanceKm": number (estimated km from supplier to Northern Michigan job site)
 }`;
 
-// 50 queries — ~3-4 per category, each targeting a distinct product angle
+// 25 queries — best coverage across all 15 categories, Northern Michigan specificity prioritized
 const SEARCH_QUERIES: Array<{ category: string; query: string }> = [
-  // Timber (4)
+  // Timber (3) — local mills and mass timber
   { category: "Timber", query: "Northern Michigan white pine framing lumber 2x6 embodied carbon kg CO2e per m3 supplier Traverse City" },
-  { category: "Timber", query: "Michigan engineered LVL laminated veneer lumber beam embodied carbon EPD kg CO2e per m3" },
   { category: "Timber", query: "Northern Michigan reclaimed barn wood salvaged timber embodied carbon building reuse supplier" },
   { category: "Timber", query: "Michigan cross-laminated timber CLT panel mass timber embodied carbon kg CO2e per m3 manufacturer" },
 
-  // Steel (3)
+  // Steel (1)
   { category: "Steel", query: "Northern Michigan structural steel wide flange W-beam embodied carbon EPD kg CO2e per tonne fabricator" },
-  { category: "Steel", query: "Michigan light gauge steel framing cold-formed steel stud embodied carbon kg CO2e per kg supplier" },
-  { category: "Steel", query: "Michigan rebar deformed steel reinforcing bar embodied carbon kg CO2e per tonne local supplier" },
 
-  // Concrete (4)
+  // Concrete (2)
   { category: "Concrete", query: "Northern Michigan ready-mix concrete 4000 psi embodied carbon kg CO2e per m3 local batch plant Petoskey" },
-  { category: "Concrete", query: "Michigan precast concrete panel wall system embodied carbon kg CO2e per m2 manufacturer" },
   { category: "Concrete", query: "Northern Michigan insulating concrete forms ICF polystyrene embodied carbon kg CO2e per m2" },
-  { category: "Concrete", query: "Michigan fly ash supplementary cementitious material concrete mix embodied carbon reduction kg CO2e per m3" },
 
-  // Earth (3)
+  // Earth (1)
   { category: "Earth", query: "Northern Michigan rammed earth wall construction embodied carbon kg CO2e per m3 contractor builder" },
-  { category: "Earth", query: "Michigan compressed stabilized earth block CSEB adobe brick embodied carbon kg CO2e per unit" },
-  { category: "Earth", query: "Michigan natural clay plaster earthen wall finish embodied carbon kg CO2e per m2 supplier" },
 
-  // Insulation (4)
+  // Insulation (2) — cold climate critical
   { category: "Insulation", query: "Northern Michigan blown cellulose insulation recycled paper embodied carbon kg CO2e per m2 installer" },
   { category: "Insulation", query: "Michigan mineral wool rockwool batts board insulation embodied carbon kg CO2e per m2 supplier" },
-  { category: "Insulation", query: "Northern Michigan closed-cell spray polyurethane foam insulation embodied carbon kg CO2e per m2" },
-  { category: "Insulation", query: "Michigan rigid EPS expanded polystyrene foam board insulation embodied carbon kg CO2e per m2" },
 
-  // Composites (3)
+  // Composites (1)
   { category: "Composites", query: "Northern Michigan fiber cement board siding James Hardie HardiePlank embodied carbon kg CO2e per m2 supplier" },
-  { category: "Composites", query: "Michigan fiberglass composite structural panel FRP embodied carbon kg CO2e per m2 manufacturer" },
-  { category: "Composites", query: "Michigan wood-plastic composite WPC decking embodied carbon kg CO2e per m2 supplier Northern Michigan" },
 
-  // Masonry (4)
-  { category: "Masonry", query: "Northern Michigan concrete masonry unit CMU 8-inch block embodied carbon kg CO2e per unit local supplier" },
-  { category: "Masonry", query: "Michigan clay brick residential veneer embodied carbon kg CO2e per unit manufacturer Midwest" },
+  // Masonry (2) — fieldstone is hyperlocal
   { category: "Masonry", query: "Northern Michigan fieldstone rubble stone masonry embodied carbon kg CO2e per m3 local quarry" },
-  { category: "Masonry", query: "Michigan split-face block decorative concrete masonry unit embodied carbon kg CO2e per m2" },
+  { category: "Masonry", query: "Northern Michigan concrete masonry unit CMU 8-inch block embodied carbon kg CO2e per unit local supplier" },
 
-  // Roofing (4)
+  // Roofing (2) — standing seam and cedar both common in NM
   { category: "Roofing", query: "Northern Michigan standing seam metal roof steel Galvalume embodied carbon kg CO2e per m2 installer" },
-  { category: "Roofing", query: "Michigan asphalt architectural shingle 30-year roofing embodied carbon kg CO2e per m2 supplier" },
   { category: "Roofing", query: "Northern Michigan white cedar shake shingle roofing embodied carbon kg CO2e per m2 local mill" },
-  { category: "Roofing", query: "Michigan TPO thermoplastic polyolefin membrane flat roof embodied carbon kg CO2e per m2 supplier" },
 
-  // Cladding (3)
+  // Cladding (2) — cedar and board-and-batten define NM vernacular
   { category: "Cladding", query: "Northern Michigan white cedar bevel siding wood cladding embodied carbon kg CO2e per m2 local mill" },
   { category: "Cladding", query: "Michigan board and batten pine siding vertical wood cladding embodied carbon kg CO2e per m2" },
-  { category: "Cladding", query: "Northern Michigan corrugated steel metal panel cladding Corten weathering steel embodied carbon kg CO2e per m2" },
 
-  // Flooring (3)
+  // Flooring (1)
   { category: "Flooring", query: "Northern Michigan hard maple hardwood flooring solid 3/4 inch embodied carbon kg CO2e per m2 local mill" },
-  { category: "Flooring", query: "Michigan white oak engineered hardwood flooring embodied carbon kg CO2e per m2 manufacturer" },
-  { category: "Flooring", query: "Michigan polished concrete floor slab residential embodied carbon kg CO2e per m2 contractor" },
 
-  // Windows (3)
+  // Windows (2) — cold climate demands high-performance glazing
   { category: "Windows", query: "Northern Michigan triple-pane fiberglass window Pella Marvin embodied carbon kg CO2e per m2 supplier" },
   { category: "Windows", query: "Michigan wood-clad double-pane window assembly embodied carbon kg CO2e per m2 manufacturer local" },
-  { category: "Windows", query: "Northern Michigan aluminum-clad wood window fixed picture window embodied carbon kg CO2e per m2" },
 
-  // Mechanical (4)
+  // Mechanical (2) — heat pumps and HRV essential for tight NM homes
   { category: "Mechanical", query: "Northern Michigan cold-climate air source heat pump Mitsubishi Bosch embodied carbon kg CO2e per unit installer" },
-  { category: "Mechanical", query: "Michigan ground-source geothermal heat pump system embodied carbon kg CO2e per unit contractor" },
-  { category: "Mechanical", query: "Northern Michigan wood pellet boiler biomass heating system embodied carbon kg CO2e per unit supplier" },
   { category: "Mechanical", query: "Michigan heat recovery ventilator HRV energy recovery ventilation embodied carbon kg CO2e per unit supplier" },
 
-  // Finishes (3)
+  // Finishes (1)
   { category: "Finishes", query: "Northern Michigan zero-VOC interior latex paint Benjamin Moore Sherwin-Williams embodied carbon kg CO2e per liter" },
-  { category: "Finishes", query: "Michigan lime putty plaster interior wall finish embodied carbon kg CO2e per m2 supplier" },
-  { category: "Finishes", query: "Northern Michigan linseed oil wood finish natural oil penetrating sealer embodied carbon kg CO2e per liter" },
 
-  // Foundation (3)
+  // Foundation (1)
   { category: "Foundation", query: "Northern Michigan poured concrete frost wall foundation 8-inch wall embodied carbon kg CO2e per m2 contractor" },
-  { category: "Foundation", query: "Michigan grade beam slab on grade concrete foundation embodied carbon kg CO2e per m2 residential" },
-  { category: "Foundation", query: "Northern Michigan helical pier screw pile steel foundation embodied carbon kg CO2e per unit installer" },
 
-  // Landscaping (3)
+  // Landscaping (1)
   { category: "Landscaping", query: "Northern Michigan native prairie grass seed mix landscaping embodied carbon kg CO2e per m2 local nursery" },
-  { category: "Landscaping", query: "Michigan natural limestone gravel permeable driveway paving embodied carbon kg CO2e per tonne local quarry" },
-  { category: "Landscaping", query: "Northern Michigan rain garden bioswale native plantings stormwater management embodied carbon kg CO2e per m2" },
 ];
 
 interface MaterialData {
@@ -397,13 +370,12 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       supplier_name: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
       price_per_unit: safeNum(data.costPerUnit),
       currency: "USD",
-      unit: (data.functionalUnit ?? "m²").slice(0, 50),
+      unit: (data.functionalUnit ?? "m2").slice(0, 50),
       transport_method: data.transportMethod ? data.transportMethod.slice(0, 100) : null,
       transport_distance_km: data.transportDistanceKm ? Math.round(safeNum(data.transportDistanceKm)) : null,
       availability_status: "in_stock",
-      last_updated: new Date().toISOString().split("T")[0],
     }),
-  }).catch((e) => console.warn(`[MaterialResearchAgent] regional_data skipped: ${e.message}`));
+  });
 
   return { inserted: wasNew, skipped: !wasNew };
 }
