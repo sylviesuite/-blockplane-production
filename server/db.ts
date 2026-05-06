@@ -135,6 +135,7 @@ function mapRow(r: any) {
   const lisScore = (r.lis_ris_scores?.[0]?.lis_score ?? r.lis_score) ?? 0;
   const risScore = (r.lis_ris_scores?.[0]?.ris_score ?? r.ris_score) ?? 0;
   const totalCarbon = (r.carbon_footprints?.[0]?.total_carbon_cradle_to_gate ?? r.total_carbon_cradle_to_gate) ?? 0;
+  const functionalUnit = (r.carbon_footprints?.[0]?.functional_unit ?? r.functional_unit) || "sq ft";
   const dataQualityScore: number | null = r.data_quality_score ?? null;
   return {
     id: r.id as string,
@@ -146,7 +147,7 @@ function mapRow(r: any) {
     totalCarbon: String(totalCarbon),
     lisScore,
     risScore,
-    functionalUnit: "m²",
+    functionalUnit,
     costPerUnit: String((lisScore * 0.8).toFixed(2)),
     confidenceLevel: deriveConfidenceLevel(dataQualityScore),
     dataQualityScore,
@@ -214,7 +215,7 @@ export async function getAllMaterials() {
     }
 
     const rows = await supabaseFetch(
-      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate),lis_ris_scores(lis_score,ris_score)&limit=300"
+      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=300"
     );
     let materials = mapRowsToMaterials(rows as any[]);
     if (materials.length === 0 && useFallback) {
@@ -245,7 +246,7 @@ export async function getMaterialById(id: string) {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     if (supabaseUrl && supabaseKey) {
       const rows = await supabaseFetch(
-        `materials?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate),lis_ris_scores(lis_score,ris_score)&limit=1`
+        `materials?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=1`
       );
       if ((rows as any[]).length) return mapRow((rows as any[])[0]);
     }
