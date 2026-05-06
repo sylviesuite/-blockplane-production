@@ -349,7 +349,7 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       c1_c4_end_of_life: c1c4,
       total_carbon_cradle_to_gate: totalCarbon,
       total_carbon_cradle_to_grave: totalCarbon + c1c4,
-      functional_unit: (data.functionalUnit ?? "m²").slice(0, 50),
+      functional_unit: (data.functionalUnit ?? "sq ft").slice(0, 50),
       source: (data.source ?? "Web research").slice(0, 255),
       verification_status: confidenceToVerification(data.confidenceLevel),
     }),
@@ -368,23 +368,31 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
     }),
   }).catch((e) => console.warn(`[MaterialResearchAgent] lis_ris_scores skipped: ${e.message}`));
 
-  await supabaseRest("/rest/v1/regional_data", {
-    method: "POST",
-    headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
-    body: JSON.stringify({
-      material_id: materialId,
-      region: "Northern Michigan",
-      state_province: "MI",
-      country: "US",
-      supplier_name: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
-      price_per_unit: safeNum(data.costPerUnit),
-      currency: "USD",
-      unit: (data.functionalUnit ?? "m2").slice(0, 50),
-      transport_method: data.transportMethod ? data.transportMethod.slice(0, 100) : null,
-      transport_distance_km: data.transportDistanceKm ? Math.round(safeNum(data.transportDistanceKm)) : null,
-      availability_status: "in_stock",
-    }),
-  });
+  // regional_data has no unique constraint on (material_id, region), so
+  // resolution=ignore-duplicates would do nothing. Guard with an existence
+  // check instead to prevent duplicate rows accumulating across runs.
+  const rdExists = await supabaseRest(
+    `/rest/v1/regional_data?material_id=eq.${materialId}&region=eq.${encodeURIComponent("Northern Michigan")}&select=id&limit=1`
+  );
+  if (!Array.isArray(rdExists) || rdExists.length === 0) {
+    await supabaseRest("/rest/v1/regional_data", {
+      method: "POST",
+      headers: { Prefer: "return=minimal" },
+      body: JSON.stringify({
+        material_id: materialId,
+        region: "Northern Michigan",
+        state_province: "MI",
+        country: "US",
+        supplier_name: data.manufacturer ? data.manufacturer.slice(0, 255) : null,
+        price_per_unit: safeNum(data.costPerUnit),
+        currency: "USD",
+        unit: (data.functionalUnit ?? "sq ft").slice(0, 50),
+        transport_method: data.transportMethod ? data.transportMethod.slice(0, 100) : null,
+        transport_distance_km: data.transportDistanceKm ? Math.round(safeNum(data.transportDistanceKm)) : null,
+        availability_status: "in_stock",
+      }),
+    });
+  }
 
   return { inserted: wasNew, skipped: !wasNew };
 }
