@@ -98,9 +98,10 @@ export async function getUserByOpenId(openId: string) {
 // MATERIALS DATABASE QUERIES (Supabase REST API)
 // ============================================================================
 //
-// Runtime reads the Supabase view `materials_with_scores` (see getAllMaterials).
-// If the view is empty or credentials are missing, set USE_LOCAL_MATERIALS_FALLBACK=1
-// to load server/data/materials-dev-fallback.json for local development.
+// Runtime queries the `materials` table directly with embedded carbon_footprints and
+// lis_ris_scores (LEFT JOINs via Supabase REST), so materials without scores still appear.
+// If credentials are missing, set USE_LOCAL_MATERIALS_FALLBACK=1 to load
+// server/data/materials-dev-fallback.json for local development.
 
 async function supabaseFetch(path: string) {
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -130,8 +131,10 @@ function deriveConfidenceLevel(score: number | null): "High" | "Medium" | "Low" 
 }
 
 function mapRow(r: any) {
-  const lisScore = r.lis_score ?? 0;
-  const risScore = r.ris_score ?? 0;
+  // Support both flat rows (from the old view) and nested rows from embedded selects
+  const lisScore = (r.lis_ris_scores?.[0]?.lis_score ?? r.lis_score) ?? 0;
+  const risScore = (r.lis_ris_scores?.[0]?.ris_score ?? r.ris_score) ?? 0;
+  const totalCarbon = (r.carbon_footprints?.[0]?.total_carbon_cradle_to_gate ?? r.total_carbon_cradle_to_gate) ?? 0;
   const dataQualityScore: number | null = r.data_quality_score ?? null;
   return {
     id: r.id as string,
@@ -140,7 +143,7 @@ function mapRow(r: any) {
     subcategory: r.subcategory ?? null,
     manufacturer: r.manufacturer ?? null,
     description: r.description ?? null,
-    totalCarbon: String(r.total_carbon_cradle_to_gate ?? 0),
+    totalCarbon: String(totalCarbon),
     lisScore,
     risScore,
     functionalUnit: "m²",
@@ -211,7 +214,7 @@ export async function getAllMaterials() {
     }
 
     const rows = await supabaseFetch(
-      "materials_with_scores?select=id,name,category,subcategory,manufacturer,description,lis_score,ris_score,total_carbon_cradle_to_gate,data_quality_score,source,source_url,last_verified&limit=300"
+      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate),lis_ris_scores(lis_score,ris_score)&limit=300"
     );
     let materials = mapRowsToMaterials(rows as any[]);
     if (materials.length === 0 && useFallback) {
@@ -242,7 +245,7 @@ export async function getMaterialById(id: string) {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     if (supabaseUrl && supabaseKey) {
       const rows = await supabaseFetch(
-        `materials_with_scores?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,lis_score,ris_score,total_carbon_cradle_to_gate,data_quality_score,source,source_url,last_verified&limit=1`
+        `materials?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate),lis_ris_scores(lis_score,ris_score)&limit=1`
       );
       if ((rows as any[]).length) return mapRow((rows as any[])[0]);
     }
