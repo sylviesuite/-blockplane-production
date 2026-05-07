@@ -59,6 +59,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/how-it-works">
+                  <a className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                    How It Works
+                  </a>
+                </Link>
+              </li>
+              <li>
                 <Link href="/docs">
                   <a className="text-sm text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2">
                     <FileText className="h-4 w-4" />

@@ -28,6 +28,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import BetaSignup from "./pages/BetaSignup";
 import TermsOfService from "./pages/TermsOfService";
+import HowItWorks from "./pages/HowItWorks";
 import CarbonCalculator from "./pages/CarbonCalculator";
 import AuthGate from "./components/AuthGate";
 
@@ -71,6 +72,7 @@ function Router() {
       <Route path="/signup" component={Signup} />
       <Route path="/beta" component={BetaSignup} />
       <Route path="/terms" component={TermsOfService} />
+      <Route path="/how-it-works" component={HowItWorks} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
