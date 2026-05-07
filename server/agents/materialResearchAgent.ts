@@ -22,7 +22,7 @@ Required fields:
   "costPerUnit": number (USD per functional unit),
   "risScore": integer 0-100 (higher = more regenerative),
   "lisScore": integer 0-100 (higher = better lifecycle performance),
-  "isRegenerative": 0 or 1,
+  "isRegenerative": 0 or 1 — set to 1 ONLY if the material actively sequesters carbon, restores ecosystems, or improves environmental conditions. Qualifying materials: rammed earth, compressed earth blocks (natural composition, minimal processing, carbon-stable mass wall), hemp-based products, hempcrete, mycelium, cork, green roof systems, sustainably harvested timber (carbon storage in wood), CLT and mass timber (long-term carbon lock-in), reclaimed wood (no new harvest). Do NOT set to 1 for: concrete variants (ready-mix, precast, ICF, CMU), steel, insulation (fiberglass, mineral wool, spray foam, cellulose), mechanical systems (heat pumps, HRVs), energy-efficient products, low-VOC coatings, recycled-content plastics or synthetics, or any material whose primary benefit is reduced impact rather than active restoration,
   "description": "1-2 sentences describing the material and its Northern Michigan relevance",
   "manufacturer": "manufacturer or regional supplier name",
   "region": "Northern Michigan",

@@ -47,7 +47,17 @@
       "Bash(python3 -c ' *)",
       "Bash(xargs cat *)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(ls render.yaml render.yml .render.yaml)",
+      "Bash(ls bin/)",
+      "Bash(gh repo *)",
+      "Bash(npx drizzle-kit *)",
+      "Bash(echo \"EXIT:$?\")",
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(New-Item *)",
+      "Bash(Get-Content \"C:\\\\Users\\\\steve\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-steve-dev--blockplane-production\\\\fb402938-91c3-4758-bdec-3552a86b7046\\\\tasks\\\\bhdirpb34.output\" -Wait)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-Item *)"
     ]
   }
 }
