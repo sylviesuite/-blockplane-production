@@ -191,6 +191,8 @@ async function finalizeJobLog(
 // Claude web search
 // ---------------------------------------------------------------------------
 
+const FETCH_TIMEOUT_MS = 60_000; // 60s per API turn — prevents hung fetches
+
 async function callClaudeWithWebSearch(userQuery: string): Promise<string | null> {
   const apiKey = process.env.CLAUDE_API_KEY;
   if (!apiKey) throw new Error("CLAUDE_API_KEY not set");
@@ -198,8 +200,12 @@ async function callClaudeWithWebSearch(userQuery: string): Promise<string | null
   const messages: any[] = [{ role: "user", content: userQuery }];
 
   for (let turn = 0; turn < 6; turn++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
     const res = await fetch(CLAUDE_API_URL, {
       method: "POST",
+      signal: controller.signal,
       headers: {
         "content-type": "application/json",
         "x-api-key": apiKey,
@@ -213,7 +219,7 @@ async function callClaudeWithWebSearch(userQuery: string): Promise<string | null
         tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
         messages,
       }),
-    });
+    }).finally(() => clearTimeout(timeout));
 
     if (!res.ok) {
       const errText = await res.text().catch(() => "");
