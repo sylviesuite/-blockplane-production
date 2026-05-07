@@ -250,19 +250,59 @@ async function callClaudeWithWebSearch(userQuery: string): Promise<string | null
 // JSON parsing helpers
 // ---------------------------------------------------------------------------
 
-function extractJson(text: string): MaterialData | null {
-  const raw = text.trim();
-  const candidates = [
-    raw,
-    raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""),
-    (raw.match(/\{[\s\S]*\}/) ?? [])[0] ?? "",
-  ];
+/**
+ * Coerce a value that Claude may return as a string or number to a number.
+ * Returns 0 if the value is missing or unparseable.
+ */
+function coerceNum(v: unknown): number {
+  if (typeof v === "number") return isNaN(v) ? 0 : v;
+  const n = parseFloat(String(v ?? ""));
+  return isNaN(n) ? 0 : n;
+}
+
+export function extractJson(text: string): MaterialData | null {
+  // Strip BOM and outer whitespace
+  const raw = text.trim().replace(/^﻿/, "");
+
+  const candidates: string[] = [];
+
+  // 1. Content captured inside any markdown code fence (non-greedy)
+  //    Handles: ```json\n{...}\n``` and ```\n{...}\n```
+  const fenceMatch = raw.match(/```(?:json)?[ \t]*\r?\n?([\s\S]*?)```/i);
+  if (fenceMatch?.[1]) candidates.push(fenceMatch[1].trim());
+
+  // 2. Outermost {...} using first-open / last-close brace.
+  //    More reliable than a greedy /\{[\s\S]*\}/ which extends to the
+  //    last } in the entire string, including any trailing prose.
+  const firstBrace = raw.indexOf("{");
+  const lastBrace = raw.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    candidates.push(raw.slice(firstBrace, lastBrace + 1));
+  }
+
+  // 3. Raw text as-is (already-clean JSON responses)
+  candidates.push(raw);
+
   for (const candidate of candidates) {
+    if (!candidate) continue;
     try {
       const parsed = JSON.parse(candidate);
-      if (parsed && typeof parsed.name === "string" && typeof parsed.totalCarbon === "number") {
-        return parsed as MaterialData;
+      if (!parsed || typeof parsed.name !== "string") continue;
+
+      // Accept totalCarbon as a number OR a numeric string
+      const totalCarbon = coerceNum(parsed.totalCarbon);
+      if (totalCarbon === 0 && parsed.totalCarbon == null) continue;
+      parsed.totalCarbon = totalCarbon;
+
+      // Coerce remaining numeric fields — Claude occasionally returns strings
+      for (const field of [
+        "costPerUnit", "risScore", "lisScore", "isRegenerative",
+        "a1a3", "a4", "a5", "b", "c1c4", "transportDistanceKm",
+      ] as const) {
+        if (parsed[field] !== undefined) parsed[field] = coerceNum(parsed[field]);
       }
+
+      return parsed as MaterialData;
     } catch {
       // try next candidate
     }
