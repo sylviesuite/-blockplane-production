@@ -191,7 +191,7 @@ async function finalizeJobLog(
 // Claude web search
 // ---------------------------------------------------------------------------
 
-const FETCH_TIMEOUT_MS = 60_000; // 60s per API turn — prevents hung fetches
+const FETCH_TIMEOUT_MS = 120_000; // 120s per API turn — allows multi-turn web search
 
 async function callClaudeWithWebSearch(userQuery: string): Promise<string | null> {
   const apiKey = process.env.CLAUDE_API_KEY;
@@ -468,27 +468,41 @@ export async function runMaterialResearchAgent(): Promise<AgentSummary> {
     const { category, query } = SEARCH_QUERIES[i];
     summary.queriesRun++;
 
-    try {
-      console.log(`[MaterialResearchAgent] [${i + 1}/${SEARCH_QUERIES.length}] ${category}: ${query.slice(0, 60)}...`);
-      const rawText = await callClaudeWithWebSearch(query);
-      if (!rawText) throw new Error("Empty response from Claude");
-
-      const data = extractJson(rawText);
-      if (!data) throw new Error(`Could not parse JSON: ${rawText.slice(0, 120)}`);
-
-      data.category = category;
-      const result = await insertMaterial(data);
-      if (result.inserted) {
-        summary.inserted++;
-        console.log(`[MaterialResearchAgent] Inserted: ${data.name}`);
-      } else {
-        summary.skipped++;
-        console.log(`[MaterialResearchAgent] Skipped (duplicate): ${data.name}`);
+    let attempt = 0;
+    let succeeded = false;
+    while (attempt < 2 && !succeeded) {
+      if (attempt > 0) {
+        console.log(`[MaterialResearchAgent] Retrying [${category}] after 15s...`);
+        await new Promise((resolve) => setTimeout(resolve, 15_000));
       }
-    } catch (err: any) {
-      const message = err?.message ?? String(err);
-      console.error(`[MaterialResearchAgent] Error [${category}]:`, message);
-      summary.errors.push({ category, error: message });
+      try {
+        console.log(`[MaterialResearchAgent] [${i + 1}/${SEARCH_QUERIES.length}] ${category}: ${query.slice(0, 60)}...`);
+        const rawText = await callClaudeWithWebSearch(query);
+        if (!rawText) throw new Error("Empty response from Claude");
+
+        const data = extractJson(rawText);
+        if (!data) throw new Error(`Could not parse JSON: ${rawText.slice(0, 120)}`);
+
+        data.category = category;
+        const result = await insertMaterial(data);
+        if (result.inserted) {
+          summary.inserted++;
+          console.log(`[MaterialResearchAgent] Inserted: ${data.name}`);
+        } else {
+          summary.skipped++;
+          console.log(`[MaterialResearchAgent] Skipped (duplicate): ${data.name}`);
+        }
+        succeeded = true;
+      } catch (err: any) {
+        const message = err?.message ?? String(err);
+        if (attempt === 0) {
+          console.warn(`[MaterialResearchAgent] Attempt 1 failed [${category}]: ${message}`);
+        } else {
+          console.error(`[MaterialResearchAgent] Error [${category}]:`, message);
+          summary.errors.push({ category, error: message });
+        }
+      }
+      attempt++;
     }
 
     // Delay between queries to stay under the 30k token/min rate limit
