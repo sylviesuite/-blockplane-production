@@ -154,15 +154,15 @@ type Material = {
 
 const sampleMaterials: Material[] = [
   {
-    name: "CLT Panel",
-    category: "Cross-laminated timber",
-    value: -72,
-    ris: 91,
-    risTier: "Regenerative",
+    name: "Structural Lumber (Douglas Fir)",
+    category: "Dimensional framing lumber",
+    value: -12,
+    ris: 78,
+    risTier: "Low-impact",
     trust: "verified",
-    source: "Nordic Structures · EPD #1042",
-    distanceMi: 180,
-    transport: 4,
+    source: "APA · EPD #2031",
+    distanceMi: 45,
+    transport: 1,
   },
   {
     name: "Concrete Block CMU",
