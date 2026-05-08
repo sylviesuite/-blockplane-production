@@ -101,6 +101,9 @@ jspm_packages/
 tmp/
 temp/
 
+# Local dev scripts (not for version control)
+server/scripts/run-agent.ts
+
 # Database
 *.db
 *.sqlite
