@@ -10,9 +10,9 @@ import { Badge } from "@/components/ui/badge";
 function CarbonBar({ value, max }: { value: number; max: number }) {
   const pct = Math.min((value / max) * 100, 100);
   const color =
-    value < max * 0.33 ? "#09FBD3" : value < max * 0.66 ? "#FF8E4A" : "#ef4444";
+    value < max * 0.33 ? "#3f8c52" : value < max * 0.66 ? "#c17f24" : "#a04a3c";
   return (
-    <div className="w-full bg-slate-700/50 rounded-full h-1.5 mt-1">
+    <div className="w-full bg-border rounded-full h-1.5 mt-1">
       <div
         className="h-1.5 rounded-full transition-all duration-500"
         style={{ width: `${pct}%`, background: color }}
@@ -23,11 +23,11 @@ function CarbonBar({ value, max }: { value: number; max: number }) {
 
 function ScorePill({ label, value }: { label: string; value: number }) {
   const color =
-    value >= 70 ? "text-[#09FBD3]" : value >= 40 ? "text-[#FF8E4A]" : "text-slate-400";
+    value >= 70 ? "text-[#3f8c52]" : value >= 40 ? "text-[#c17f24]" : "text-muted-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5">
       <span className={`text-lg font-bold tabular-nums ${color}`}>{value}</span>
-      <span className="text-[10px] uppercase tracking-wider text-slate-500">{label}</span>
+      <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
     </div>
   );
 }
@@ -47,21 +47,21 @@ export default function CarbonCalculator() {
   const showResults = debouncedQuery.length > 0 || results.length > 0;
 
   return (
-    <div className="min-h-screen bg-[#0a0f1a] text-white flex flex-col">
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header />
 
       <main className="flex-1 w-full max-w-3xl mx-auto px-4 py-12 space-y-10">
 
         {/* Hero */}
         <div className="text-center space-y-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#09FBD3]/10 border border-[#09FBD3]/20 px-3 py-1 text-xs text-[#09FBD3] font-medium mb-2">
+          <div className="inline-flex items-center gap-2 rounded-full bg-[#c17f24]/10 border border-[#c17f24]/30 px-3 py-1 text-xs text-[#c17f24] font-medium mb-2">
             <Leaf className="h-3 w-3" />
             Free — no account required
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Embodied Carbon Calculator
           </h1>
-          <p className="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
             Look up the embodied carbon of any building material — instantly. Search
             by name to see kg&nbsp;CO₂e per&nbsp;m², lifecycle scores, and sustainability
             ratings from the BlockPlane database.
@@ -70,11 +70,11 @@ export default function CarbonCalculator() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             type="search"
             placeholder="Search materials — e.g. CLT, concrete, hemp insulation…"
-            className="pl-9 bg-slate-900/80 border-slate-700 focus:border-[#09FBD3]/60 text-white placeholder:text-slate-500 h-12 text-base"
+            className="pl-9 h-12 text-base"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -83,13 +83,13 @@ export default function CarbonCalculator() {
 
         {/* Results */}
         {isLoading && debouncedQuery && (
-          <p className="text-center text-slate-500 text-sm">Searching…</p>
+          <p className="text-center text-muted-foreground text-sm">Searching…</p>
         )}
 
         {showResults && !isLoading && results.length === 0 && debouncedQuery && (
           <div className="text-center py-10 space-y-2">
-            <p className="text-slate-400">No materials found for "{debouncedQuery}".</p>
-            <p className="text-slate-500 text-sm">
+            <p className="text-muted-foreground">No materials found for "{debouncedQuery}".</p>
+            <p className="text-muted-foreground text-sm">
               Try a broader term like "timber", "steel", or "insulation".
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function CarbonCalculator() {
         {results.length > 0 && (
           <div className="space-y-3">
             {!debouncedQuery && (
-              <p className="text-xs text-slate-500 text-center">
+              <p className="text-xs text-muted-foreground text-center">
                 Showing all materials — type above to filter
               </p>
             )}
@@ -108,14 +108,14 @@ export default function CarbonCalculator() {
                 return (
                   <li key={m.id}>
                     <Link href={`/materials/${m.id}`}>
-                      <div className="group flex items-center gap-4 rounded-xl border border-slate-700/50 bg-slate-900/60 p-4 hover:border-[#09FBD3]/40 hover:bg-slate-900/90 transition-all cursor-pointer">
+                      <div className="group flex items-center gap-4 rounded-xl border border-border bg-card p-4 hover:border-[#c17f24]/50 hover:bg-[#eae7e0] transition-all cursor-pointer">
 
                         {/* Carbon value — primary metric */}
                         <div className="flex-none text-center w-20">
-                          <p className="text-xl font-bold tabular-nums text-[#09FBD3]">
+                          <p className="text-xl font-bold tabular-nums text-[#c17f24]">
                             {carbon.toFixed(1)}
                           </p>
-                          <p className="text-[10px] text-slate-500 leading-tight">
+                          <p className="text-[10px] text-muted-foreground leading-tight">
                             kg CO₂e/m²
                           </p>
                           <CarbonBar value={carbon} max={CARBON_MAX} />
@@ -123,20 +123,20 @@ export default function CarbonCalculator() {
 
                         {/* Name + category */}
                         <div className="flex-1 min-w-0">
-                          <p className="font-semibold truncate group-hover:text-[#09FBD3] transition-colors">
+                          <p className="font-semibold truncate group-hover:text-[#c17f24] transition-colors">
                             {m.name}
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <Badge
                               variant="outline"
-                              className="text-[10px] border-slate-600 text-slate-400 py-0"
+                              className="text-[10px] py-0"
                             >
                               {m.category}
                             </Badge>
                             {m.isRegenerative === 1 && (
                               <Badge
                                 variant="outline"
-                                className="text-[10px] border-[#09FBD3]/40 text-[#09FBD3] py-0"
+                                className="text-[10px] border-[#3f8c52]/40 text-[#3f8c52] py-0"
                               >
                                 Regenerative
                               </Badge>
@@ -148,7 +148,7 @@ export default function CarbonCalculator() {
                         <div className="flex-none flex gap-4 items-center">
                           <ScorePill label="LIS" value={m.lisScore} />
                           <ScorePill label="RIS" value={m.risScore} />
-                          <ArrowRight className="h-4 w-4 text-slate-600 group-hover:text-[#09FBD3] transition-colors ml-1" />
+                          <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-[#c17f24] transition-colors ml-1" />
                         </div>
 
                       </div>
@@ -158,7 +158,7 @@ export default function CarbonCalculator() {
               })}
             </ul>
             {data && data.totalItems > results.length && (
-              <p className="text-center text-xs text-slate-500 pt-1">
+              <p className="text-center text-xs text-muted-foreground pt-1">
                 Showing {results.length} of {data.totalItems} — refine your search to narrow results
               </p>
             )}
@@ -166,16 +166,16 @@ export default function CarbonCalculator() {
         )}
 
         {/* Education block */}
-        <section className="rounded-xl border border-slate-700/40 bg-slate-900/40 p-6 space-y-4 text-sm text-slate-400">
-          <div className="flex items-center gap-2 text-slate-300 font-semibold">
-            <Info className="h-4 w-4 text-[#09FBD3]" />
+        <section className="rounded-xl border border-border bg-card p-6 space-y-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 font-semibold text-foreground">
+            <Info className="h-4 w-4 text-[#c17f24]" />
             What is embodied carbon?
           </div>
           <p>
-            <strong className="text-slate-200">Embodied carbon</strong> is the CO₂ emitted
+            <strong className="text-foreground">Embodied carbon</strong> is the CO₂ emitted
             during the extraction, manufacturing, transport, and construction of a building
             material — everything before the building is occupied. It is measured in{" "}
-            <strong className="text-slate-200">kg CO₂ equivalent per m²</strong> (kg CO₂e/m²).
+            <strong className="text-foreground">kg CO₂ equivalent per m²</strong> (kg CO₂e/m²).
           </p>
           <p>
             Unlike operational carbon (heating, cooling, lighting), embodied carbon is locked
@@ -189,15 +189,15 @@ export default function CarbonCalculator() {
               { label: "RIS — Regenerative Impact Score", body: "Measures positive ecological value — carbon sequestration, biodiversity, circularity. Higher = better." },
               { label: "Benchmark 2000", body: "BlockPlane's reference standard. A LIS of 100 and RIS of 38 represent a conventional construction baseline." },
             ].map(({ label, body }) => (
-              <div key={label} className="rounded-lg bg-slate-800/50 p-3 space-y-1">
-                <p className="text-slate-300 font-medium text-xs">{label}</p>
+              <div key={label} className="rounded-lg bg-background p-3 space-y-1 border border-border">
+                <p className="text-foreground font-medium text-xs">{label}</p>
                 <p className="text-xs">{body}</p>
               </div>
             ))}
           </div>
           <p className="text-xs">
             Want the full picture?{" "}
-            <Link href="/materials" className="text-[#09FBD3] hover:underline">
+            <Link href="/materials" className="text-[#c17f24] hover:underline">
               Browse the complete material database →
             </Link>
           </p>

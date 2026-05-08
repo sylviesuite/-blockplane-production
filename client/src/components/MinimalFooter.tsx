@@ -1,16 +1,27 @@
+import { Link } from 'wouter';
+
+const forest = '#1a2e1f';
+const cream = '#f5f2ec';
+
 export default function MinimalFooter() {
   return (
-    <footer className="border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} BlockPlane Materials Explorer. All rights reserved.</p>
+    <footer style={{ backgroundColor: forest }}>
+      <div className="container py-6">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
+          <p style={{ color: `${cream}66` }}>
+            © {new Date().getFullYear()} BlockPlane. All rights reserved.
+          </p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-foreground transition-colors">
-              Terms of Service
-            </a>
+            <Link href="/privacy">
+              <span style={{ color: `${cream}99` }} className="hover:text-white cursor-pointer transition-colors">
+                Privacy Policy
+              </span>
+            </Link>
+            <Link href="/terms">
+              <span style={{ color: `${cream}99` }} className="hover:text-white cursor-pointer transition-colors">
+                Terms of Service
+              </span>
+            </Link>
           </div>
         </div>
       </div>

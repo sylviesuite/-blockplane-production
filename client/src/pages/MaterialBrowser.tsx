@@ -113,13 +113,13 @@ export default function MaterialBrowser() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <Header />
       {/* Header */}
-      <div className="bg-slate-900/90 border-b border-slate-800">
+      <div style={{ backgroundColor: '#1a2e1f' }}>
         <div className="container py-4">
           <h1 className="text-4xl font-bold text-white mb-1">Material Database</h1>
-          <p className="text-lg text-slate-200">
+          <p className="text-lg" style={{ color: 'rgba(245,242,236,0.8)' }}>
             Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
           </p>
         </div>
@@ -129,7 +129,7 @@ export default function MaterialBrowser() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Filters Sidebar */}
             <div className="lg:col-span-1">
-              <Card className="bg-slate-900/95 border border-slate-800/80 text-white shadow-lg shadow-slate-900/60">
+              <Card className="shadow-lg">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Filter className="w-5 h-5" />
@@ -139,7 +139,7 @@ export default function MaterialBrowser() {
                   Refine your material search
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6 text-slate-100">
+              <CardContent className="space-y-6">
                 {/* Search */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">Search</label>
@@ -235,7 +235,7 @@ export default function MaterialBrowser() {
           </div>
 
           {/* Materials Grid */}
-          <div className="lg:col-span-3 space-y-6 bg-slate-950/50 rounded-3xl p-4 border border-slate-900/60 shadow-inner shadow-slate-950/40">
+          <div className="lg:col-span-3 space-y-6 bg-[#eae7e0] rounded-3xl p-4 border border-border shadow-inner">
             {/* Sort and Results Info */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div className="text-sm text-gray-600">
@@ -290,11 +290,11 @@ export default function MaterialBrowser() {
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {searchResults.items.map((material: any) => (
                       <Link key={material.id} href={`/materials/${material.id}`}>
-                        <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer bg-slate-900 border border-slate-800 text-white">
+                        <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
                           <CardHeader>
                             <div className="flex justify-between items-start mb-2">
                               <Badge variant="outline">{material.category}</Badge>
-                              <Badge 
+                              <Badge
                                 variant={getConfidenceBadgeVariant(material.confidenceLevel)}
                                 className="flex items-center gap-1"
                               >
@@ -302,12 +302,12 @@ export default function MaterialBrowser() {
                                 {material.confidenceLevel}
                               </Badge>
                             </div>
-                            <CardTitle className="text-lg text-white">{material.name}</CardTitle>
-                            <CardDescription className="line-clamp-2 text-slate-300">
+                            <CardTitle className="text-lg">{material.name}</CardTitle>
+                            <CardDescription className="line-clamp-2">
                               {material.description || "No description available"}
                             </CardDescription>
                           </CardHeader>
-                          <CardContent className="space-y-3 text-slate-100">
+                          <CardContent className="space-y-3">
                             {/* Key Metrics */}
                             <div className="grid grid-cols-2 gap-3">
                               <div className="flex items-center gap-2">

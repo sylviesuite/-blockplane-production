@@ -54,14 +54,14 @@ export default function Analysis() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      <div className="min-h-screen bg-background">
         {/* Header */}
-        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+        <div style={{ backgroundColor: '#1a2e1f' }}>
           <div className="container py-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">
+            <h1 className="text-4xl font-bold text-white mb-3">
               Material Analysis Tools
             </h1>
-            <p className="text-lg text-gray-600 dark:text-gray-400">
+            <p className="text-lg" style={{ color: 'rgba(245,242,236,0.8)' }}>
               Advanced visualization and comparison tools for {materials.length} sustainable building materials
             </p>
           </div>

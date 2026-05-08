@@ -79,15 +79,10 @@ function Router() {
   );
 }
 
-// NOTE: About Theme
-// - Dark mode is the default theme with cyan/orange gradients
-// - Users can toggle to light mode using the sun/moon button in the header
-// - Theme preference is saved in localStorage after user manually toggles
-
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark" switchable>
+      <ThemeProvider defaultTheme="light">
         <AuthProvider>
           <TooltipProvider>
             <Toaster />
