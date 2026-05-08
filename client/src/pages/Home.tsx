@@ -145,7 +145,7 @@ type Material = {
   category: string;
   value: number;
   ris: number;
-  risTier: "Regenerative" | "Low-impact" | "Standard" | "High";
+  risTier: "Regenerative" | "Low-impact" | "Standard" | "High-impact";
   trust: Trust;
   source: string;
   distanceMi: number;
@@ -165,7 +165,7 @@ const sampleMaterials: Material[] = [
     transport: 1,
   },
   {
-    name: "Concrete Block CMU",
+    name: "Concrete Block (CMU)",
     category: "Standard masonry unit",
     value: 89,
     ris: 52,
@@ -176,15 +176,15 @@ const sampleMaterials: Material[] = [
     transport: 2,
   },
   {
-    name: "Spray Foam Open Cell",
-    category: "Insulation (R-21 wall)",
-    value: 34,
-    ris: 68,
-    risTier: "Low-impact",
+    name: "Rigid Foam Insulation (XPS)",
+    category: "Extruded polystyrene insulation",
+    value: 142,
+    ris: 28,
+    risTier: "High-impact",
     trust: "ai",
     source: "AI estimate · benchmarked",
-    distanceMi: 220,
-    transport: 5,
+    distanceMi: 310,
+    transport: 6,
   },
 ];
 
@@ -192,7 +192,7 @@ const tierColor: Record<Material["risTier"], string> = {
   Regenerative: "#3f8c52",
   "Low-impact": "#4a7fa8",
   Standard: "#c17f24",
-  High: "#a04a3c",
+  "High-impact": "#a04a3c",
 };
 
 function ExampleStrip() {
@@ -405,7 +405,7 @@ const risLegend: { tier: Material["risTier"]; range: string; note: string }[] = 
   { tier: "Regenerative", range: "75 – 100", note: "Actively sequesters carbon or restores ecosystems." },
   { tier: "Low-impact", range: "50 – 74", note: "Notably below regional baseline." },
   { tier: "Standard", range: "25 – 49", note: "Typical for the category." },
-  { tier: "High", range: "0 – 24", note: "Carbon-intensive — substitute if possible." },
+  { tier: "High-impact", range: "0 – 24", note: "Carbon-intensive — substitute if possible." },
 ];
 
 function RDS() {
