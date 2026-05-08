@@ -32,28 +32,32 @@ function Nav() {
             className="hidden text-sm font-medium md:inline transition-colors"
             style={{ color: "rgba(245,242,236,0.6)" }}
           >
-            Database
+            Materials
+          </Link>
+          <Link
+            href="/analysis"
+            className="hidden text-sm font-medium md:inline transition-colors"
+            style={{ color: "rgba(245,242,236,0.6)" }}
+          >
+            Analysis
           </Link>
           <Link
             href="/how-it-works"
             className="hidden text-sm font-medium md:inline transition-colors"
             style={{ color: "rgba(245,242,236,0.6)" }}
           >
-            Methodology
-          </Link>
-          <Link
-            href="/how-it-works#confidence"
-            className="hidden text-sm font-medium md:inline transition-colors"
-            style={{ color: "rgba(245,242,236,0.6)" }}
-          >
-            Trust
+            How It Works
           </Link>
 
           {user ? (
             <>
-              <span className="hidden lg:inline text-sm" style={{ color: "rgba(245,242,236,0.5)" }}>
-                {user.name ?? user.email}
-              </span>
+              <Link
+                href="/projects"
+                className="hidden text-sm font-medium md:inline transition-colors"
+                style={{ color: "rgba(245,242,236,0.6)" }}
+              >
+                Account
+              </Link>
               <button
                 onClick={logout}
                 className="rounded-md px-4 py-2 text-sm font-semibold transition-colors"
@@ -140,8 +144,8 @@ type Material = {
   name: string;
   category: string;
   value: number;
-  rds: number;
-  rdsTier: "Regenerative" | "Low-impact" | "Standard" | "High";
+  ris: number;
+  risTier: "Regenerative" | "Low-impact" | "Standard" | "High";
   trust: Trust;
   source: string;
   distanceMi: number;
@@ -153,8 +157,8 @@ const sampleMaterials: Material[] = [
     name: "CLT Panel",
     category: "Cross-laminated timber",
     value: -72,
-    rds: 91,
-    rdsTier: "Regenerative",
+    ris: 91,
+    risTier: "Regenerative",
     trust: "verified",
     source: "Nordic Structures · EPD #1042",
     distanceMi: 180,
@@ -164,8 +168,8 @@ const sampleMaterials: Material[] = [
     name: "Concrete Block CMU",
     category: "Standard masonry unit",
     value: 89,
-    rds: 52,
-    rdsTier: "Standard",
+    ris: 52,
+    risTier: "Standard",
     trust: "database",
     source: "EC3 industry average",
     distanceMi: 95,
@@ -175,8 +179,8 @@ const sampleMaterials: Material[] = [
     name: "Spray Foam Open Cell",
     category: "Insulation (R-21 wall)",
     value: 34,
-    rds: 68,
-    rdsTier: "Low-impact",
+    ris: 68,
+    risTier: "Low-impact",
     trust: "ai",
     source: "AI estimate · benchmarked",
     distanceMi: 220,
@@ -184,7 +188,7 @@ const sampleMaterials: Material[] = [
   },
 ];
 
-const tierColor: Record<Material["rdsTier"], string> = {
+const tierColor: Record<Material["risTier"], string> = {
   Regenerative: "#3f8c52",
   "Low-impact": "#4a7fa8",
   Standard: "#c17f24",
@@ -280,14 +284,14 @@ function ExampleStrip() {
                   >
                     <span
                       className="inline-block h-2 w-2 rounded-full"
-                      style={{ backgroundColor: tierColor[m.rdsTier] }}
+                      style={{ backgroundColor: tierColor[m.risTier] }}
                       aria-hidden
                     />
                     <span className="font-medium" style={{ color: cream }}>
-                      RDS {m.rds}
+                      RIS {m.ris}
                     </span>
                     <span>·</span>
-                    <span>{m.rdsTier}</span>
+                    <span>{m.risTier}</span>
                   </div>
                   <div
                     className="mt-5 grid grid-cols-2 gap-3 border-t pt-4 text-xs"
@@ -343,7 +347,7 @@ const features = [
   },
   {
     title: "Compare with scored metrics",
-    body: "The Regional Design Score (RDS) lets you weigh options side-by-side — not just carbon, but sourcing, durability, and reuse.",
+    body: "The Regenerative Impact Score (RIS) lets you weigh options side-by-side — not just carbon, but sourcing, durability, and reuse.",
     href: "/analysis",
   },
   {
@@ -396,12 +400,12 @@ function What() {
   );
 }
 
-// ── RDS legend ────────────────────────────────────────────────────────────────
-const rdsLegend: { tier: Material["rdsTier"]; range: string; note: string }[] = [
-  { tier: "Regenerative", range: "< 0", note: "Carbon-storing across its life cycle." },
-  { tier: "Low-impact", range: "0 – 50", note: "Notably below regional baseline." },
-  { tier: "Standard", range: "50 – 150", note: "Typical for the category." },
-  { tier: "High", range: "> 150", note: "Carbon-intensive — substitute if possible." },
+// ── RIS legend ────────────────────────────────────────────────────────────────
+const risLegend: { tier: Material["risTier"]; range: string; note: string }[] = [
+  { tier: "Regenerative", range: "75 – 100", note: "Actively sequesters carbon or restores ecosystems." },
+  { tier: "Low-impact", range: "50 – 74", note: "Notably below regional baseline." },
+  { tier: "Standard", range: "25 – 49", note: "Typical for the category." },
+  { tier: "High", range: "0 – 24", note: "Carbon-intensive — substitute if possible." },
 ];
 
 function RDS() {
@@ -417,7 +421,7 @@ function RDS() {
               className="text-xs font-semibold uppercase tracking-wider"
               style={{ color: amber }}
             >
-              Regional Design Score
+              Regenerative Impact Score
             </span>
             <h2
               className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl"
@@ -426,9 +430,9 @@ function RDS() {
               One score that captures the whole picture.
             </h2>
             <p className="mt-4 text-sm leading-relaxed" style={{ color: muted }}>
-              RDS combines embodied carbon, regional sourcing, durability, and end-of-life
-              recovery into a single number. Lower is better. Negative means the material
-              stores more carbon than it emits.
+              RIS combines embodied carbon, regional sourcing, durability, and end-of-life
+              recovery into a single 0–100 score. Higher is better. Materials scoring 75+
+              actively sequester carbon or restore ecosystems.
             </p>
             <Link
               href="/how-it-works"
@@ -439,7 +443,7 @@ function RDS() {
             </Link>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
-            {rdsLegend.map((l) => (
+            {risLegend.map((l) => (
               <div
                 key={l.tier}
                 className="flex items-start gap-3 border bg-white/40 p-4"
@@ -550,72 +554,6 @@ function Confidence() {
   );
 }
 
-// ── Carbon Shift digest preview ───────────────────────────────────────────────
-function Alerts() {
-  return (
-    <section style={{ backgroundColor: cream }}>
-      <div
-        className="mx-auto max-w-6xl px-6 py-20"
-        style={{ borderTop: `1px solid ${borderSoft}` }}
-      >
-        <div className="grid gap-10 md:grid-cols-[1fr_1fr] md:items-center md:gap-16">
-          <div>
-            <span
-              className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: amber }}
-            >
-              Carbon Shift · weekly
-            </span>
-            <h2
-              className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl"
-              style={{ color: text }}
-            >
-              The local-supply changes that matter, in your inbox.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed" style={{ color: muted }}>
-              A short Friday digest of new verified EPDs, regional suppliers, and pricing
-              shifts within 250 miles of your project. No noise.
-            </p>
-          </div>
-          <div className="border p-6" style={{ backgroundColor: "white", borderColor: borderSoft }}>
-            <div className="text-xs uppercase tracking-wider" style={{ color: muted }}>
-              Sample · Detroit, MI
-            </div>
-            <div className="mt-3 space-y-3 text-sm" style={{ color: text }}>
-              <div className="flex gap-3">
-                <span
-                  className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                  style={{ backgroundColor: tierColor.Regenerative }}
-                />
-                <span>
-                  3 new verified EPDs within 100 mi: CLT, cellulose insulation, recycled
-                  steel studs.
-                </span>
-              </div>
-              <div className="flex gap-3">
-                <span
-                  className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                  style={{ backgroundColor: tierColor["Low-impact"] }}
-                />
-                <span>Hempcrete block pricing dropped 12% from a Grand Rapids supplier.</span>
-              </div>
-              <div className="flex gap-3">
-                <span
-                  className="mt-1.5 inline-block h-1.5 w-1.5 flex-shrink-0 rounded-full"
-                  style={{ backgroundColor: tierColor.Standard }}
-                />
-                <span>
-                  Transport CO₂ for Type-S mortar revised down with a new rail route.
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ── Bottom CTA ────────────────────────────────────────────────────────────────
 function BottomCTA() {
   const { user } = useAuth();
@@ -715,7 +653,6 @@ export default function Home() {
       <What />
       <RDS />
       <Confidence />
-      <Alerts />
       <BottomCTA />
       <LandingFooter />
     </main>
