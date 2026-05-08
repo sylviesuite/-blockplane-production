@@ -154,14 +154,14 @@ type Material = {
 
 const sampleMaterials: Material[] = [
   {
-    name: "Structural Lumber (Douglas Fir)",
-    category: "Dimensional framing lumber",
-    value: -12,
-    ris: 78,
-    risTier: "Low-impact",
+    name: "Cellulose Insulation",
+    category: "Recycled content insulation",
+    value: -14,
+    ris: 85,
+    risTier: "Regenerative",
     trust: "verified",
-    source: "APA · EPD #2031",
-    distanceMi: 45,
+    source: "CIMA · EPD #3104",
+    distanceMi: 40,
     transport: 1,
   },
   {
