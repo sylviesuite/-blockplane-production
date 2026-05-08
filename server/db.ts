@@ -161,16 +161,12 @@ function mapRow(r: any) {
   };
 }
 
-/** Raw rows from Supabase or materials-dev-fallback.json before mapRow. */
+/** Deduplicate raw rows by ID only — the DB is the source of truth for uniqueness. */
 function dedupeMaterialRows(rows: any[]) {
   const seenId = new Set<string>();
-  const seenName = new Set<string>();
   return rows.filter((r) => {
     if (seenId.has(r.id)) return false;
     seenId.add(r.id);
-    const nameKey = `${r.name}||${r.category}`;
-    if (seenName.has(nameKey)) return false;
-    seenName.add(nameKey);
     return true;
   });
 }
@@ -215,7 +211,7 @@ export async function getAllMaterials() {
     }
 
     const rows = await supabaseFetch(
-      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=300"
+      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=2000"
     );
     let materials = mapRowsToMaterials(rows as any[]);
     if (materials.length === 0 && useFallback) {
