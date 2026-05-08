@@ -74,10 +74,10 @@ async function main() {
     ris: risByMaterial.get(m.id) ?? 0,
   }));
 
-  // Group by (name, category, carbon) — round carbon to 4 dp to handle float noise
+  // Group by (name, category) — any two rows with the same name+category are duplicates
   const groups = new Map<string, Row[]>();
   for (const row of rows) {
-    const key = `${row.name}||${row.category}||${row.carbon.toFixed(4)}`;
+    const key = `${row.name}||${row.category}`;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key)!.push(row);
   }
