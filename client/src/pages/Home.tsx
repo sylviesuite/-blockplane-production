@@ -42,6 +42,13 @@ function Nav() {
             Analysis
           </Link>
           <Link
+            href="/benchmark"
+            className="hidden text-sm font-medium md:inline transition-colors"
+            style={{ color: "rgba(245,242,236,0.6)" }}
+          >
+            Benchmark 2000
+          </Link>
+          <Link
             href="/how-it-works"
             className="hidden text-sm font-medium md:inline transition-colors"
             style={{ color: "rgba(245,242,236,0.6)" }}
