@@ -212,7 +212,7 @@ function ExampleStrip() {
               className="max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl"
               style={{ color: cream }}
             >
-              Real numbers, normalized so you can compare them.
+              The real lifecycle carbon impact behind every material you specify.
             </h2>
             <p className="mt-2 text-sm" style={{ color: "#cfcabf" }}>
               All values shown as kg CO₂e per sq ft of finished assembly.
