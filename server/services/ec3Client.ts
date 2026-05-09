@@ -58,7 +58,10 @@ async function ec3Fetch(path: string, params: Record<string, string>): Promise<a
 
   const text = await res.text();
   if (!res.ok) {
-    throw new Error(`EC3 ${res.status} ${res.statusText} — ${text.slice(0, 300)}`);
+    // EC3 embeds a human-readable detail field even on 403s
+    let detail = text.slice(0, 300);
+    try { detail = JSON.parse(text)?.detail ?? detail; } catch {}
+    throw new Error(`EC3 ${res.status}: ${detail}`);
   }
   return text ? JSON.parse(text) : null;
 }
