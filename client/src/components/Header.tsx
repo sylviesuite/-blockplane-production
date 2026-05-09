@@ -40,6 +40,11 @@ export function Header() {
               Calculator
             </span>
           </Link>
+          <Link href="/benchmark">
+            <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
+              Benchmark 2000
+            </span>
+          </Link>
         </nav>
 
         <div className="ml-auto flex items-center gap-4 text-sm">
