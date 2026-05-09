@@ -15,6 +15,7 @@ import { impactRouter } from './routers/impact';
 import { publicAPIRouter } from './routers/publicAPI';
 import { supplierRouter } from './routers/supplier';
 import { materialAPIRouter } from './routers/materialAPI';
+import { benchmarkRouter } from './routers/benchmark';
 import { selectRelevantMemories } from './ai/memoryGate';
 
 const MEMORY_BEHAVIOR_RULE =
@@ -240,6 +241,9 @@ export const appRouter = router({
 
   // Material API for Revit plugin integration
   materialAPI: materialAPIRouter,
+
+  // Benchmark 2000 reference building model
+  benchmark: benchmarkRouter,
 
   // Material recommendations
   recommendations: router({

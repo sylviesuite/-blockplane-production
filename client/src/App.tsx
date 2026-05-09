@@ -30,6 +30,7 @@ import BetaSignup from "./pages/BetaSignup";
 import TermsOfService from "./pages/TermsOfService";
 import HowItWorks from "./pages/HowItWorks";
 import CarbonCalculator from "./pages/CarbonCalculator";
+import Benchmark from "./pages/Benchmark";
 import AuthGate from "./components/AuthGate";
 
 function DefaultRoute() {
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/assistant" component={Assistant} />
       <Route path={"/impact"} component={KPIDashboard} />
       <Route path="/calculator" component={CarbonCalculator} />
+      <Route path="/benchmark" component={Benchmark} />
       <Route path="/materials/:id" component={MaterialDetailEnhanced} />
       <Route path="/projects">
         {() => <AuthGate redirect><ProjectAnalysis /></AuthGate>}
