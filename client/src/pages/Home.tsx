@@ -98,8 +98,11 @@ function Hero() {
           className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           style={{ color: cream }}
         >
-          Make better material decisions — starting with the carbon numbers.
+          Craft a sustainable future with Block Plane Metrics.
         </h1>
+        <p className="mt-3 text-base" style={{ color: "rgba(245,242,236,0.55)" }}>
+          A cradle-to-gate carbon calculator for building materials.
+        </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
           Block Plane gives you verified embodied carbon data for 243 regional building
           materials, normalized per assembly so you can actually compare them.
