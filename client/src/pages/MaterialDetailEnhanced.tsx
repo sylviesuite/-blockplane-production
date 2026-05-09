@@ -81,12 +81,13 @@ function buildInsightText(
     risSentence = `A RIS of ${ris} is below average — factor in higher maintenance intervals and confirm moisture performance for your climate.`;
 
   let lisSentence: string;
+  const cSqFt = (carbon / 10.764).toFixed(2);
   if (lis <= 30)
-    lisSentence = `At LIS ${lis} and ${carbon.toFixed(1)} kg CO₂e, it sits among the lower-impact ${category} options available.`;
+    lisSentence = `At LIS ${lis} and ${cSqFt} kg CO₂e/sq ft, it sits among the lower-impact ${category} options available.`;
   else if (lis <= 55)
-    lisSentence = `Its LIS of ${lis} (${carbon.toFixed(1)} kg CO₂e) reflects moderate lifecycle impact, typical for the ${category} category.`;
+    lisSentence = `Its LIS of ${lis} (${cSqFt} kg CO₂e/sq ft) reflects moderate lifecycle impact, typical for the ${category} category.`;
   else
-    lisSentence = `The LIS of ${lis} (${carbon.toFixed(1)} kg CO₂e) is on the higher end — check alternatives if embodied carbon is a project constraint.`;
+    lisSentence = `The LIS of ${lis} (${cSqFt} kg CO₂e/sq ft) is on the higher end — check alternatives if embodied carbon is a project constraint.`;
 
   let advice: string;
   if ((ris ?? 0) >= 70 && lis <= 40)
@@ -140,6 +141,7 @@ export default function MaterialDetailEnhanced() {
 
   const confidenceLevel = material.confidenceLevel as ConfidenceLevel;
   const carbon = parseFloat(material.totalCarbon);
+  const carbonSqFt = carbon / 10.764;
   const cost = parseFloat(material.costPerUnit);
 
   const confidenceBadgeClass: Record<ConfidenceLevel, string> = {
@@ -220,8 +222,8 @@ export default function MaterialDetailEnhanced() {
               <div>
                 <p className="text-xs leading-none" style={{ color: "rgba(245,242,236,0.5)" }}>Carbon</p>
                 <p className="text-base font-bold text-emerald-300 leading-tight">
-                  {carbon.toFixed(1)}
-                  <span className="text-xs font-normal ml-1" style={{ color: "rgba(245,242,236,0.5)" }}>kg CO₂e</span>
+                  {carbonSqFt.toFixed(2)}
+                  <span className="text-xs font-normal ml-1" style={{ color: "rgba(245,242,236,0.5)" }}>kg CO₂e/sq ft</span>
                 </p>
               </div>
             </div>
@@ -313,7 +315,7 @@ export default function MaterialDetailEnhanced() {
                     <Clock className="w-7 h-7 text-muted-foreground/40" />
                     <p className="text-sm font-medium text-muted-foreground">Lifecycle phase data coming soon</p>
                     <p className="text-xs text-muted-foreground/60 text-center max-w-sm">
-                      Total cradle-to-gate is {carbon.toFixed(1)} kg CO₂e — per-phase breakdown
+                      Total cradle-to-gate is {carbonSqFt.toFixed(2)} kg CO₂e/sq ft — per-phase breakdown
                       will be added as data coverage expands.
                     </p>
                   </div>
@@ -436,7 +438,7 @@ export default function MaterialDetailEnhanced() {
                         <div className="flex flex-wrap gap-3 text-xs">
                           {rec.carbonSavings > 0 && (
                             <span className="text-[#3f8c52]">
-                              −{rec.carbonSavings.toFixed(1)} kg CO₂e carbon
+                              −{(rec.carbonSavings / 10.764).toFixed(2)} kg CO₂e/sq ft
                             </span>
                           )}
                           {rec.risDelta > 0 && (

@@ -45,7 +45,7 @@ export default function MaterialBrowser() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [minRIS, setMinRIS] = useState<number | undefined>();
-  const [maxCarbon, setMaxCarbon] = useState<number | undefined>();
+  const [maxCarbonSqFt, setMaxCarbonSqFt] = useState<number | undefined>();
   const [regenerativeOnly, setRegenerativeOnly] = useState(false);
   const [sortBy, setSortBy] = useState<"name" | "carbon" | "cost" | "ris" | "lis">("name");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -57,7 +57,7 @@ export default function MaterialBrowser() {
     query: searchQuery || undefined,
     categories: selectedCategories.length > 0 ? (selectedCategories as any) : undefined,
     minRIS,
-    maxCarbon,
+    maxCarbon: maxCarbonSqFt ? maxCarbonSqFt * 10.764 : undefined,
     regenerativeOnly: regenerativeOnly || undefined,
     sortBy,
     sortOrder,
@@ -71,7 +71,7 @@ export default function MaterialBrowser() {
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedCategories, minRIS, maxCarbon, regenerativeOnly, sortBy, sortOrder]);
+  }, [searchQuery, selectedCategories, minRIS, maxCarbonSqFt, regenerativeOnly, sortBy, sortOrder]);
 
   // Toggle category selection
   const toggleCategory = (category: string) => {
@@ -87,7 +87,7 @@ export default function MaterialBrowser() {
     setSearchQuery("");
     setSelectedCategories([]);
     setMinRIS(undefined);
-    setMaxCarbon(undefined);
+    setMaxCarbonSqFt(undefined);
     setRegenerativeOnly(false);
     setCurrentPage(1);
   };
@@ -121,6 +121,9 @@ export default function MaterialBrowser() {
           <h1 className="text-4xl font-bold text-white mb-1">Material Database</h1>
           <p className="text-lg" style={{ color: 'rgba(245,242,236,0.8)' }}>
             Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
+          </p>
+          <p className="text-xs mt-1" style={{ color: 'rgba(245,242,236,0.45)' }}>
+            Imperial units · Northern Michigan region
           </p>
         </div>
       </div>
@@ -196,14 +199,14 @@ export default function MaterialBrowser() {
                 {/* Carbon Filter */}
                 <div>
                   <label className="text-sm font-medium mb-2 block">
-                    Maximum Carbon (kg CO₂e)
+                    Maximum Carbon (kg CO₂e/sq ft)
                   </label>
                   <Input
                     type="number"
                     min="0"
-                    placeholder="e.g., 500"
-                    value={maxCarbon || ""}
-                    onChange={(e) => setMaxCarbon(e.target.value ? parseFloat(e.target.value) : undefined)}
+                    placeholder="e.g., 20"
+                    value={maxCarbonSqFt || ""}
+                    onChange={(e) => setMaxCarbonSqFt(e.target.value ? parseFloat(e.target.value) : undefined)}
                   />
                 </div>
 
@@ -315,7 +318,7 @@ export default function MaterialBrowser() {
                                 <div>
                                   <p className="text-xs text-gray-500">Carbon</p>
                                   <p className="text-sm font-semibold">
-                                    {parseFloat(material.totalCarbon).toFixed(1)} kg CO₂e
+                                    {(parseFloat(material.totalCarbon) / 10.764).toFixed(2)} kg CO₂e/sq ft
                                   </p>
                                 </div>
                               </div>

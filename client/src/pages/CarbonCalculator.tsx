@@ -35,7 +35,8 @@ function ScorePill({ label, value }: { label: string; value: number | null }) {
   );
 }
 
-const CARBON_MAX = 200;
+const M2_TO_SQFT = 10.764;
+const CARBON_MAX = 20; // ~200 kg CO₂e/m² in per-sq-ft units
 
 export default function CarbonCalculator() {
   const [query, setQuery] = useState("");
@@ -66,7 +67,7 @@ export default function CarbonCalculator() {
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
             Look up the embodied carbon of any building material — instantly. Search
-            by name to see kg&nbsp;CO₂e per&nbsp;m², lifecycle scores, and sustainability
+            by name to see kg&nbsp;CO₂e per&nbsp;sq&nbsp;ft, lifecycle scores, and sustainability
             ratings from the BlockPlane database.
           </p>
         </div>
@@ -105,9 +106,12 @@ export default function CarbonCalculator() {
                 Showing all materials — type above to filter
               </p>
             )}
+            <p className="text-xs text-muted-foreground text-center">
+              Imperial units · Northern Michigan region
+            </p>
             <ul className="space-y-2">
               {results.map((m) => {
-                const carbon = parseFloat(m.totalCarbon);
+                const carbon = parseFloat(m.totalCarbon) / M2_TO_SQFT;
                 return (
                   <li key={m.id}>
                     <Link href={`/materials/${m.id}`}>
@@ -119,7 +123,7 @@ export default function CarbonCalculator() {
                             {carbon.toFixed(1)}
                           </p>
                           <p className="text-[10px] text-muted-foreground leading-tight">
-                            kg CO₂e/m²
+                            kg CO₂e/sq ft
                           </p>
                           <CarbonBar value={carbon} max={CARBON_MAX} />
                         </div>
@@ -178,7 +182,7 @@ export default function CarbonCalculator() {
             <strong className="text-foreground">Embodied carbon</strong> is the CO₂ emitted
             during the extraction, manufacturing, transport, and construction of a building
             material — everything before the building is occupied. It is measured in{" "}
-            <strong className="text-foreground">kg CO₂ equivalent per m²</strong> (kg CO₂e/m²).
+            <strong className="text-foreground">kg CO₂ equivalent per sq ft</strong> (kg CO₂e/sq ft).
           </p>
           <p>
             Unlike operational carbon (heating, cooling, lighting), embodied carbon is locked

@@ -155,39 +155,40 @@ type Material = {
   transport: number;
 };
 
+// Values in kg CO₂e/sq ft (converted from kg CO₂e/m² ÷ 10.764)
 const sampleMaterials: Material[] = [
   {
     name: "Cellulose Insulation",
     category: "Recycled content insulation",
-    value: -14,
+    value: -1.3,
     ris: 85,
     risTier: "Regenerative",
     trust: "verified",
     source: "CIMA · EPD #3104",
     distanceMi: 40,
-    transport: 1,
+    transport: 0.1,
   },
   {
     name: "Douglas Fir Lumber",
     category: "Dimensional framing lumber",
-    value: 12,
+    value: 1.1,
     ris: 72,
     risTier: "Low-impact",
     trust: "verified",
     source: "APA · EPD #2031",
     distanceMi: 85,
-    transport: 2,
+    transport: 0.2,
   },
   {
     name: "XPS Rigid Foam",
     category: "Extruded polystyrene insulation",
-    value: 142,
+    value: 13.2,
     ris: 28,
     risTier: "High-impact",
     trust: "ai",
     source: "AI estimate · benchmarked",
     distanceMi: 310,
-    transport: 6,
+    transport: 0.6,
   },
 ];
 
@@ -214,7 +215,10 @@ function ExampleStrip() {
               Real numbers, normalized so you can compare them.
             </h2>
             <p className="mt-2 text-sm" style={{ color: "#cfcabf" }}>
-              All values shown as kg CO₂e / m²
+              All values shown as kg CO₂e per sq ft of finished assembly.
+            </p>
+            <p className="mt-1 text-xs" style={{ color: "rgba(245,242,236,0.45)" }}>
+              Imperial units · Northern Michigan region
             </p>
           </div>
         </div>
@@ -254,10 +258,10 @@ function ExampleStrip() {
                       style={{ color: positive ? "#8fb98a" : cream }}
                     >
                       {positive ? "−" : ""}
-                      {Math.abs(m.value)}
+                      {Math.abs(m.value).toFixed(1)}
                     </span>
                     <span className="text-sm" style={{ color: "#cfcabf" }}>
-                      kg CO₂e / m²
+                      kg CO₂e / sq ft
                     </span>
                   </div>
                   <div
@@ -292,7 +296,7 @@ function ExampleStrip() {
                         Transport
                       </div>
                       <div className="mt-1" style={{ color: cream }}>
-                        +{m.transport} kg CO₂e/m²
+                        +{m.transport} kg CO₂e/sq ft
                       </div>
                     </div>
                   </div>
