@@ -105,7 +105,7 @@ function Hero() {
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
           Block Plane gives you verified embodied carbon data for 243 regional building
-          materials. Standardized across assemblies for accurate comparison.
+          materials.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
