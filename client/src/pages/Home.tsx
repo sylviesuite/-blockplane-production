@@ -165,7 +165,7 @@ const sampleMaterials: Material[] = [
     transport: 1,
   },
   {
-    name: "Douglas Fir Framing Lumber",
+    name: "Douglas Fir Lumber",
     category: "Dimensional framing lumber",
     value: 12,
     ris: 72,
@@ -176,7 +176,7 @@ const sampleMaterials: Material[] = [
     transport: 2,
   },
   {
-    name: "Rigid Foam Insulation (XPS)",
+    name: "XPS Rigid Foam",
     category: "Extruded polystyrene insulation",
     value: 142,
     ris: 28,
@@ -196,7 +196,6 @@ const tierColor: Record<Material["risTier"], string> = {
 };
 
 function ExampleStrip() {
-  const units = ["per m²", "per kg", "per assembly"] as const;
   return (
     <section id="materials" style={{ backgroundColor: forest }}>
       <div
@@ -212,35 +211,12 @@ function ExampleStrip() {
               Real numbers, normalized so you can compare them.
             </h2>
             <p className="mt-2 text-sm" style={{ color: "#cfcabf" }}>
-              All values shown as kg CO₂e per m² of finished wall assembly.
+              All values shown as kg CO₂e / m²
             </p>
-          </div>
-          <div
-            className="flex items-center rounded-md border p-1 text-xs"
-            style={{ borderColor: borderOnDark }}
-            role="group"
-            aria-label="Unit selector preview"
-          >
-            {units.map((u, i) => (
-              <span
-                key={u}
-                className="rounded px-3 py-1.5 font-medium"
-                style={{
-                  backgroundColor: i === 0 ? cream : "transparent",
-                  color: i === 0 ? text : "rgba(245,242,236,0.7)",
-                }}
-              >
-                {u}
-              </span>
-            ))}
           </div>
         </div>
 
-        <div
-          className="grid gap-px overflow-hidden rounded-lg"
-          style={{ backgroundColor: borderOnDark }}
-        >
-          <div className="grid gap-px sm:grid-cols-3" style={{ backgroundColor: borderOnDark }}>
+        <div className="grid gap-4 sm:grid-cols-3">
             {sampleMaterials.map((m) => {
               const positive = m.value < 0;
               const t = trustMeta[m.trust];
@@ -248,7 +224,10 @@ function ExampleStrip() {
                 <article
                   key={m.name}
                   className="flex flex-col p-7"
-                  style={{ backgroundColor: forest }}
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.08)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                  }}
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs uppercase tracking-wider" style={{ color: "#9a9588" }}>
@@ -317,7 +296,6 @@ function ExampleStrip() {
                 </article>
               );
             })}
-          </div>
         </div>
 
         <div className="mt-8 text-center">
