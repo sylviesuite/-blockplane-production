@@ -330,6 +330,69 @@ function ExampleStrip() {
   );
 }
 
+// ── Benchmark 2000 Teaser ─────────────────────────────────────────────────────
+function BenchmarkTeaser() {
+  return (
+    <section style={{ backgroundColor: forest }}>
+      <div
+        className="mx-auto max-w-6xl px-6 py-20"
+        style={{ borderTop: `1px solid ${borderOnDark}` }}
+      >
+        <div
+          className="relative w-full overflow-hidden rounded-lg"
+          style={{ height: "clamp(280px, 36vw, 480px)" }}
+        >
+          <img
+            src="/images/benchmark2000-house.png"
+            alt="Benchmark 2000 reference home"
+            className="absolute inset-0 w-full h-full"
+            style={{ objectFit: "cover", objectPosition: "center top" }}
+          />
+          {/* Dark overlay — transparent at top, dense at bottom for text */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(26,46,31,0.25) 0%, rgba(26,46,31,0.72) 55%, rgba(26,46,31,0.92) 100%)",
+            }}
+          />
+          {/* Text content */}
+          <div className="absolute inset-0 flex flex-col justify-end px-8 pb-10">
+            <p
+              className="mb-2 text-xs font-semibold uppercase tracking-wider"
+              style={{ color: amber }}
+            >
+              Benchmark 2000
+            </p>
+            <h2
+              className="mb-3 max-w-xl text-2xl font-semibold tracking-tight sm:text-3xl"
+              style={{ color: cream }}
+            >
+              See the full carbon picture of a real home.
+            </h2>
+            <p
+              className="mb-6 max-w-lg text-sm leading-relaxed"
+              style={{ color: "rgba(245,242,236,0.70)" }}
+            >
+              Benchmark 2000 is a standard 2,000 sq&nbsp;ft Northern Michigan reference home.
+              Click any assembly to explore materials, compare alternatives, and see
+              whole-house carbon impact in real time.
+            </p>
+            <Link href="/benchmark">
+              <span
+                className="inline-block rounded-md px-6 py-2.5 text-sm font-semibold cursor-pointer transition-colors"
+                style={{ backgroundColor: amber, color: "#fff" }}
+              >
+                Explore Benchmark 2000 →
+              </span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ── What Block Plane does ─────────────────────────────────────────────────────
 const features = [
   {
@@ -642,6 +705,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <ExampleStrip />
+      <BenchmarkTeaser />
       <What />
       <RDS />
       <Confidence />
