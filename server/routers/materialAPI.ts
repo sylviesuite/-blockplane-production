@@ -81,10 +81,10 @@ function filterMaterials(materials: any[], filters: z.infer<typeof materialSearc
   
   // RIS filters
   if (filters.minRIS !== undefined) {
-    filtered = filtered.filter(m => m.risScore >= filters.minRIS!);
+    filtered = filtered.filter(m => m.risScore !== null && m.risScore >= filters.minRIS!);
   }
   if (filters.maxRIS !== undefined) {
-    filtered = filtered.filter(m => m.risScore <= filters.maxRIS!);
+    filtered = filtered.filter(m => m.risScore !== null && m.risScore <= filters.maxRIS!);
   }
   
   // LIS filters
@@ -150,8 +150,8 @@ function sortMaterials(materials: any[], sortBy: string, sortOrder: "asc" | "des
         bVal = parseFloat(b.costPerUnit);
         break;
       case "ris":
-        aVal = a.risScore;
-        bVal = b.risScore;
+        aVal = a.risScore ?? (sortOrder === "asc" ? Infinity : -Infinity);
+        bVal = b.risScore ?? (sortOrder === "asc" ? Infinity : -Infinity);
         break;
       case "lis":
         aVal = a.lisScore;
@@ -317,7 +317,7 @@ export const materialAPIRouter = router({
         
         // RIS improvement (higher is better)
         if (input.prioritizeRIS) {
-          const risDiff = candidate.risScore - currentMaterial.risScore;
+          const risDiff = (candidate.risScore ?? 0) - (currentMaterial.risScore ?? 0);
           score += risDiff * 0.4; // 40% weight
         }
         

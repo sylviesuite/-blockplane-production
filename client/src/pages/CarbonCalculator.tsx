@@ -21,12 +21,15 @@ function CarbonBar({ value, max }: { value: number; max: number }) {
   );
 }
 
-function ScorePill({ label, value }: { label: string; value: number }) {
+function ScorePill({ label, value }: { label: string; value: number | null }) {
   const color =
-    value >= 70 ? "text-[#3f8c52]" : value >= 40 ? "text-[#c17f24]" : "text-muted-foreground";
+    value === null ? "text-amber-600"
+    : value >= 70 ? "text-[#3f8c52]"
+    : value >= 40 ? "text-[#c17f24]"
+    : "text-muted-foreground";
   return (
     <div className="flex flex-col items-center gap-0.5">
-      <span className={`text-lg font-bold tabular-nums ${color}`}>{value}</span>
+      <span className={`text-lg font-bold tabular-nums ${color}`}>{value ?? "—"}</span>
       <span className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</span>
     </div>
   );

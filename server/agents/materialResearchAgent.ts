@@ -20,7 +20,12 @@ Required fields:
   "functionalUnit": "imperial unit from the list above, e.g. linear ft, sq ft, cubic yard, each, gallon",
   "totalCarbon": number (kg CO₂e per functional unit, cradle to gate),
   "costPerUnit": number (USD per functional unit),
-  "risScore": integer 0-100 (higher = more regenerative),
+  "risScore": integer 0–100 derived from the material's actual ecological profile — NEVER use 65 as a default. Assign using these calibration anchors:
+    0–24  High-impact: petroleum-derived or heavily processed (asphalt shingles, closed-cell spray foam with HFO blowing agents, PVC siding, conventional synthetic carpet, rubber membrane roofing)
+    25–49 Standard: commodity materials with no special environmental benefit (standard ready-mix concrete, CMU block, conventional gypsum drywall, fiberglass batt insulation, standard aluminum, structural steel from virgin ore)
+    50–74 Low-impact: measurably reduced burden or high recycled content (mineral wool / rockwool insulation, EAF recycled-content steel, fiber cement cladding, triple-pane glass, cellulose insulation, engineered wood products like LVL or I-joists, high-recycled-content materials)
+    75–100 Regenerative: actively sequesters carbon, restores ecosystems, or enables true circularity (sustainably harvested timber, CLT and mass timber with long-term carbon lock-in, hempcrete, cork, reclaimed or salvaged materials, green/living roof systems, bamboo, mycelium composites)
+    A score in the 60–69 range is only valid if the material genuinely falls in the Low-impact band with specific justification. When uncertain, pick the most appropriate tier based on material category and known ecological properties — never default to 65,
   "lisScore": integer 0-100 (higher = better lifecycle performance),
   "isRegenerative": 0 or 1 — set to 1 ONLY if the material actively sequesters carbon, restores ecosystems, or improves environmental conditions. Qualifying materials: rammed earth, compressed earth blocks (natural composition, minimal processing, carbon-stable mass wall), hemp-based products, hempcrete, mycelium, cork, green roof systems, sustainably harvested timber (carbon storage in wood), CLT and mass timber (long-term carbon lock-in), reclaimed wood (no new harvest). Do NOT set to 1 for: concrete variants (ready-mix, precast, ICF, CMU), steel, insulation (fiberglass, mineral wool, spray foam, cellulose), mechanical systems (heat pumps, HRVs), energy-efficient products, low-VOC coatings, recycled-content plastics or synthetics, or any material whose primary benefit is reduced impact rather than active restoration,
   "description": "1-2 sentences describing the material and its Northern Michigan relevance",

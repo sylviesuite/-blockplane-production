@@ -34,12 +34,13 @@ function formatSourceLabel(raw: string): string {
 // ── Fix 3: material-specific methodology paragraph ───────────────────────────
 function buildMethodologyText(
   category: string,
-  ris: number,
+  ris: number | null,
   lis: number,
   confidence: ConfidenceLevel,
 ): string {
   let risDesc: string;
-  if (ris >= 80) risDesc = "exceptionally durable and resilient";
+  if (ris === null) risDesc = "score pending review";
+  else if (ris >= 80) risDesc = "exceptionally durable and resilient";
   else if (ris >= 60) risDesc = "reliably durable under normal conditions";
   else if (ris >= 40) risDesc = "average durability — compare alternatives";
   else risDesc = "below-average durability — verify maintenance requirements";
@@ -63,8 +64,9 @@ function buildMethodologyText(
     confidenceNote =
       "Data is preliminary. Do not use for professional specifications without independent verification.";
 
+  const risDisplay = ris !== null ? `RIS ${ris} (${risDesc})` : `RIS score pending review`;
   return (
-    `This ${category} entry scores RIS ${ris} (${risDesc}) and LIS ${lis} (${lisDesc}). ` +
+    `This ${category} entry has ${risDisplay} and LIS ${lis} (${lisDesc}). ` +
     confidenceNote
   );
 }
@@ -72,12 +74,14 @@ function buildMethodologyText(
 // ── Fix 5: plain-language "Why this matters" for builders ─────────────────────
 function buildInsightText(
   category: string,
-  ris: number,
+  ris: number | null,
   lis: number,
   carbon: number,
 ): string {
   let risSentence: string;
-  if (ris >= 80)
+  if (ris === null)
+    risSentence = `The Regenerative Impact Score for this material is pending review — check back after the next data update.`;
+  else if (ris >= 80)
     risSentence = `With a RIS of ${ris}, this material is built to last — expect low maintenance callbacks and strong moisture resistance in the field.`;
   else if (ris >= 60)
     risSentence = `A RIS of ${ris} means reliable performance under typical site conditions with standard maintenance.`;
@@ -93,9 +97,9 @@ function buildInsightText(
     lisSentence = `The LIS of ${lis} (${carbon.toFixed(1)} kg CO₂e) is on the higher end — check alternatives if embodied carbon is a project constraint.`;
 
   let advice: string;
-  if (ris >= 70 && lis <= 40)
+  if ((ris ?? 0) >= 70 && lis <= 40)
     advice = "A strong all-round choice when durability and sustainability both matter.";
-  else if (ris >= 70)
+  else if ((ris ?? 0) >= 70)
     advice = "Strong durability credentials; weigh the carbon cost against your project targets.";
   else if (lis <= 40)
     advice = "Good environmental profile — pair with a robust system detail to compensate for lower resilience.";
@@ -259,10 +263,14 @@ export default function MaterialDetailEnhanced() {
             </div>
             <div className="bg-slate-800/60 rounded-lg px-3 py-2">
               <p className="text-xs text-slate-500 leading-none mb-0.5">RIS</p>
-              <p className="text-base font-bold text-purple-400 leading-tight">
-                {material.risScore}
-                <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>
-              </p>
+              {material.risScore !== null ? (
+                <p className="text-base font-bold text-purple-400 leading-tight">
+                  {material.risScore}
+                  <span className="text-xs font-normal text-slate-400 ml-1">/ 100</span>
+                </p>
+              ) : (
+                <p className="text-xs font-medium text-amber-400 leading-tight mt-0.5">Score Pending</p>
+              )}
               <p className="text-[10px] text-slate-500">Higher is better</p>
             </div>
             <div className="bg-slate-800/60 rounded-lg px-3 py-2">

@@ -133,7 +133,8 @@ function deriveConfidenceLevel(score: number | null): "High" | "Medium" | "Low" 
 function mapRow(r: any) {
   // Support both flat rows (from the old view) and nested rows from embedded selects
   const lisScore = (r.lis_ris_scores?.[0]?.lis_score ?? r.lis_score) ?? 0;
-  const risScore = (r.lis_ris_scores?.[0]?.ris_score ?? r.ris_score) ?? 0;
+  const rawRis = r.lis_ris_scores?.[0]?.ris_score ?? r.ris_score;
+  const risScore: number | null = rawRis !== null && rawRis !== undefined ? Number(rawRis) : null;
   const totalCarbon = (r.carbon_footprints?.[0]?.total_carbon_cradle_to_gate ?? r.total_carbon_cradle_to_gate) ?? 0;
   const functionalUnit = (r.carbon_footprints?.[0]?.functional_unit ?? r.functional_unit) || "sq ft";
   const dataQualityScore: number | null = r.data_quality_score ?? null;
@@ -154,7 +155,7 @@ function mapRow(r: any) {
     source: r.source ?? null,
     sourceUrl: r.source_url ?? null,
     lastVerified: r.last_verified ?? null,
-    isRegenerative: risScore > 70 ? 1 : 0,
+    isRegenerative: (risScore ?? 0) > 70 ? 1 : 0,
     lifecycle: [] as any[],
     epdMetadata: [] as any[],
     dataQuality: dataQualityScore != null ? JSON.stringify({ score: dataQualityScore }) : null,
