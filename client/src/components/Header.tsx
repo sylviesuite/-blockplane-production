@@ -30,6 +30,11 @@ export function Header() {
               Analysis
             </span>
           </Link>
+          <Link href="/benchmark">
+            <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
+              Benchmark 2000
+            </span>
+          </Link>
           <Link href="/how-it-works">
             <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
               How It Works
@@ -38,11 +43,6 @@ export function Header() {
           <Link href="/calculator">
             <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
               Calculator
-            </span>
-          </Link>
-          <Link href="/benchmark">
-            <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
-              Benchmark 2000
             </span>
           </Link>
         </nav>
