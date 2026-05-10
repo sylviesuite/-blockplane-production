@@ -449,6 +449,74 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
 }
 
 // ---------------------------------------------------------------------------
+// Single-material targeted research (used by the admin approval flow)
+// ---------------------------------------------------------------------------
+
+export async function researchAndInsertSingleMaterial(submission: {
+  name: string;
+  category: string;
+  carbonValue?: number | null;
+  functionalUnit?: string | null;
+  description?: string | null;
+  manufacturer?: string | null;
+  source?: string | null;
+}): Promise<{ inserted: boolean; skipped: boolean; researched: boolean }> {
+  const { name, category } = submission;
+  const query = `"${name}" embodied carbon kg CO2e per unit EPD data building material Northern Michigan`;
+
+  console.log(`[MaterialResearchAgent] Targeted research: "${name}" (${category})`);
+
+  try {
+    const rawText = await callClaudeWithWebSearch(query);
+    if (!rawText) throw new Error("Empty response from Claude");
+
+    const data = extractJson(rawText);
+    if (!data) throw new Error(`Could not parse JSON: ${rawText.slice(0, 120)}`);
+
+    // Pin name and category to the submission values so naming convention is preserved
+    data.name = name;
+    data.category = category;
+
+    const result = await insertMaterial(data);
+    console.log(`[MaterialResearchAgent] Targeted insert ${result.inserted ? "succeeded" : "skipped (duplicate)"}: "${name}"`);
+    return { ...result, researched: true };
+  } catch (err: any) {
+    console.warn(`[MaterialResearchAgent] Targeted research failed for "${name}": ${err?.message}`);
+
+    // Fall back to submitter-provided carbon data if present
+    if (submission.carbonValue != null && submission.carbonValue > 0) {
+      console.log(`[MaterialResearchAgent] Inserting "${name}" with submission fallback data (Low confidence)`);
+      const fallback: MaterialData = {
+        name,
+        category,
+        functionalUnit: submission.functionalUnit ?? "sq ft",
+        totalCarbon: submission.carbonValue,
+        costPerUnit: 0,
+        risScore: 0,
+        lisScore: 0,
+        isRegenerative: 0,
+        description: submission.description ?? "",
+        manufacturer: submission.manufacturer ?? "",
+        region: "Northern Michigan",
+        source: submission.source ?? "Community submission",
+        confidenceLevel: "Low",
+        a1a3: submission.carbonValue * 0.9,
+        a4: submission.carbonValue * 0.1,
+        a5: 0,
+        b: 0,
+        c1c4: 0,
+        transportMethod: "truck",
+        transportDistanceKm: 200,
+      };
+      const result = await insertMaterial(fallback);
+      return { ...result, researched: false };
+    }
+
+    throw err;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Main export
 // ---------------------------------------------------------------------------
 

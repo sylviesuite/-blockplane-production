@@ -4,6 +4,7 @@ import { TRPCError } from '@trpc/server';
 import { getDb } from '../db';
 import { materials, lifecycleValues, risScores, pricing, epdMetadata, analyticsEvents } from '../../drizzle/schema';
 import { eq, desc, sql, and, gte } from 'drizzle-orm';
+import { researchAndInsertSingleMaterial } from '../agents/materialResearchAgent';
 
 async function supabaseAdmin(path: string, init: RequestInit = {}): Promise<any> {
   const url = process.env.SUPABASE_URL;
@@ -398,6 +399,16 @@ export const adminRouter = router({
       reviewerNotes: z.string().max(1000).optional(),
     }))
     .mutation(async ({ input }) => {
+      // Fetch submission details before patching so we have the data for research
+      let submission: any = null;
+      if (input.status === "approved") {
+        const rows = await supabaseAdmin(
+          `material_submissions?id=eq.${encodeURIComponent(input.id)}&select=name,category,carbon_value,functional_unit,description,manufacturer,source&limit=1`
+        );
+        submission = Array.isArray(rows) && rows.length > 0 ? rows[0] : null;
+      }
+
+      // Mark approved/rejected
       await supabaseAdmin(
         `material_submissions?id=eq.${encodeURIComponent(input.id)}`,
         {
@@ -410,6 +421,25 @@ export const adminRouter = router({
           }),
         }
       );
-      return { success: true };
+
+      // On approval: fire targeted research and insert asynchronously
+      if (input.status === "approved" && submission) {
+        setImmediate(() => {
+          researchAndInsertSingleMaterial({
+            name: submission.name,
+            category: submission.category,
+            carbonValue: submission.carbon_value,
+            functionalUnit: submission.functional_unit,
+            description: submission.description,
+            manufacturer: submission.manufacturer,
+            source: submission.source,
+          }).catch((err: any) =>
+            console.error(`[ReviewSubmission] Research failed for "${submission.name}":`, err?.message)
+          );
+        });
+        return { success: true, researching: true };
+      }
+
+      return { success: true, researching: false };
     }),
 });
