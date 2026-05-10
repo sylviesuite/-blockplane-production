@@ -8,15 +8,16 @@
 #   3. Render will detect this file and pre-fill the settings
 #   4. Set AGENT_SECRET in Environment → Secret Files (do NOT use sync: false default)
 #
-# Schedule is UTC. 6 AM EST = 11:00 UTC. During EDT (UTC-4) this fires at 7 AM local.
-# To target 6 AM year-round, a timezone-aware scheduler (e.g. GitHub Actions) is needed.
+# Schedule is UTC. 13:00 UTC = 9 AM EDT / 8 AM EST.
+# Firing at 13:00 UTC targets mid-morning when the Render web service
+# is likely already warm from real traffic, reducing stalled-at-0 runs.
 
 services:
   - type: cron
     name: blockplane-agent-daily
     env: node
     plan: starter
-    schedule: "0 11 * * *"   # 06:00 EST / 07:00 EDT
+    schedule: "0 13 * * *"   # 09:00 EDT / 08:00 EST
     buildCommand: npm install
     startCommand: node scripts/trigger-agent.mjs
     envVars:
