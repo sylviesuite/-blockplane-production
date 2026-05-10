@@ -378,6 +378,61 @@ export const materialAPIRouter = router({
     }),
 
   /**
+   * Submit a material for review
+   * Writes to material_submissions table; honeypot field silently drops bot submissions
+   */
+  submitMaterial: publicProcedure
+    .input(z.object({
+      name: z.string().min(2).max(255),
+      category: z.string().min(1).max(100),
+      description: z.string().max(1000).optional(),
+      carbonValue: z.number().positive().optional(),
+      functionalUnit: z.string().max(50).optional(),
+      source: z.string().max(500).optional(),
+      manufacturer: z.string().max(255).optional(),
+      submitterName: z.string().max(100).optional(),
+      submitterEmail: z.string().email().optional().or(z.literal("")),
+      honeypot: z.string().default(""),
+    }))
+    .mutation(async ({ input }) => {
+      // Silently succeed for bots — never reveal the trap
+      if (input.honeypot) return { success: true };
+
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+      if (!supabaseUrl || !supabaseKey) throw new Error("Supabase not configured");
+
+      const res = await fetch(`${supabaseUrl}/rest/v1/material_submissions`, {
+        method: "POST",
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+          "Content-Type": "application/json",
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          name: input.name,
+          category: input.category.toLowerCase(),
+          description: input.description ?? null,
+          carbon_value: input.carbonValue ?? null,
+          functional_unit: input.functionalUnit ?? null,
+          source: input.source ?? null,
+          manufacturer: input.manufacturer ?? null,
+          submitter_name: input.submitterName ?? null,
+          submitter_email: input.submitterEmail || null,
+          status: "pending",
+        }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`Submission failed: ${text.slice(0, 200)}`);
+      }
+
+      return { success: true };
+    }),
+
+  /**
    * Get statistics about the material database
    * Useful for Revit plugin to show data coverage
    */

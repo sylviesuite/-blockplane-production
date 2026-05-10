@@ -37,10 +37,14 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import { Header } from "@/components/Header";
+import { SubmitMaterialModal } from "@/components/SubmitMaterialModal";
+import { PlusCircle } from "lucide-react";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
 export default function MaterialBrowser() {
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -115,18 +119,29 @@ export default function MaterialBrowser() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Header />
-      {/* Header */}
+      {/* Page header */}
       <div style={{ backgroundColor: '#1a2e1f' }}>
-        <div className="container py-4">
-          <h1 className="text-4xl font-bold text-white mb-1">Material Database</h1>
-          <p className="text-lg" style={{ color: 'rgba(245,242,236,0.8)' }}>
-            Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
-          </p>
-          <p className="text-xs mt-1" style={{ color: 'rgba(245,242,236,0.45)' }}>
-            Imperial units · Northern Michigan region
-          </p>
+        <div className="container py-4 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-4xl font-bold text-white mb-1">Material Database</h1>
+            <p className="text-lg" style={{ color: 'rgba(245,242,236,0.8)' }}>
+              Explore {searchResults?.totalItems || 0} sustainable building materials with transparent carbon data
+            </p>
+            <p className="text-xs mt-1" style={{ color: 'rgba(245,242,236,0.45)' }}>
+              Imperial units · Northern Michigan region
+            </p>
+          </div>
+          <Button
+            onClick={() => setShowSubmitModal(true)}
+            className="flex items-center gap-2 shrink-0"
+            style={{ backgroundColor: '#c17f24', color: '#fff', border: 'none' }}
+          >
+            <PlusCircle className="w-4 h-4" />
+            Submit a Material
+          </Button>
         </div>
       </div>
+      <SubmitMaterialModal open={showSubmitModal} onClose={() => setShowSubmitModal(false)} />
 
       <div className="container py-5">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

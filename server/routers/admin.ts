@@ -5,6 +5,25 @@ import { getDb } from '../db';
 import { materials, lifecycleValues, risScores, pricing, epdMetadata, analyticsEvents } from '../../drizzle/schema';
 import { eq, desc, sql, and, gte } from 'drizzle-orm';
 
+async function supabaseAdmin(path: string, init: RequestInit = {}): Promise<any> {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) throw new Error("Supabase not configured");
+  const res = await fetch(`${url}/rest/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: key,
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+      ...(init.headers as Record<string, string> | undefined),
+    },
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`Supabase ${res.status}: ${text}`);
+  return text ? JSON.parse(text) : null;
+}
+
 // Admin-only procedure
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== 'admin') {
@@ -355,5 +374,42 @@ export const adminRouter = router({
         total: totalResult.count,
         byCategory,
       };
+    }),
+
+  // ============================================================================
+  // MATERIAL SUBMISSIONS REVIEW QUEUE
+  // ============================================================================
+
+  getSubmissions: adminProcedure
+    .input(z.object({
+      status: z.enum(["pending", "approved", "rejected", "all"]).default("pending"),
+    }))
+    .query(async ({ input }) => {
+      const filter = input.status === "all"
+        ? "material_submissions?select=*&order=created_at.desc&limit=200"
+        : `material_submissions?select=*&status=eq.${input.status}&order=created_at.desc&limit=200`;
+      return await supabaseAdmin(filter);
+    }),
+
+  reviewSubmission: adminProcedure
+    .input(z.object({
+      id: z.string().uuid(),
+      status: z.enum(["approved", "rejected"]),
+      reviewerNotes: z.string().max(1000).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      await supabaseAdmin(
+        `material_submissions?id=eq.${encodeURIComponent(input.id)}`,
+        {
+          method: "PATCH",
+          headers: { Prefer: "return=minimal" },
+          body: JSON.stringify({
+            status: input.status,
+            reviewer_notes: input.reviewerNotes ?? null,
+            reviewed_at: new Date().toISOString(),
+          }),
+        }
+      );
+      return { success: true };
     }),
 });
