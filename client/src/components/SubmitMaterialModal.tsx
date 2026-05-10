@@ -81,7 +81,7 @@ export function SubmitMaterialModal({ open, onClose }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) handleClose(); }}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-white">
+      <DialogContent className="bg-white dark:bg-zinc-900 max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle style={{ color: forest }}>Submit a Material</DialogTitle>
           <DialogDescription>

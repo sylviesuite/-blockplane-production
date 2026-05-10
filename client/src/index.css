@@ -170,3 +170,7 @@
 [data-radix-dialog-content] {
   z-index: 101;
 }
+/* Select/popover dropdowns must clear the dialog */
+[data-radix-popper-content-wrapper] {
+  z-index: 200 !important;
+}
