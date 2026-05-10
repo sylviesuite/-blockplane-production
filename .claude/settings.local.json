@@ -57,7 +57,9 @@
       "PowerShell(New-Item *)",
       "Bash(Get-Content \"C:\\\\Users\\\\steve\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-steve-dev--blockplane-production\\\\fb402938-91c3-4758-bdec-3552a86b7046\\\\tasks\\\\bhdirpb34.output\" -Wait)",
       "PowerShell(Get-Process *)",
-      "PowerShell(Get-Item *)"
+      "PowerShell(Get-Item *)",
+      "Bash(Find \"C:\\\\Users\\\\steve\\\\dev\\\\-blockplane-production\" -type f \\\\\\( -name \"routes.ts\" -o -name \"routes.js\" -o -name \"*routes*\" \\\\\\) ! -path \"*/node_modules/*\")",
+      "Bash(Expand-Archive *)"
     ]
   }
 }
