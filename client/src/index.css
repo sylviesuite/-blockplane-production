@@ -163,3 +163,10 @@
     }
   }
 }
+
+[data-radix-dialog-overlay] {
+  z-index: 100;
+}
+[data-radix-dialog-content] {
+  z-index: 101;
+}
