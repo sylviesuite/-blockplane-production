@@ -139,7 +139,7 @@ export function SubmitMaterialModal({ open, onClose }: Props) {
                 <SelectTrigger>
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white">
                   {CATEGORIES.map((c) => (
                     <SelectItem key={c} value={c}>{c}</SelectItem>
                   ))}
@@ -180,7 +180,7 @@ export function SubmitMaterialModal({ open, onClose }: Props) {
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     {FUNCTIONAL_UNITS.map((u) => (
                       <SelectItem key={u} value={u}>{u}</SelectItem>
                     ))}
