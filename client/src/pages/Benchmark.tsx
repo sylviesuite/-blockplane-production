@@ -147,6 +147,15 @@ export default function Benchmark() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: forest }}>
+      <style>{`
+        @keyframes pill-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(193,127,36,0); }
+          50%       { box-shadow: 0 0 0 4px rgba(193,127,36,0.45); }
+        }
+        .zone-pill-pulse {
+          animation: pill-pulse 1s ease-in-out 3;
+        }
+      `}</style>
       <Header />
 
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-8">
@@ -172,6 +181,9 @@ export default function Benchmark() {
 
           {/* ── Interactive house image ─────────────────────────────── */}
           <div className="w-full lg:flex-1 shrink-0">
+            <p className="mb-2 text-xs" style={{ color: "rgba(245,242,236,0.55)" }}>
+              Click any assembly to explore materials, compare alternatives, and see whole-house carbon impact.
+            </p>
             {/* Container maintains 3:2 aspect ratio to match image */}
             <div className="relative w-full" style={{ aspectRatio: "3 / 2" }}>
               <img
@@ -236,7 +248,7 @@ export default function Benchmark() {
                 return (
                   <button
                     key={zone.id}
-                    className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-all select-none"
+                    className={`absolute transform -translate-x-1/2 -translate-y-1/2 transition-all select-none${isActive ? "" : " zone-pill-pulse"}`}
                     style={{
                       left: `${zone.cx}%`,
                       top: `${zone.cy}%`,
