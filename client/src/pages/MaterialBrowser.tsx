@@ -349,8 +349,14 @@ export default function MaterialBrowser() {
                               </div>
                             </div>
 
-                            {/* RIS/LIS Scores */}
+                            {/* LIS/RIS Scores */}
                             <div className="flex gap-2">
+                              <div className="flex-1 bg-blue-50 rounded p-2">
+                                <p className="text-xs text-gray-600">LIS</p>
+                                <p className="text-lg font-bold text-blue-700">
+                                  {material.lisScore}
+                                </p>
+                              </div>
                               <div className="flex-1 bg-emerald-50 rounded p-2">
                                 <p className="text-xs text-gray-600">RIS</p>
                                 {material.risScore !== null ? (
@@ -358,12 +364,6 @@ export default function MaterialBrowser() {
                                 ) : (
                                   <p className="text-xs font-medium text-amber-600 mt-1">Pending</p>
                                 )}
-                              </div>
-                              <div className="flex-1 bg-blue-50 rounded p-2">
-                                <p className="text-xs text-gray-600">LIS</p>
-                                <p className="text-lg font-bold text-blue-700">
-                                  {material.lisScore}
-                                </p>
                               </div>
                             </div>
 

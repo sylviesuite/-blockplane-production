@@ -171,6 +171,10 @@ export default function QuickComparison({ materials, onClose }: QuickComparisonP
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
+                      <span className="text-muted-foreground">LIS Score:</span>
+                      <span className="font-semibold">{material.lisScore}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
                       <span className="text-muted-foreground">RIS Score:</span>
                       <div className="flex items-center gap-1">
                         <span className="font-semibold">{material.risScore}</span>
@@ -178,10 +182,6 @@ export default function QuickComparison({ materials, onClose }: QuickComparisonP
                           <Badge variant="default" className="text-xs">Best</Badge>
                         )}
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">LIS Score:</span>
-                      <span className="font-semibold">{material.lisScore}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -273,6 +273,10 @@ export default function QuickComparison({ materials, onClose }: QuickComparisonP
                       ))}
                     </tr>
                     <tr className="border-b">
+                      <td className="p-2 font-medium">LIS Score</td>
+                      {materials.map(m => <td key={m.id} className="p-2">{m.lisScore}</td>)}
+                    </tr>
+                    <tr className="border-b">
                       <td className="p-2 font-medium">RIS Score</td>
                       {materials.map(m => (
                         <td key={m.id} className="p-2">
@@ -280,10 +284,6 @@ export default function QuickComparison({ materials, onClose }: QuickComparisonP
                           {m.id === bestRIS.id && <Badge variant="default" className="ml-2 text-xs">Highest</Badge>}
                         </td>
                       ))}
-                    </tr>
-                    <tr className="border-b">
-                      <td className="p-2 font-medium">LIS Score</td>
-                      {materials.map(m => <td key={m.id} className="p-2">{m.lisScore}</td>)}
                     </tr>
                     <tr className="border-b bg-muted/30">
                       <td className="p-2 font-medium" colSpan={4}>Lifecycle Phases (kg CO₂e)</td>

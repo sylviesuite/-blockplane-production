@@ -238,6 +238,14 @@ export default function MaterialDetailEnhanced() {
               </div>
             </div>
             <div className="bg-white/10 rounded-lg px-3 py-2">
+              <p className="text-xs leading-none mb-0.5" style={{ color: "rgba(245,242,236,0.5)" }}>LIS</p>
+              <p className="text-base font-bold text-orange-300 leading-tight">
+                {material.lisScore}
+                <span className="text-xs font-normal ml-1" style={{ color: "rgba(245,242,236,0.5)" }}>/ 100</span>
+              </p>
+              <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>Lower is better</p>
+            </div>
+            <div className="bg-white/10 rounded-lg px-3 py-2">
               <p className="text-xs leading-none mb-0.5" style={{ color: "rgba(245,242,236,0.5)" }}>RIS</p>
               {material.risScore !== null ? (
                 <p className="text-base font-bold text-amber-300 leading-tight">
@@ -248,14 +256,6 @@ export default function MaterialDetailEnhanced() {
                 <p className="text-xs font-medium text-amber-300 leading-tight mt-0.5">Score Pending</p>
               )}
               <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>Higher is better</p>
-            </div>
-            <div className="bg-white/10 rounded-lg px-3 py-2">
-              <p className="text-xs leading-none mb-0.5" style={{ color: "rgba(245,242,236,0.5)" }}>LIS</p>
-              <p className="text-base font-bold text-orange-300 leading-tight">
-                {material.lisScore}
-                <span className="text-xs font-normal ml-1" style={{ color: "rgba(245,242,236,0.5)" }}>/ 100</span>
-              </p>
-              <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>Lower is better</p>
             </div>
           </div>
 
