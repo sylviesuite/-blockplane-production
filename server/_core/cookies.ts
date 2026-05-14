@@ -43,6 +43,8 @@ export function getSessionCookieOptions(
     httpOnly: true,
     path: "/",
     sameSite: "none",
-    secure: isSecureRequest(req),
+    // Always secure in production so sameSite:"none" is never rejected by browsers.
+    // Also honour x-forwarded-proto for dev HTTPS tunnels.
+    secure: process.env.NODE_ENV === "production" || isSecureRequest(req),
   };
 }
