@@ -62,7 +62,7 @@ export function Footer() {
             © {currentYear} {APP_TITLE}. All rights reserved.
           </p>
           <Link href="/admin">
-            <span style={{ color: `${cream}33` }} className="text-xs hover:opacity-60 cursor-pointer transition-opacity">
+            <span style={{ color: `${cream}55` }} className="text-xs hover:opacity-60 cursor-pointer transition-opacity">
               Admin
             </span>
           </Link>

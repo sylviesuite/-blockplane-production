@@ -692,6 +692,9 @@ function LandingFooter() {
             Methodology
           </Link>
           <span>© {new Date().getFullYear()} Block Plane · Northern Michigan</span>
+          <Link href="/admin" style={{ color: "#55503e" }} className="hover:opacity-60 transition-opacity">
+            Admin
+          </Link>
         </div>
       </div>
     </footer>
