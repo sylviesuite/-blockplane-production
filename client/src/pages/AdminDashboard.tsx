@@ -7,7 +7,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Plus,
   Upload,
@@ -15,7 +14,6 @@ import {
   Users,
   Database,
   Activity,
-  AlertCircle,
   CheckCircle,
   XCircle,
   Trash2,
@@ -23,25 +21,24 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { trpc } from '@/lib/trpc';
-import { useAuth } from '@/_core/hooks/useAuth';
+import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
+import { useLocation } from 'wouter';
+import { LogOut } from 'lucide-react';
 
 export default function AdminDashboard() {
-  const { user } = useAuth();
+  const { user, isLoading, logout } = useAuth();
+  const [, navigate] = useLocation();
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Check admin access
-  if (!user || user.role !== 'admin') {
-    return (
-      <div className="container py-12">
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Admin access required. Please contact the system administrator.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!isLoading && (!user || user.role !== 'admin')) {
+      navigate('/');
+    }
+  }, [isLoading, user, navigate]);
+
+  // Render nothing while session resolves or redirect is in flight
+  if (isLoading || !user || user.role !== 'admin') return null;
 
   return (
     <div className="container py-8 space-y-8">
@@ -52,9 +49,15 @@ export default function AdminDashboard() {
             Manage materials, view analytics, and monitor platform usage
           </p>
         </div>
-        <Badge variant="secondary" className="text-lg px-4 py-2">
-          Admin
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Badge variant="secondary" className="text-lg px-4 py-2">
+            Admin
+          </Badge>
+          <Button variant="ghost" size="sm" onClick={logout} className="gap-2 text-gray-600 hover:text-gray-900">
+            <LogOut className="h-4 w-4" />
+            Sign out
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
