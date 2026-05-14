@@ -42,7 +42,7 @@ Required fields:
   "transportDistanceKm": number (estimated km from supplier to Northern Michigan job site)
 }`;
 
-// 25 queries — best coverage across all 15 categories, Northern Michigan specificity prioritized
+// 50 queries — 25 original + 25 manufacturer-targeted, Northern Michigan specificity prioritized
 const SEARCH_QUERIES: Array<{ category: string; query: string }> = [
   // Timber (3) — local mills and mass timber
   { category: "Timber", query: "Northern Michigan white pine framing lumber 2x6 embodied carbon kg CO2e per m3 supplier Traverse City" },
@@ -97,6 +97,52 @@ const SEARCH_QUERIES: Array<{ category: string; query: string }> = [
 
   // Landscaping (1)
   { category: "Landscaping", query: "Northern Michigan native prairie grass seed mix landscaping embodied carbon kg CO2e per m2 local nursery" },
+
+  // ── Manufacturer-targeted queries (25) ──────────────────────────────────
+
+  // Timber — engineered lumber manufacturers
+  { category: "Timber", query: "Weyerhaeuser TJI I-joist engineered lumber LVL Northern Michigan embodied carbon kg CO2e per m3 framing supplier cost" },
+  { category: "Timber", query: "Boise Cascade VERSA-LAM LVL beam I-joist Northern Michigan embodied carbon kg CO2e per m3 framing supplier Traverse City" },
+  { category: "Timber", query: "LP Building Products LP SmartSide engineered wood strand siding Northern Michigan embodied carbon kg CO2e per m2 distributor" },
+
+  // Steel — recycled-content and connectors
+  { category: "Steel", query: "Nucor recycled-content structural steel rebar wide flange electric arc furnace embodied carbon kg CO2e per tonne EPD" },
+  { category: "Steel", query: "Simpson Strong-Tie structural connector hurricane tie joist hanger Northern Michigan embodied carbon kg CO2e per unit supplier" },
+
+  // Composites — sheathing and OSB
+  { category: "Composites", query: "Huber Engineered Woods ZIP System roof wall sheathing Northern Michigan embodied carbon kg CO2e per m2 installer supplier" },
+  { category: "Composites", query: "Georgia-Pacific DryMax OSB sheathing plywood Northern Michigan embodied carbon kg CO2e per m2 lumber yard supplier" },
+  { category: "Composites", query: "SIGA Majrex Fentrim air barrier tape airtight building envelope Northern Michigan Passive House embodied carbon kg CO2e per m2" },
+
+  // Insulation — cold climate critical manufacturers
+  { category: "Insulation", query: "ROCKWOOL Comfortbatt mineral wool batt insulation embodied carbon kg CO2e per m2 R-value Northern Michigan supplier EPD" },
+  { category: "Insulation", query: "Owens Corning EcoTouch fiberglass batt insulation and Duration shingle roofing Northern Michigan embodied carbon kg CO2e per m2 EPD supplier" },
+  { category: "Insulation", query: "Dow Thermax polyisocyanurate foam board continuous insulation Northern Michigan embodied carbon kg CO2e per m2 R-value" },
+  { category: "Insulation", query: "Johns Manville AP Foil-Faced polyiso fiberglass insulation batt Northern Michigan embodied carbon kg CO2e per m2 supplier" },
+  { category: "Insulation", query: "Knauf EcoBatt mineral wool insulation batts Northern Michigan embodied carbon kg CO2e per m2 R-21 supplier EPD" },
+  { category: "Insulation", query: "CertainTeed CertaPro fiberglass batt insulation Northern Michigan embodied carbon kg CO2e per m2 R-38 supplier" },
+  { category: "Insulation", query: "475 Building Supply Passive House INTELLO Plus vapor retarder membrane Northern Michigan embodied carbon kg CO2e per m2" },
+
+  // Roofing — underlayment and shingles
+  { category: "Roofing", query: "Grace Ice and Water Shield self-adhered roofing underlayment Northern Michigan embodied carbon kg CO2e per m2 supplier installer" },
+  { category: "Roofing", query: "CertainTeed Landmark asphalt shingle roofing and CertaPro insulation Northern Michigan embodied carbon kg CO2e per m2 supplier EPD" },
+
+  // Windows — high-performance and Passive House
+  { category: "Windows", query: "Pella 350 Series vinyl window Northern Michigan triple-pane embodied carbon kg CO2e per m2 supplier cost installer" },
+  { category: "Windows", query: "Intus Windows European PVC triple-pane Passive House certified window Northern Michigan embodied carbon kg CO2e per m2" },
+  { category: "Windows", query: "Alpen High Performance Windows triple-pane suspended film Northern Michigan embodied carbon kg CO2e per m2 supplier" },
+  { category: "Windows", query: "Serious Windows 925 series triple-pane high-performance Passive House Northern Michigan embodied carbon kg CO2e per m2" },
+
+  // Mechanical — heat pumps
+  { category: "Mechanical", query: "Bosch IDS 2.0 cold-climate air source heat pump Northern Michigan embodied carbon kg CO2e per unit SEER installer cost" },
+
+  // Foundation — waterproofing and air barrier
+  { category: "Foundation", query: "Tremco ExoAir fluid-applied air barrier waterproofing membrane Northern Michigan embodied carbon kg CO2e per m2 contractor" },
+
+  // Finishes — drywall, paint, flooring
+  { category: "Finishes", query: "USG Sheetrock gypsum drywall 5/8 inch type X Northern Michigan embodied carbon kg CO2e per m2 supplier cost EPD" },
+  { category: "Finishes", query: "Sherwin-Williams Emerald zero-VOC interior paint Northern Michigan embodied carbon kg CO2e per liter distributor" },
+  { category: "Flooring", query: "Armstrong LVT luxury vinyl tile plank flooring Northern Michigan embodied carbon kg CO2e per m2 supplier cost" },
 ];
 
 interface MaterialData {
