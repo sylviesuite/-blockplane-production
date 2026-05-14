@@ -24,13 +24,17 @@ const AuthContext = createContext<AuthContextValue>({
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [, navigate] = useLocation();
+  const utils = trpc.useUtils();
   const { data: user, isLoading } = trpc.auth.me.useQuery(undefined, {
     retry: false,
     staleTime: 5 * 60 * 1000,
   });
 
   const logoutMutation = trpc.auth.logout.useMutation({
-    onSuccess: () => navigate("/"),
+    onSuccess: () => {
+      utils.auth.me.reset();
+      navigate("/");
+    },
   });
 
   return (
