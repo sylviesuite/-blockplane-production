@@ -21,7 +21,7 @@ import { CheckCircle } from "lucide-react";
 const CATEGORIES = [
   "Timber", "Steel", "Concrete", "Earth", "Insulation", "Composites",
   "Masonry", "Roofing", "Cladding", "Flooring", "Windows", "Mechanical",
-  "Finishes", "Foundation", "Landscaping",
+  "Finishes", "Foundation", "Landscaping", "Wall Systems",
 ];
 
 const FUNCTIONAL_UNITS = ["sq ft", "linear ft", "cubic yard", "cubic ft", "each", "gallon"];

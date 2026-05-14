@@ -487,7 +487,7 @@ Return ONLY a valid JSON object — no markdown, no prose, no code fences. Omit 
 
 {
   "name": "Standardized product name — [Brand] [Product Type] [Dimension/Grade if applicable]. Example: 'Verdant Panel Natural Hemp Acoustic Board 4x8'",
-  "category": "One of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping",
+  "category": "One of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping, Wall Systems",
   "functional_unit": "One of: sq ft, linear ft, cubic yard, cubic ft, each, gallon — pick the most appropriate",
   "carbon_kg_per_unit": null or number (kg CO2e per functional unit — ONLY if explicitly stated on the page),
   "cost_per_unit": null or number (USD per functional unit — only if listed),

@@ -801,7 +801,7 @@ function downloadTemplate() {
 // URL Import section
 // ---------------------------------------------------------------------------
 
-const CATEGORIES = ['Timber', 'Steel', 'Concrete', 'Earth', 'Insulation', 'Composites', 'Masonry', 'Roofing', 'Cladding', 'Flooring', 'Windows', 'Mechanical', 'Finishes', 'Foundation', 'Landscaping'];
+const CATEGORIES = ['Timber', 'Steel', 'Concrete', 'Earth', 'Insulation', 'Composites', 'Masonry', 'Roofing', 'Cladding', 'Flooring', 'Windows', 'Mechanical', 'Finishes', 'Foundation', 'Landscaping', 'Wall Systems'];
 const UNITS = ['sq ft', 'linear ft', 'cubic yard', 'cubic ft', 'each', 'gallon'];
 const LC_LABELS: Record<string, string> = { a1_a3: 'A1-A3', a4: 'A4', a5: 'A5', b: 'B', c1_c4: 'C1-C4' };
 

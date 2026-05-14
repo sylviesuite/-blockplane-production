@@ -16,7 +16,7 @@ Use imperial units for functionalUnit — the correct unit by material type:
 Required fields:
 {
   "name": "standardized product name — format: [Species/Material] [Product Type] [Dimension/Grade], dimensions and sizes ALWAYS last. Examples: 'Northern Michigan White Pine Dimensional Lumber 2x6', 'Northern Michigan Eastern White Pine Board & Batten Siding 1x10', 'ROCKWOOL ComfortBatt Stone Wool Insulation R-15'. NEVER lead with a dimension or size (e.g. NOT '2x6 White Pine Lumber', NOT '1x10 Eastern White Pine...'). Always include regional qualifier 'Northern Michigan' or 'Michigan' where applicable.",
-  "category": "one of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping",
+  "category": "one of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping, Wall Systems",
   "functionalUnit": "imperial unit from the list above, e.g. linear ft, sq ft, cubic yard, each, gallon",
   "totalCarbon": number (kg CO₂e per functional unit, cradle to gate),
   "costPerUnit": number (USD per functional unit),
