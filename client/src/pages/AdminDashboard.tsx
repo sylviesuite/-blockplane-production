@@ -8,15 +8,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Plus, 
-  Upload, 
-  TrendingUp, 
-  Users, 
-  Database, 
+import {
+  Plus,
+  Upload,
+  TrendingUp,
+  Users,
+  Database,
   Activity,
   AlertCircle,
   CheckCircle,
+  XCircle,
   Trash2,
   Edit
 } from 'lucide-react';
@@ -57,11 +58,12 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="import">Bulk Import</TabsTrigger>
+          <TabsTrigger value="submissions">Submissions</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -78,6 +80,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="import" className="space-y-4">
           <BulkImportTab />
+        </TabsContent>
+
+        <TabsContent value="submissions" className="space-y-4">
+          <SubmissionsTab />
         </TabsContent>
       </Tabs>
     </div>
@@ -526,6 +532,144 @@ function AnalyticsTab() {
           </CardContent>
         </Card>
       </div>
+    </div>
+  );
+}
+
+function SubmissionsTab() {
+  const [statusFilter, setStatusFilter] = useState<'pending' | 'approved' | 'rejected'>('pending');
+  const [notes, setNotes] = useState<Record<string, string>>({});
+
+  const { data: submissions, isLoading, refetch } = trpc.admin.getSubmissions.useQuery({ status: statusFilter });
+  const reviewSubmission = trpc.admin.reviewSubmission.useMutation();
+
+  const handleReview = async (id: string, status: 'approved' | 'rejected') => {
+    try {
+      await reviewSubmission.mutateAsync({ id, status, reviewerNotes: notes[id] || undefined });
+      toast.success(`Submission ${status}`);
+      setNotes((prev) => { const n = { ...prev }; delete n[id]; return n; });
+      refetch();
+    } catch {
+      toast.error(`Failed to ${status} submission`);
+    }
+  };
+
+  const statusColors: Record<string, string> = {
+    pending: 'bg-yellow-100 text-yellow-800',
+    approved: 'bg-green-100 text-green-800',
+    rejected: 'bg-red-100 text-red-800',
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Material Submissions</h2>
+        <div className="flex gap-2">
+          {(['pending', 'approved', 'rejected'] as const).map((s) => (
+            <Button
+              key={s}
+              variant={statusFilter === s ? 'default' : 'outline'}
+              size="sm"
+              className="capitalize"
+              onClick={() => setStatusFilter(s)}
+            >
+              {s}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {isLoading && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">Loading submissions…</CardContent>
+        </Card>
+      )}
+
+      {!isLoading && (!submissions || submissions.length === 0) && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">
+            No {statusFilter} submissions
+          </CardContent>
+        </Card>
+      )}
+
+      {submissions?.map((sub: any) => (
+        <Card key={sub.id}>
+          <CardHeader className="pb-3">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle className="text-lg">{sub.name}</CardTitle>
+                <CardDescription className="mt-1 space-x-2">
+                  <span>{sub.category}</span>
+                  {sub.functional_unit && <span>· {sub.functional_unit}</span>}
+                  {sub.carbon_value != null && <span>· {sub.carbon_value} kg CO₂e</span>}
+                  {sub.cost_per_unit != null && <span>· ${sub.cost_per_unit}/{sub.functional_unit}</span>}
+                </CardDescription>
+              </div>
+              <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${statusColors[sub.status] ?? ''}`}>
+                {sub.status}
+              </span>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {sub.description && (
+              <p className="text-sm text-gray-700">{sub.description}</p>
+            )}
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm text-gray-600">
+              {sub.manufacturer && <span><span className="font-medium">Manufacturer:</span> {sub.manufacturer}</span>}
+              {sub.source && (
+                <span>
+                  <span className="font-medium">Source:</span>{' '}
+                  <a href={sub.source} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate max-w-xs inline-block align-bottom">
+                    {sub.source}
+                  </a>
+                </span>
+              )}
+              {sub.submitter_email && <span><span className="font-medium">Submitter:</span> {sub.submitter_email}</span>}
+              {sub.submitter_name && <span><span className="font-medium">Name:</span> {sub.submitter_name}</span>}
+              {sub.created_at && (
+                <span><span className="font-medium">Submitted:</span> {new Date(sub.created_at).toLocaleDateString()}</span>
+              )}
+            </div>
+
+            {sub.status === 'pending' && (
+              <div className="pt-2 space-y-2">
+                <Textarea
+                  placeholder="Reviewer notes (optional)"
+                  rows={2}
+                  value={notes[sub.id] ?? ''}
+                  onChange={(e) => setNotes((prev) => ({ ...prev, [sub.id]: e.target.value }))}
+                />
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    className="gap-1 bg-green-600 hover:bg-green-700"
+                    disabled={reviewSubmission.isPending}
+                    onClick={() => handleReview(sub.id, 'approved')}
+                  >
+                    <CheckCircle className="h-4 w-4" />
+                    Approve
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    className="gap-1"
+                    disabled={reviewSubmission.isPending}
+                    onClick={() => handleReview(sub.id, 'rejected')}
+                  >
+                    <XCircle className="h-4 w-4" />
+                    Reject
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {sub.reviewer_notes && (
+              <p className="text-xs text-gray-500 border-t pt-2"><span className="font-medium">Notes:</span> {sub.reviewer_notes}</p>
+            )}
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
