@@ -375,6 +375,13 @@ export default function MaterialBrowser() {
                               </Badge>
                             )}
 
+                            {/* Frontier Badge */}
+                            {(material.risScore >= 80 || (material as any).sourceUrl) && (
+                              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                                Frontier
+                              </span>
+                            )}
+
                             {/* Functional Unit */}
                             <p className="text-xs text-gray-500 text-center">
                               Per {material.functionalUnit}

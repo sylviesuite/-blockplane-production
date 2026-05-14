@@ -208,6 +208,13 @@ export default function MaterialDetailEnhanced() {
             )}
           </div>
 
+          {/* Manufacturer subtitle */}
+          {material.manufacturer && (
+            <p className="text-sm mb-1" style={{ color: "rgba(245,242,236,0.5)" }}>
+              {material.manufacturer}
+            </p>
+          )}
+
           {/* Description */}
           {material.description && (
             <p className="text-sm line-clamp-2 max-w-3xl mb-3" style={{ color: "rgba(245,242,236,0.65)" }}>
@@ -457,6 +464,21 @@ export default function MaterialDetailEnhanced() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Manufacturer site link */}
+        {(material as any).sourceUrl && (
+          <div className="mt-3 pb-1 text-center">
+            <a
+              href={(material as any).sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs hover:underline transition-colors"
+              style={{ color: "rgba(90,90,86,0.7)" }}
+            >
+              View manufacturer site →
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
