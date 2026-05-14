@@ -6,6 +6,25 @@ import { materials, lifecycleValues, risScores, pricing, epdMetadata, analyticsE
 import { eq, desc, sql, and, gte } from 'drizzle-orm';
 import { researchAndInsertSingleMaterial } from '../agents/materialResearchAgent';
 
+function stripHtml(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<head[\s\S]*?<\/head>/gi, ' ')
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 12000);
+}
+
 async function supabaseAdmin(path: string, init: RequestInit = {}): Promise<any> {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_KEY;
@@ -423,6 +442,130 @@ export const adminRouter = router({
       }
 
       return { imported, needsResearch, total: input.rows.length, errors };
+    }),
+
+  // ============================================================================
+  // URL RESEARCH — scrape a product page and extract material data
+  // ============================================================================
+
+  researchUrl: adminProcedure
+    .input(z.object({ url: z.string().url().max(2048) }))
+    .mutation(async ({ input }) => {
+      // 1. Fetch the page
+      const controller = new AbortController();
+      const fetchTimeout = setTimeout(() => controller.abort(), 15_000);
+      let pageText = '';
+      try {
+        const response = await fetch(input.url, {
+          signal: controller.signal,
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (compatible; BuildingMaterialsResearch/1.0; +https://blockplanemetric.com)',
+            Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          },
+        });
+        clearTimeout(fetchTimeout);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const html = await response.text();
+        pageText = stripHtml(html);
+      } catch (err: any) {
+        clearTimeout(fetchTimeout);
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: `Could not fetch URL: ${err?.message ?? String(err)}`,
+        });
+      }
+
+      // 2. Extract with Claude
+      const apiKey = process.env.CLAUDE_API_KEY;
+      if (!apiKey) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Claude API not configured' });
+
+      const prompt = `You are extracting building material product data from a webpage for a sustainable building materials platform focused on Northern Michigan residential construction.
+
+Source URL: ${input.url}
+
+Return ONLY a valid JSON object — no markdown, no prose, no code fences. Omit fields you cannot confidently determine (use null for numeric fields, empty string for text).
+
+{
+  "name": "Standardized product name — [Brand] [Product Type] [Dimension/Grade if applicable]. Example: 'Verdant Panel Natural Hemp Acoustic Board 4x8'",
+  "category": "One of: Timber, Steel, Concrete, Earth, Insulation, Composites, Masonry, Roofing, Cladding, Flooring, Windows, Mechanical, Finishes, Foundation, Landscaping",
+  "functional_unit": "One of: sq ft, linear ft, cubic yard, cubic ft, each, gallon — pick the most appropriate",
+  "carbon_kg_per_unit": null or number (kg CO2e per functional unit — ONLY if explicitly stated on the page),
+  "cost_per_unit": null or number (USD per functional unit — only if listed),
+  "lis_score": integer 0-100 (lifecycle impact score; higher = better; 75-100 regenerative/sequestering, 50-74 low-impact, 25-49 standard, 0-24 high-impact),
+  "ris_score": integer 0-100 (regenerative impact score; same scale — 75-100 only for materials that actively sequester carbon or restore ecosystems),
+  "a1_a3": null or number,
+  "a4": null or number,
+  "a5": null or number,
+  "b": null or number,
+  "c1_c4": null or number,
+  "description": "1-2 sentences: material composition, sustainability attributes, typical use case",
+  "manufacturer": "Company or brand name"
+}
+
+Webpage content:
+${pageText}`;
+
+      const claudeRes = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+
+      if (!claudeRes.ok) {
+        const errText = await claudeRes.text().catch(() => '');
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: `Claude API error: ${errText.slice(0, 200)}` });
+      }
+
+      const claudeData: any = await claudeRes.json();
+      const rawText: string = claudeData.content?.[0]?.text ?? '';
+
+      const firstBrace = rawText.indexOf('{');
+      const lastBrace = rawText.lastIndexOf('}');
+      if (firstBrace === -1 || lastBrace <= firstBrace) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Could not extract product data from page — try a different URL' });
+      }
+
+      let extracted: any;
+      try {
+        extracted = JSON.parse(rawText.slice(firstBrace, lastBrace + 1));
+      } catch {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Could not parse extracted data' });
+      }
+
+      const safeNum = (v: unknown): number | null => {
+        const n = parseFloat(String(v ?? ''));
+        return isNaN(n) ? null : n;
+      };
+      const safeInt = (v: unknown): number | null => {
+        const n = parseInt(String(v ?? ''));
+        return isNaN(n) ? null : Math.min(100, Math.max(0, n));
+      };
+
+      return {
+        name: String(extracted.name ?? ''),
+        category: String(extracted.category ?? ''),
+        functional_unit: String(extracted.functional_unit ?? ''),
+        carbon_kg_per_unit: safeNum(extracted.carbon_kg_per_unit),
+        cost_per_unit: safeNum(extracted.cost_per_unit),
+        lis_score: safeInt(extracted.lis_score),
+        ris_score: safeInt(extracted.ris_score),
+        a1_a3: safeNum(extracted.a1_a3),
+        a4: safeNum(extracted.a4),
+        a5: safeNum(extracted.a5),
+        b: safeNum(extracted.b),
+        c1_c4: safeNum(extracted.c1_c4),
+        description: String(extracted.description ?? ''),
+        manufacturer: String(extracted.manufacturer ?? ''),
+        source: input.url,
+      };
     }),
 
   // ============================================================================

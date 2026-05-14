@@ -17,7 +17,8 @@ import {
   CheckCircle,
   XCircle,
   Trash2,
-  Edit
+  Edit,
+  Globe,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { trpc } from '@/lib/trpc';
@@ -797,10 +798,244 @@ function downloadTemplate() {
 }
 
 // ---------------------------------------------------------------------------
-// BulkImportTab component
+// URL Import section
 // ---------------------------------------------------------------------------
 
-function BulkImportTab() {
+const CATEGORIES = ['Timber', 'Steel', 'Concrete', 'Earth', 'Insulation', 'Composites', 'Masonry', 'Roofing', 'Cladding', 'Flooring', 'Windows', 'Mechanical', 'Finishes', 'Foundation', 'Landscaping'];
+const UNITS = ['sq ft', 'linear ft', 'cubic yard', 'cubic ft', 'each', 'gallon'];
+const LC_LABELS: Record<string, string> = { a1_a3: 'A1-A3', a4: 'A4', a5: 'A5', b: 'B', c1_c4: 'C1-C4' };
+
+type UrlExtracted = {
+  name: string;
+  category: string;
+  functional_unit: string;
+  carbon_kg_per_unit: number | null;
+  cost_per_unit: number | null;
+  lis_score: number | null;
+  ris_score: number | null;
+  a1_a3: number | null;
+  a4: number | null;
+  a5: number | null;
+  b: number | null;
+  c1_c4: number | null;
+  description: string;
+  manufacturer: string;
+  source: string;
+};
+
+function UrlImportSection() {
+  const [url, setUrl] = useState('');
+  const [result, setResult] = useState<UrlExtracted | null>(null);
+  const [savedOk, setSavedOk] = useState(false);
+
+  const research = trpc.admin.researchUrl.useMutation();
+  const save = trpc.admin.bulkImportToSupabase.useMutation();
+
+  const handleResearch = async () => {
+    if (!url.trim()) { toast.error('Enter a URL first'); return; }
+    setResult(null);
+    setSavedOk(false);
+    try {
+      const data = await research.mutateAsync({ url: url.trim() });
+      setResult(data as UrlExtracted);
+    } catch (err: any) {
+      toast.error(err?.message ?? 'Research failed');
+    }
+  };
+
+  const handleSave = async () => {
+    if (!result) return;
+    try {
+      await save.mutateAsync({ rows: [result] });
+      setSavedOk(true);
+      toast.success(`"${result.name}" added to Supabase`);
+    } catch (err: any) {
+      toast.error(err?.message ?? 'Save failed');
+    }
+  };
+
+  const setField = (key: keyof UrlExtracted, value: UrlExtracted[keyof UrlExtracted]) =>
+    setResult((r) => r ? { ...r, [key]: value } : r);
+
+  const setNum = (key: keyof UrlExtracted, val: string) => {
+    const n = parseFloat(val);
+    setField(key, isNaN(n) ? null : n);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Research from URL</CardTitle>
+          <CardDescription>
+            Paste a product page URL — Claude scrapes and extracts material data for you to review before saving.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <Input
+              placeholder="https://..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleResearch(); }}
+              className="flex-1"
+            />
+            <Button onClick={handleResearch} disabled={research.isPending} className="gap-2 shrink-0">
+              <Globe className="h-4 w-4" />
+              {research.isPending ? 'Researching…' : 'Research this product'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {result && !savedOk && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Extracted Data — Review & Edit</CardTitle>
+            <CardDescription>
+              {result.carbon_kg_per_unit == null
+                ? 'Carbon data not found on the page — material will be flagged for the research agent.'
+                : `Carbon: ${result.carbon_kg_per_unit} kg CO₂e / ${result.functional_unit || 'unit'}`}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-5">
+            {/* Primary fields */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label>Name <span className="text-red-500">*</span></Label>
+                <Input value={result.name} onChange={(e) => setField('name', e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <Label>Category <span className="text-red-500">*</span></Label>
+                <Select value={result.category} onValueChange={(v) => setField('category', v)}>
+                  <SelectTrigger><SelectValue placeholder="select category" /></SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>Functional Unit</Label>
+                <Select value={result.functional_unit} onValueChange={(v) => setField('functional_unit', v)}>
+                  <SelectTrigger><SelectValue placeholder="select unit" /></SelectTrigger>
+                  <SelectContent>
+                    {UNITS.map((u) => <SelectItem key={u} value={u}>{u}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1">
+                <Label>Carbon (kg CO₂e/unit)</Label>
+                <Input
+                  type="number" step="0.01"
+                  placeholder="blank = flag for research"
+                  value={result.carbon_kg_per_unit ?? ''}
+                  onChange={(e) => setNum('carbon_kg_per_unit', e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Cost ($/unit)</Label>
+                <Input
+                  type="number" step="0.01"
+                  value={result.cost_per_unit ?? ''}
+                  onChange={(e) => setNum('cost_per_unit', e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Manufacturer</Label>
+                <Input value={result.manufacturer} onChange={(e) => setField('manufacturer', e.target.value)} />
+              </div>
+            </div>
+
+            {/* Scores */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label>LIS Score (0–100)</Label>
+                <Input
+                  type="number" min="0" max="100"
+                  value={result.lis_score ?? ''}
+                  onChange={(e) => setNum('lis_score', e.target.value)}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>RIS Score (0–100)</Label>
+                <Input
+                  type="number" min="0" max="100"
+                  value={result.ris_score ?? ''}
+                  onChange={(e) => setNum('ris_score', e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Lifecycle breakdown */}
+            <div>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">Lifecycle Breakdown (optional)</p>
+              <div className="grid grid-cols-5 gap-3">
+                {(['a1_a3', 'a4', 'a5', 'b', 'c1_c4'] as const).map((k) => (
+                  <div key={k} className="space-y-1">
+                    <Label className="text-xs">{LC_LABELS[k]}</Label>
+                    <Input
+                      type="number" step="0.01"
+                      value={result[k] ?? ''}
+                      onChange={(e) => setNum(k, e.target.value)}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Description + Source */}
+            <div className="space-y-1">
+              <Label>Description</Label>
+              <Textarea
+                rows={2}
+                value={result.description}
+                onChange={(e) => setField('description', e.target.value)}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>Source URL</Label>
+              <Input value={result.source} onChange={(e) => setField('source', e.target.value)} />
+            </div>
+
+            <Button
+              onClick={handleSave}
+              disabled={!result.name || !result.category || save.isPending}
+              className="gap-2"
+            >
+              <CheckCircle className="h-4 w-4" />
+              {save.isPending ? 'Saving…' : 'Confirm & Add to Supabase'}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {savedOk && result && (
+        <Card>
+          <CardContent className="pt-6 space-y-3">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-8 w-8 text-green-500" />
+              <div>
+                <p className="text-lg font-semibold">"{result.name}" added</p>
+                {result.carbon_kg_per_unit == null && (
+                  <p className="text-sm text-amber-700">Flagged for research agent to fill in carbon data on next run</p>
+                )}
+              </div>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => { setUrl(''); setResult(null); setSavedOk(false); }}>
+              Research Another URL
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// CSV Import section
+// ---------------------------------------------------------------------------
+
+function CsvImportSection() {
   const [step, setStep] = useState<'upload' | 'mapping' | 'preview' | 'done'>('upload');
   const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
   const [csvRows, setCsvRows] = useState<string[][]>([]);
@@ -829,9 +1064,7 @@ function BulkImportTab() {
     const rows = csvRows
       .map((r) => buildImportRow(r, csvHeaders, mapping))
       .filter((r) => r.name && r.category);
-
     if (rows.length === 0) { toast.error('No valid rows to import (name and category are required)'); return; }
-
     try {
       const result = await bulkImport.mutateAsync({ rows });
       setImportResult(result);
@@ -842,71 +1075,50 @@ function BulkImportTab() {
     }
   };
 
-  const reset = () => {
-    setStep('upload');
-    setCsvHeaders([]);
-    setCsvRows([]);
-    setMapping({});
-    setImportResult(null);
-  };
+  const reset = () => { setStep('upload'); setCsvHeaders([]); setCsvRows([]); setMapping({}); setImportResult(null); };
 
-  // ── Upload step ──────────────────────────────────────────────────────────
   if (step === 'upload') {
     return (
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Bulk Import</h2>
-        <Card>
-          <CardHeader>
-            <CardTitle>Import Materials from CSV</CardTitle>
-            <CardDescription>
-              Upload a CSV with material data. Missing carbon values are flagged for the research agent to fill in automatically.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
-              <Upload className="h-4 w-4" />
-              Download CSV Template
-            </Button>
-            <div className="space-y-2">
-              <Label htmlFor="import-file">CSV File</Label>
-              <Input id="import-file" type="file" accept=".csv" onChange={handleFileChange} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Import from CSV</CardTitle>
+          <CardDescription>Upload a CSV with material data. Missing carbon values are flagged for the research agent.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
+            <Upload className="h-4 w-4" />
+            Download CSV Template
+          </Button>
+          <div className="space-y-2">
+            <Label htmlFor="import-file">CSV File</Label>
+            <Input id="import-file" type="file" accept=".csv" onChange={handleFileChange} />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
-  // ── Column mapping step ──────────────────────────────────────────────────
   if (step === 'mapping') {
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Map Columns</h2>
+          <p className="text-sm text-gray-600">{csvRows.length} rows detected — map columns to fields.</p>
           <Button variant="ghost" size="sm" onClick={reset}>← Back</Button>
         </div>
-        <p className="text-sm text-gray-600">{csvRows.length} data rows detected. Map your CSV columns to the expected fields.</p>
         <Card>
           <CardContent className="pt-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {IMPORT_FIELDS.map(({ key, label, required }) => (
                 <div key={key} className="space-y-1">
-                  <Label className="text-sm">
-                    {label}
-                    {required && <span className="text-red-500 ml-1">*</span>}
-                  </Label>
+                  <Label className="text-sm">{label}{required && <span className="text-red-500 ml-1">*</span>}</Label>
                   <Select
                     value={mapping[key] ?? ''}
                     onValueChange={(v) => setMapping((m) => ({ ...m, [key]: v === '__skip__' ? '' : v }))}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="(skip)" />
-                    </SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder="(skip)" /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="__skip__">(skip)</SelectItem>
-                      {csvHeaders.map((h) => (
-                        <SelectItem key={h} value={h}>{h}</SelectItem>
-                      ))}
+                      {csvHeaders.map((h) => <SelectItem key={h} value={h}>{h}</SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
@@ -921,23 +1133,17 @@ function BulkImportTab() {
     );
   }
 
-  // ── Preview step ─────────────────────────────────────────────────────────
   if (step === 'preview') {
     const missingCarbon = previewRows.filter((r) => r.carbon_kg_per_unit == null).length;
     return (
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Preview</h2>
+          <p className="text-sm text-gray-600">
+            First {previewRows.length} of {csvRows.length} rows.
+            {missingCarbon > 0 && <span className="ml-2 text-amber-700 font-medium">{missingCarbon} missing carbon — flagged for agent.</span>}
+          </p>
           <Button variant="ghost" size="sm" onClick={() => setStep('mapping')}>← Back</Button>
         </div>
-        <p className="text-sm text-gray-600">
-          Showing first {previewRows.length} of {csvRows.length} rows.
-          {missingCarbon > 0 && (
-            <span className="ml-2 text-amber-700 font-medium">
-              {missingCarbon} row{missingCarbon > 1 ? 's' : ''} missing carbon data — will be flagged for research agent.
-            </span>
-          )}
-        </p>
         <Card>
           <CardContent className="pt-4 overflow-x-auto">
             <table className="w-full text-sm">
@@ -964,9 +1170,7 @@ function BulkImportTab() {
                     </td>
                     <td className="py-2 pr-4 text-gray-600">{row.cost_per_unit != null ? `$${row.cost_per_unit}` : '—'}</td>
                     <td className="py-2 text-gray-600">
-                      {row.lis_score != null || row.ris_score != null
-                        ? `${row.lis_score ?? '?'} / ${row.ris_score ?? '?'}`
-                        : '—'}
+                      {row.lis_score != null || row.ris_score != null ? `${row.lis_score ?? '?'} / ${row.ris_score ?? '?'}` : '—'}
                     </td>
                   </tr>
                 ))}
@@ -982,23 +1186,17 @@ function BulkImportTab() {
     );
   }
 
-  // ── Done step ────────────────────────────────────────────────────────────
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Import Complete</h2>
       {importResult && (
         <Card>
           <CardContent className="pt-6 space-y-3">
             <div className="flex items-center gap-3">
               <CheckCircle className="h-8 w-8 text-green-500" />
               <div>
-                <p className="text-lg font-semibold">
-                  {importResult.imported} of {importResult.total} rows imported
-                </p>
+                <p className="text-lg font-semibold">{importResult.imported} of {importResult.total} rows imported</p>
                 {importResult.needsResearch > 0 && (
-                  <p className="text-sm text-amber-700">
-                    {importResult.needsResearch} flagged for research agent (missing carbon data)
-                  </p>
+                  <p className="text-sm text-amber-700">{importResult.needsResearch} flagged for research agent (missing carbon data)</p>
                 )}
               </div>
             </div>
@@ -1014,6 +1212,33 @@ function BulkImportTab() {
         </Card>
       )}
       <Button variant="outline" onClick={reset}>Import Another File</Button>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// BulkImportTab — mode selector wrapper
+// ---------------------------------------------------------------------------
+
+function BulkImportTab() {
+  const [mode, setMode] = useState<'url' | 'csv'>('url');
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Bulk Import</h2>
+        <div className="flex gap-1 border rounded-lg p-1">
+          <Button size="sm" variant={mode === 'url' ? 'default' : 'ghost'} onClick={() => setMode('url')} className="gap-2">
+            <Globe className="h-4 w-4" />
+            From URL
+          </Button>
+          <Button size="sm" variant={mode === 'csv' ? 'default' : 'ghost'} onClick={() => setMode('csv')} className="gap-2">
+            <Upload className="h-4 w-4" />
+            From CSV
+          </Button>
+        </div>
+      </div>
+      {mode === 'url' ? <UrlImportSection /> : <CsvImportSection />}
     </div>
   );
 }
