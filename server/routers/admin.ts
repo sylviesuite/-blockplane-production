@@ -288,6 +288,144 @@ export const adminRouter = router({
     }),
 
   // ============================================================================
+  // BULK IMPORT TO SUPABASE
+  // ============================================================================
+
+  bulkImportToSupabase: adminProcedure
+    .input(z.object({
+      rows: z.array(z.object({
+        name: z.string().min(1).max(255),
+        category: z.string().min(1).max(100),
+        functional_unit: z.string().max(50).optional(),
+        carbon_kg_per_unit: z.number().nullable().optional(),
+        cost_per_unit: z.number().nullable().optional(),
+        lis_score: z.number().min(0).max(100).nullable().optional(),
+        ris_score: z.number().min(0).max(100).nullable().optional(),
+        a1_a3: z.number().nullable().optional(),
+        a4: z.number().nullable().optional(),
+        a5: z.number().nullable().optional(),
+        b: z.number().nullable().optional(),
+        c1_c4: z.number().nullable().optional(),
+        description: z.string().max(2000).optional(),
+        manufacturer: z.string().max(255).optional(),
+        source: z.string().max(255).optional(),
+      })).min(1).max(500),
+    }))
+    .mutation(async ({ input }) => {
+      let imported = 0;
+      let needsResearch = 0;
+      const errors: string[] = [];
+
+      for (const row of input.rows) {
+        try {
+          const hasCarbon = row.carbon_kg_per_unit != null && row.carbon_kg_per_unit > 0;
+
+          // Insert material (ignore duplicate names)
+          const inserted = await supabaseAdmin(
+            `materials`,
+            {
+              method: "POST",
+              headers: { Prefer: "return=representation,resolution=ignore-duplicates" } as any,
+              body: JSON.stringify({
+                name: row.name,
+                category: row.category.toLowerCase(),
+                manufacturer: row.manufacturer ?? null,
+                description: row.description ?? null,
+                source: row.source ?? null,
+                needs_research: !hasCarbon,
+              }),
+            }
+          );
+
+          // Resolve UUID
+          let materialId: string | null = null;
+          if (Array.isArray(inserted) && inserted.length > 0) {
+            materialId = inserted[0].id;
+          } else {
+            const existing = await supabaseAdmin(
+              `materials?name=eq.${encodeURIComponent(row.name)}&select=id&limit=1`
+            );
+            materialId = Array.isArray(existing) && existing.length > 0 ? existing[0].id : null;
+          }
+
+          if (!materialId) {
+            errors.push(`Could not resolve ID for "${row.name}"`);
+            continue;
+          }
+
+          if (hasCarbon) {
+            const totalC = row.carbon_kg_per_unit!;
+            const c1c4 = row.c1_c4 ?? 0;
+
+            await supabaseAdmin(`carbon_footprints`, {
+              method: "POST",
+              headers: { Prefer: "return=minimal,resolution=ignore-duplicates" } as any,
+              body: JSON.stringify({
+                material_id: materialId,
+                a1_a3_manufacturing: row.a1_a3 ?? totalC * 0.9,
+                a4_transport: row.a4 ?? totalC * 0.1,
+                a5_installation: row.a5 ?? 0,
+                b1_b7_use_phase: row.b ?? 0,
+                c1_c4_end_of_life: c1c4,
+                total_carbon_cradle_to_gate: totalC,
+                total_carbon_cradle_to_grave: totalC + c1c4,
+                functional_unit: (row.functional_unit ?? "sq ft").slice(0, 50),
+                source: (row.source ?? "Bulk import").slice(0, 255),
+                verification_status: "self_declared",
+              }),
+            }).catch((e: any) => console.warn(`[BulkImport] carbon_footprints skipped: ${e.message}`));
+
+            if (row.lis_score != null || row.ris_score != null) {
+              await supabaseAdmin(`lis_ris_scores`, {
+                method: "POST",
+                headers: { Prefer: "return=minimal,resolution=ignore-duplicates" } as any,
+                body: JSON.stringify({
+                  material_id: materialId,
+                  lis_score: row.lis_score ?? 0,
+                  ris_score: row.ris_score ?? 0,
+                  baseline_region: "Great Lakes",
+                  calculation_version: "1.0",
+                  calculation_date: new Date().toISOString().split("T")[0],
+                }),
+              }).catch((e: any) => console.warn(`[BulkImport] lis_ris_scores skipped: ${e.message}`));
+            }
+
+            if (row.cost_per_unit != null) {
+              const rdExists = await supabaseAdmin(
+                `regional_data?material_id=eq.${materialId}&region=eq.${encodeURIComponent("Northern Michigan")}&select=id&limit=1`
+              );
+              if (!Array.isArray(rdExists) || rdExists.length === 0) {
+                await supabaseAdmin(`regional_data`, {
+                  method: "POST",
+                  headers: { Prefer: "return=minimal" } as any,
+                  body: JSON.stringify({
+                    material_id: materialId,
+                    region: "Northern Michigan",
+                    state_province: "MI",
+                    country: "US",
+                    supplier_name: row.manufacturer ?? null,
+                    price_per_unit: row.cost_per_unit,
+                    currency: "USD",
+                    unit: (row.functional_unit ?? "sq ft").slice(0, 50),
+                    availability_status: "in_stock",
+                  }),
+                }).catch((e: any) => console.warn(`[BulkImport] regional_data skipped: ${e.message}`));
+              }
+            }
+          } else {
+            needsResearch++;
+          }
+
+          imported++;
+        } catch (err: any) {
+          errors.push(`"${row.name}": ${err?.message ?? String(err)}`);
+        }
+      }
+
+      return { imported, needsResearch, total: input.rows.length, errors };
+    }),
+
+  // ============================================================================
   // USAGE ANALYTICS
   // ============================================================================
 

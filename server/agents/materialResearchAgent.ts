@@ -583,6 +583,38 @@ export async function runMaterialResearchAgent(): Promise<AgentSummary> {
   console.log("[MaterialResearchAgent] Waiting 30s before first query...");
   await new Promise((resolve) => setTimeout(resolve, 30_000));
 
+  // --- Phase 0: Research materials flagged needs_research = true (from bulk import) ---
+  try {
+    const flagged = await supabaseRest(
+      "/rest/v1/materials?needs_research=eq.true&select=id,name,category&limit=100"
+    );
+    if (Array.isArray(flagged) && flagged.length > 0) {
+      console.log(`[MaterialResearchAgent] ${flagged.length} flagged material(s) need research — processing before main loop`);
+      for (const mat of flagged) {
+        try {
+          console.log(`[MaterialResearchAgent] Flagged research: "${mat.name}" (${mat.category})`);
+          const result = await researchAndInsertSingleMaterial({ name: mat.name, category: mat.category });
+          await supabaseRest(`/rest/v1/materials?id=eq.${mat.id}`, {
+            method: "PATCH",
+            headers: { Prefer: "return=minimal" },
+            body: JSON.stringify({ needs_research: false }),
+          });
+          if (result.inserted) summary.inserted++;
+          else summary.skipped++;
+          summary.queriesRun++;
+          console.log(`[MaterialResearchAgent] Flagged research done: "${mat.name}"`);
+        } catch (err: any) {
+          console.warn(`[MaterialResearchAgent] Flagged research failed for "${mat.name}": ${err?.message}`);
+          summary.errors.push({ category: mat.category ?? "unknown", error: err?.message ?? String(err) });
+        }
+        await new Promise((resolve) => setTimeout(resolve, QUERY_DELAY_MS));
+      }
+    }
+  } catch (err: any) {
+    console.warn(`[MaterialResearchAgent] Could not query needs_research materials: ${err?.message}`);
+  }
+
+  // --- Phase 1: Main loop (hardcoded SEARCH_QUERIES) ---
   for (let i = 0; i < SEARCH_QUERIES.length; i++) {
     const { category, query } = SEARCH_QUERIES[i];
     summary.queriesRun++;

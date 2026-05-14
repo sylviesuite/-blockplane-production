@@ -677,96 +677,343 @@ function SubmissionsTab() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// Bulk Import helpers
+// ---------------------------------------------------------------------------
+
+const IMPORT_FIELDS: { key: string; label: string; required: boolean }[] = [
+  { key: 'name', label: 'Name', required: true },
+  { key: 'category', label: 'Category', required: true },
+  { key: 'functional_unit', label: 'Functional Unit', required: false },
+  { key: 'carbon_kg_per_unit', label: 'Carbon (kg CO₂e/unit)', required: false },
+  { key: 'cost_per_unit', label: 'Cost ($/unit)', required: false },
+  { key: 'lis_score', label: 'LIS Score (0–100)', required: false },
+  { key: 'ris_score', label: 'RIS Score (0–100)', required: false },
+  { key: 'a1_a3', label: 'A1-A3', required: false },
+  { key: 'a4', label: 'A4', required: false },
+  { key: 'a5', label: 'A5', required: false },
+  { key: 'b', label: 'B (use phase)', required: false },
+  { key: 'c1_c4', label: 'C1-C4 (end of life)', required: false },
+  { key: 'description', label: 'Description', required: false },
+  { key: 'manufacturer', label: 'Manufacturer', required: false },
+  { key: 'source', label: 'Source URL', required: false },
+];
+
+const TEMPLATE_CSV =
+  'name,category,functional_unit,carbon_kg_per_unit,cost_per_unit,lis_score,ris_score,a1_a3,a4,a5,b,c1_c4,description,manufacturer,source\n' +
+  '"Example Material","Timber","sq ft",12.5,4.50,72,68,10.2,1.8,0.5,0,0,"Northern Michigan white pine cladding","Smith Lumber","https://example.com"';
+
+function parseCSV(text: string): { headers: string[]; rows: string[][] } {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim());
+  if (lines.length === 0) return { headers: [], rows: [] };
+
+  const parseLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '"') {
+        if (inQuotes && line[i + 1] === '"') { current += '"'; i++; }
+        else { inQuotes = !inQuotes; }
+      } else if (line[i] === ',' && !inQuotes) {
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += line[i];
+      }
+    }
+    result.push(current.trim());
+    return result;
+  };
+
+  return { headers: parseLine(lines[0]), rows: lines.slice(1).map(parseLine) };
+}
+
+function autoMapHeaders(headers: string[]): Record<string, string> {
+  const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const aliases: Record<string, string[]> = {
+    name: ['name', 'materialname', 'title'],
+    category: ['category', 'type', 'materialtype'],
+    functional_unit: ['functionalunit', 'unit', 'fu'],
+    carbon_kg_per_unit: ['carbonkgperunit', 'carbon', 'totalcarbon', 'co2e', 'kgco2e'],
+    cost_per_unit: ['costperunit', 'cost', 'price', 'priceperunit'],
+    lis_score: ['lisscore', 'lis'],
+    ris_score: ['risscore', 'ris'],
+    a1_a3: ['a1a3', 'a1_a3', 'manufacturing'],
+    a4: ['a4', 'transport'],
+    a5: ['a5', 'installation'],
+    b: ['b', 'usephase'],
+    c1_c4: ['c1c4', 'c1_c4', 'endoflife'],
+    description: ['description', 'desc', 'notes'],
+    manufacturer: ['manufacturer', 'brand', 'supplier'],
+    source: ['source', 'sourceurl', 'url', 'reference'],
+  };
+  const mapped: Record<string, string> = {};
+  for (const [field, fieldAliases] of Object.entries(aliases)) {
+    for (const h of headers) {
+      if (fieldAliases.includes(norm(h))) { mapped[field] = h; break; }
+    }
+  }
+  return mapped;
+}
+
+function buildImportRow(csvRow: string[], headers: string[], mapping: Record<string, string>) {
+  const get = (field: string) => {
+    const h = mapping[field];
+    if (!h) return '';
+    const idx = headers.indexOf(h);
+    return idx >= 0 ? (csvRow[idx] ?? '').trim() : '';
+  };
+  const num = (s: string) => { const n = parseFloat(s); return isNaN(n) ? null : n; };
+  const int = (s: string) => { const n = parseInt(s); return isNaN(n) ? null : n; };
+
+  return {
+    name: get('name'),
+    category: get('category'),
+    functional_unit: get('functional_unit') || undefined,
+    carbon_kg_per_unit: num(get('carbon_kg_per_unit')),
+    cost_per_unit: num(get('cost_per_unit')),
+    lis_score: int(get('lis_score')),
+    ris_score: int(get('ris_score')),
+    a1_a3: num(get('a1_a3')),
+    a4: num(get('a4')),
+    a5: num(get('a5')),
+    b: num(get('b')),
+    c1_c4: num(get('c1_c4')),
+    description: get('description') || undefined,
+    manufacturer: get('manufacturer') || undefined,
+    source: get('source') || undefined,
+  };
+}
+
+function downloadTemplate() {
+  const blob = new Blob([TEMPLATE_CSV], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'blockplane_materials_template.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ---------------------------------------------------------------------------
+// BulkImportTab component
+// ---------------------------------------------------------------------------
+
 function BulkImportTab() {
-  const [importFile, setImportFile] = useState<File | null>(null);
-  const bulkImport = trpc.admin.bulkImport.useMutation();
+  const [step, setStep] = useState<'upload' | 'mapping' | 'preview' | 'done'>('upload');
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [csvRows, setCsvRows] = useState<string[][]>([]);
+  const [mapping, setMapping] = useState<Record<string, string>>({});
+  const [importResult, setImportResult] = useState<{
+    imported: number; needsResearch: number; total: number; errors: string[];
+  } | null>(null);
+
+  const bulkImport = trpc.admin.bulkImportToSupabase.useMutation();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    const { headers, rows } = parseCSV(text);
+    if (headers.length === 0) { toast.error('Could not parse CSV — check the file format'); return; }
+    setCsvHeaders(headers);
+    setCsvRows(rows);
+    setMapping(autoMapHeaders(headers));
+    setStep('mapping');
+  };
+
+  const previewRows = csvRows.slice(0, 10).map((r) => buildImportRow(r, csvHeaders, mapping));
 
   const handleImport = async () => {
-    if (!importFile) {
-      toast.error('Please select a file');
-      return;
-    }
+    const rows = csvRows
+      .map((r) => buildImportRow(r, csvHeaders, mapping))
+      .filter((r) => r.name && r.category);
+
+    if (rows.length === 0) { toast.error('No valid rows to import (name and category are required)'); return; }
 
     try {
-      const text = await importFile.text();
-      const lines = text.split('\n').filter(line => line.trim());
-      const headers = lines[0].split(',').map(h => h.trim());
-
-      const materials = [];
-      for (let i = 1; i < lines.length; i++) {
-        const values = lines[i].split(',').map(v => v.trim());
-        // Parse CSV row into material object
-        // This is a simplified example - production would need robust CSV parsing
-        const material = {
-          name: values[0],
-          category: values[1] as 'Timber' | 'Steel' | 'Concrete' | 'Earth',
-          functionalUnit: values[2],
-          totalCarbon: parseFloat(values[3]),
-          description: values[4] || undefined,
-          lifecyclePhases: {
-            'A1-A3': parseFloat(values[5]),
-            'A4': parseFloat(values[6]),
-            'A5': parseFloat(values[7]),
-            'B': parseFloat(values[8]),
-            'C1-C4': parseFloat(values[9]),
-          },
-          risScore: parseInt(values[10]),
-          lisScore: parseInt(values[11]),
-          costPerUnit: parseFloat(values[12]),
-        };
-        materials.push(material);
-      }
-
-      const result = await bulkImport.mutateAsync({ materials });
+      const result = await bulkImport.mutateAsync({ rows });
+      setImportResult(result);
+      setStep('done');
       toast.success(`Imported ${result.imported} of ${result.total} materials`);
-      if (result.errors.length > 0) {
-        console.error('Import errors:', result.errors);
-      }
-    } catch (error) {
-      console.error('Import error:', error);
-      toast.error('Failed to import materials');
+    } catch (err: any) {
+      toast.error(err?.message ?? 'Import failed');
     }
   };
 
+  const reset = () => {
+    setStep('upload');
+    setCsvHeaders([]);
+    setCsvRows([]);
+    setMapping({});
+    setImportResult(null);
+  };
+
+  // ── Upload step ──────────────────────────────────────────────────────────
+  if (step === 'upload') {
+    return (
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Bulk Import</h2>
+        <Card>
+          <CardHeader>
+            <CardTitle>Import Materials from CSV</CardTitle>
+            <CardDescription>
+              Upload a CSV with material data. Missing carbon values are flagged for the research agent to fill in automatically.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button variant="outline" size="sm" onClick={downloadTemplate} className="gap-2">
+              <Upload className="h-4 w-4" />
+              Download CSV Template
+            </Button>
+            <div className="space-y-2">
+              <Label htmlFor="import-file">CSV File</Label>
+              <Input id="import-file" type="file" accept=".csv" onChange={handleFileChange} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // ── Column mapping step ──────────────────────────────────────────────────
+  if (step === 'mapping') {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Map Columns</h2>
+          <Button variant="ghost" size="sm" onClick={reset}>← Back</Button>
+        </div>
+        <p className="text-sm text-gray-600">{csvRows.length} data rows detected. Map your CSV columns to the expected fields.</p>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {IMPORT_FIELDS.map(({ key, label, required }) => (
+                <div key={key} className="space-y-1">
+                  <Label className="text-sm">
+                    {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
+                  </Label>
+                  <Select
+                    value={mapping[key] ?? ''}
+                    onValueChange={(v) => setMapping((m) => ({ ...m, [key]: v === '__skip__' ? '' : v }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="(skip)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="__skip__">(skip)</SelectItem>
+                      {csvHeaders.map((h) => (
+                        <SelectItem key={h} value={h}>{h}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+        <Button onClick={() => setStep('preview')} disabled={!mapping['name'] || !mapping['category']}>
+          Preview Import →
+        </Button>
+      </div>
+    );
+  }
+
+  // ── Preview step ─────────────────────────────────────────────────────────
+  if (step === 'preview') {
+    const missingCarbon = previewRows.filter((r) => r.carbon_kg_per_unit == null).length;
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Preview</h2>
+          <Button variant="ghost" size="sm" onClick={() => setStep('mapping')}>← Back</Button>
+        </div>
+        <p className="text-sm text-gray-600">
+          Showing first {previewRows.length} of {csvRows.length} rows.
+          {missingCarbon > 0 && (
+            <span className="ml-2 text-amber-700 font-medium">
+              {missingCarbon} row{missingCarbon > 1 ? 's' : ''} missing carbon data — will be flagged for research agent.
+            </span>
+          )}
+        </p>
+        <Card>
+          <CardContent className="pt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="pb-2 pr-4 font-medium">Name</th>
+                  <th className="pb-2 pr-4 font-medium">Category</th>
+                  <th className="pb-2 pr-4 font-medium">Unit</th>
+                  <th className="pb-2 pr-4 font-medium">Carbon</th>
+                  <th className="pb-2 pr-4 font-medium">Cost</th>
+                  <th className="pb-2 font-medium">LIS / RIS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {previewRows.map((row, i) => (
+                  <tr key={i} className="border-b last:border-0">
+                    <td className="py-2 pr-4 font-medium max-w-[200px] truncate">{row.name || <span className="text-red-500">missing</span>}</td>
+                    <td className="py-2 pr-4">{row.category || <span className="text-red-500">missing</span>}</td>
+                    <td className="py-2 pr-4 text-gray-600">{row.functional_unit ?? '—'}</td>
+                    <td className="py-2 pr-4">
+                      {row.carbon_kg_per_unit != null
+                        ? <span>{row.carbon_kg_per_unit} kg</span>
+                        : <span className="text-amber-600 text-xs">needs research</span>}
+                    </td>
+                    <td className="py-2 pr-4 text-gray-600">{row.cost_per_unit != null ? `$${row.cost_per_unit}` : '—'}</td>
+                    <td className="py-2 text-gray-600">
+                      {row.lis_score != null || row.ris_score != null
+                        ? `${row.lis_score ?? '?'} / ${row.ris_score ?? '?'}`
+                        : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+        <Button onClick={handleImport} disabled={bulkImport.isPending} className="gap-2">
+          <Upload className="h-4 w-4" />
+          {bulkImport.isPending ? `Importing ${csvRows.length} rows…` : `Import ${csvRows.length} rows`}
+        </Button>
+      </div>
+    );
+  }
+
+  // ── Done step ────────────────────────────────────────────────────────────
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Bulk Import</h2>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Import Materials from CSV</CardTitle>
-          <CardDescription>
-            Upload a CSV file with material data to import multiple materials at once
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              CSV format: name, category, functionalUnit, totalCarbon, description, A1-A3, A4, A5, B, C1-C4, risScore, lisScore, costPerUnit
-            </AlertDescription>
-          </Alert>
-
-          <div className="space-y-2">
-            <Label htmlFor="import-file">CSV File</Label>
-            <Input
-              id="import-file"
-              type="file"
-              accept=".csv"
-              onChange={(e) => setImportFile(e.target.files?.[0] || null)}
-            />
-          </div>
-
-          <Button
-            onClick={handleImport}
-            disabled={!importFile || bulkImport.isPending}
-            className="gap-2"
-          >
-            <Upload className="h-4 w-4" />
-            {bulkImport.isPending ? 'Importing...' : 'Import Materials'}
-          </Button>
-        </CardContent>
-      </Card>
+      <h2 className="text-2xl font-bold">Import Complete</h2>
+      {importResult && (
+        <Card>
+          <CardContent className="pt-6 space-y-3">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-8 w-8 text-green-500" />
+              <div>
+                <p className="text-lg font-semibold">
+                  {importResult.imported} of {importResult.total} rows imported
+                </p>
+                {importResult.needsResearch > 0 && (
+                  <p className="text-sm text-amber-700">
+                    {importResult.needsResearch} flagged for research agent (missing carbon data)
+                  </p>
+                )}
+              </div>
+            </div>
+            {importResult.errors.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-red-600">{importResult.errors.length} error{importResult.errors.length > 1 ? 's' : ''}:</p>
+                <ul className="text-xs text-red-600 space-y-1 list-disc list-inside max-h-40 overflow-y-auto">
+                  {importResult.errors.map((e, i) => <li key={i}>{e}</li>)}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+      <Button variant="outline" onClick={reset}>Import Another File</Button>
     </div>
   );
 }
