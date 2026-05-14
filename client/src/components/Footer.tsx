@@ -57,10 +57,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div style={{ borderTopColor: `${cream}22` }} className="pt-8 border-t">
-          <p style={{ color: `${cream}66` }} className="text-sm text-center">
+        <div style={{ borderTopColor: `${cream}22` }} className="pt-8 border-t flex items-center justify-between">
+          <p style={{ color: `${cream}66` }} className="text-sm">
             © {currentYear} {APP_TITLE}. All rights reserved.
           </p>
+          <Link href="/admin">
+            <span style={{ color: `${cream}33` }} className="text-xs hover:opacity-60 cursor-pointer transition-opacity">
+              Admin
+            </span>
+          </Link>
         </div>
       </div>
     </footer>

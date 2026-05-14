@@ -22,6 +22,11 @@ export default function MinimalFooter() {
                 Terms of Service
               </span>
             </Link>
+            <Link href="/admin">
+              <span style={{ color: `${cream}33` }} className="hover:opacity-60 cursor-pointer transition-opacity">
+                Admin
+              </span>
+            </Link>
           </div>
         </div>
       </div>
