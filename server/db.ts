@@ -156,6 +156,7 @@ function mapRow(r: any) {
     sourceUrl: r.source_url ?? null,
     lastVerified: r.last_verified ?? null,
     isRegenerative: (risScore ?? 0) > 70 ? 1 : 0,
+    reclaimed: r.reclaimed === true,
     lifecycle: [] as any[],
     epdMetadata: [] as any[],
     dataQuality: dataQualityScore != null ? JSON.stringify({ score: dataQualityScore }) : null,

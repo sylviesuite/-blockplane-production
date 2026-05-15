@@ -75,7 +75,9 @@ Rules:
 Respond with ONLY valid JSON — no markdown, no preamble:
 
 If alternatives exist:
-{"hasRecommendations":true,"recommendations":[{"material":"specific material name","carbonImpact":"~X% lower embodied carbon","rationale":"1–2 sentences on why this works for this assembly","climateNote":"1 sentence on cold-climate performance"}]}
+{"hasRecommendations":true,"recommendations":[{"material":"specific material name","carbonImpact":"~X% lower embodied carbon","rationale":"1–2 sentences on why this works for this assembly","climateNote":"1 sentence on cold-climate performance","reclaimed":false}]}
+
+Set "reclaimed":true for any material that is typically salvaged, reclaimed, or of unknown/variable provenance (e.g. reclaimed timber, salvaged brick, used steel). These require code compliance verification before specification.
 
 If no meaningful alternative:
 {"hasRecommendations":false,"noAlternativeMessage":"Specific explanation of why the current material is already performing well or why no meaningful swap exists."}`;
@@ -105,6 +107,7 @@ If no meaningful alternative:
           carbonImpact: String(r.carbonImpact ?? ""),
           rationale: String(r.rationale ?? ""),
           climateNote: r.climateNote ? String(r.climateNote) : undefined,
+          reclaimed: r.reclaimed === true,
         }));
         return { hasRecommendations: true as const, recommendations: recs };
       } catch {

@@ -99,7 +99,7 @@ export default function Benchmark() {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showSaveModal, setShowSaveModal] = useState(false);
 
-  type AiRec = { material: string; carbonImpact: string; rationale: string; climateNote?: string };
+  type AiRec = { material: string; carbonImpact: string; rationale: string; climateNote?: string; reclaimed?: boolean };
   type AiResult =
     | { hasRecommendations: true; recommendations: AiRec[] }
     | { hasRecommendations: false; noAlternativeMessage: string };
@@ -494,6 +494,14 @@ export default function Benchmark() {
                             <p className="text-[10px] italic" style={{ color: "rgba(245,242,236,0.4)" }}>
                               {rec.climateNote}
                             </p>
+                          )}
+                          {rec.reclaimed && (
+                            <span
+                              className="inline-block text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                              style={{ backgroundColor: amber + "22", color: amber }}
+                            >
+                              Verify code compliance before specifying.
+                            </span>
                           )}
                         </div>
                       ))}
