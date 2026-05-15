@@ -71,6 +71,7 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.23",
     "globals": "^16.4.0",
+    "jimp": "^1.6.1",
     "prettier": "^3.6.2",
     "sharp": "^0.34.5",
     "tailwindcss": "^4.2.1",
