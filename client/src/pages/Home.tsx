@@ -116,10 +116,10 @@ function Hero() {
           className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           style={{ color: cream }}
         >
-          Craft a sustainable future with BlockPlane Metric.
+          BlockPlane — helping craft a sustainable future.
         </h1>
         <p className="mt-3 text-base" style={{ color: "rgba(245,242,236,0.55)" }}>
-          A cradle-to-gate carbon calculator for building materials.
+          Smart material choices for builders, architects, and anyone who cares what goes into their project.
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
           Block Plane gives you verified embodied carbon data for 243 regional building
