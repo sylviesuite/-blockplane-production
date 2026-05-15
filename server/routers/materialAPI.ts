@@ -466,4 +466,11 @@ export const materialAPIRouter = router({
     
     return stats;
   }),
+
+  getFrontier: publicProcedure.query(async () => {
+    const all = await getAllMaterials();
+    return all
+      .filter((m) => (m.risScore !== null && m.risScore >= 80) || m.sourceUrl !== null)
+      .sort((a, b) => (b.risScore ?? -1) - (a.risScore ?? -1));
+  }),
 });

@@ -25,6 +25,11 @@ export function Header() {
               Materials
             </span>
           </Link>
+          <Link href="/frontier">
+            <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
+              Frontier
+            </span>
+          </Link>
           <Link href="/analysis">
             <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
               Analysis

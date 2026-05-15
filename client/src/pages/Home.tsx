@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
+import { FrontierTeaser } from "@/components/FrontierTeaser";
 
 // ── Design tokens (matching Lovable redesign) ─────────────────────────────────
 const forest = "#1a2e1f";
@@ -33,6 +34,13 @@ function Nav() {
             style={{ color: "rgba(245,242,236,0.6)" }}
           >
             Materials
+          </Link>
+          <Link
+            href="/frontier"
+            className="hidden text-sm font-medium md:inline transition-colors"
+            style={{ color: "rgba(245,242,236,0.6)" }}
+          >
+            Frontier
           </Link>
           <Link
             href="/analysis"
@@ -708,6 +716,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <ExampleStrip />
+      <FrontierTeaser />
       <BenchmarkTeaser />
       <What />
       <RDS />
