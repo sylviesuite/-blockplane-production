@@ -13,11 +13,11 @@ export function Header() {
     <header style={{ backgroundColor: forest }} className="sticky top-0 z-50 w-full">
       <div className="container flex h-14 items-center justify-between">
         <Link href="/" className="mr-6">
-          <div style={{ height: '44px', width: '44px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+          <div style={{ height: '54px', width: '54px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
             <img
               src="/assets/logo-blockplane.png"
               alt="BlockPlane"
-              style={{ display: 'block', height: '44px', width: '44px', borderRadius: '50%', mixBlendMode: 'normal', outline: 'none' }}
+              style={{ display: 'block', height: '54px', width: '54px', borderRadius: '50%', mixBlendMode: 'normal', outline: 'none' }}
             />
           </div>
         </Link>
