@@ -1,6 +1,5 @@
 import { Link } from 'wouter';
 import { LogIn, LogOut } from 'lucide-react';
-import { APP_TITLE } from '@/const';
 import { useAuth } from '@/contexts/AuthContext';
 
 const forest = '#1a2e1f';
@@ -14,9 +13,12 @@ export function Header() {
     <header style={{ backgroundColor: forest }} className="sticky top-0 z-50 w-full">
       <div className="container flex h-14 items-center">
         <Link href="/">
-          <span style={{ color: cream }} className="font-bold text-lg mr-8 cursor-pointer">
-            {APP_TITLE}
-          </span>
+          <img
+            src="/assets/logo-blockplane.png"
+            alt="BlockPlane"
+            height="40"
+            style={{ display: 'block' }}
+          />
         </Link>
 
         <nav className="flex flex-1 items-center gap-6 text-sm">

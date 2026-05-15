@@ -21,10 +21,12 @@ function Nav() {
     <nav className="border-b" style={{ backgroundColor: forest, borderColor: borderOnDark }}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-sm" style={{ backgroundColor: cream }} aria-hidden />
-          <span className="text-lg font-semibold tracking-tight" style={{ color: cream }}>
-            Block Plane
-          </span>
+          <img
+            src="/assets/logo-blockplane.png"
+            alt="BlockPlane"
+            height="40"
+            style={{ display: 'block' }}
+          />
         </Link>
 
         <div className="flex items-center gap-7">
