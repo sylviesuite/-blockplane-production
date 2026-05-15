@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Header } from "@/components/Header";
 import MinimalFooter from "@/components/MinimalFooter";
-import { X, Sparkles, TrendingDown, TrendingUp, ChevronRight, Bookmark } from "lucide-react";
+import { X, Sparkles, ChevronRight, Bookmark } from "lucide-react";
 import { SaveProjectModal } from "@/components/SaveProjectModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocation } from "wouter";
@@ -10,7 +10,6 @@ import { useLocation } from "wouter";
 const forest = "#1a2e1f";
 const cream = "#f5f2ec";
 const amber = "#c17f24";
-const M2_TO_SQFT = 10.764;
 
 // SVG zones mapped onto the 1536×1024 image using viewBox="0 0 100 100"
 // (x/y expressed as % of image width/height, preserveAspectRatio="none")
@@ -122,12 +121,6 @@ export default function Benchmark() {
 
   const activeAssembly = activeId && data ? (data.assemblies.find(a => a.id === activeId) ?? null) : null;
   const activeMeta = activeId ? (ASSEMBLY_META[activeId] ?? null) : null;
-
-  // Fetch swap alternatives for the active zone
-  const { data: swapData } = trpc.materialAPI.search.useQuery(
-    { query: activeAssembly?.dbSearchQuery || undefined, pageSize: 4, sortBy: "carbon", sortOrder: "asc" },
-    { enabled: !!activeAssembly?.dbSearchQuery, staleTime: 60_000 },
-  );
 
   function selectZone(id: string) {
     if (activeId === id) {
@@ -445,44 +438,6 @@ export default function Benchmark() {
                   style={{ color: "rgba(245,242,236,0.45)", borderBottom: "1px solid rgba(245,242,236,0.08)" }}>
                   {activeMeta.note}
                 </p>
-
-                {/* Swap alternatives */}
-                {swapData?.items && swapData.items.length > 0 && (
-                  <div className="px-4 py-3.5" style={{ borderBottom: "1px solid rgba(245,242,236,0.08)" }}>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider mb-2.5"
-                      style={{ color: "rgba(245,242,236,0.45)" }}>
-                      Swap Alternatives
-                    </p>
-                    <div className="space-y-1.5">
-                      {swapData.items.slice(0, 3).map((m) => {
-                        const altCpSqFt = parseFloat(m.totalCarbon) / M2_TO_SQFT;
-                        const altTotal  = Math.round(altCpSqFt * activeAssembly.quantity);
-                        const delta     = altTotal - activeAssembly.carbonTotal;
-                        return (
-                          <div key={m.id}
-                            className="flex items-center justify-between rounded-lg px-3 py-2"
-                            style={{ backgroundColor: "rgba(255,255,255,0.05)", border: "1px solid rgba(245,242,236,0.07)" }}>
-                            <div className="min-w-0 flex-1 mr-2">
-                              <p className="text-xs font-medium truncate" style={{ color: cream }}>{m.name}</p>
-                              <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>
-                                {altTotal.toLocaleString()} kg CO₂e
-                              </p>
-                            </div>
-                            <div className="shrink-0 flex items-center gap-1">
-                              {delta < 0
-                                ? <TrendingDown className="h-3 w-3 text-emerald-400" />
-                                : <TrendingUp   className="h-3 w-3 text-red-400"     />}
-                              <span className="text-xs font-bold tabular-nums"
-                                style={{ color: delta < 0 ? "#6ee7b7" : "#fca5a5" }}>
-                                {delta < 0 ? "−" : "+"}{Math.abs(delta).toLocaleString()}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
 
                 {/* AI recommendations */}
                 <div className="px-4 py-3.5">
