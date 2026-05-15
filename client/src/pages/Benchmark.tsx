@@ -478,15 +478,13 @@ export default function Benchmark() {
                       {aiResult.hasRecommendations && aiResult.recommendations.map((rec, i) => (
                         <div key={i} className="rounded-lg p-3 space-y-1.5"
                           style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(245,242,236,0.1)" }}>
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="text-xs font-semibold leading-snug" style={{ color: cream }}>
-                              {rec.material}
-                            </p>
-                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 whitespace-nowrap"
-                              style={{ backgroundColor: amber + "25", color: amber }}>
-                              {rec.carbonImpact}
-                            </span>
-                          </div>
+                          <p className="text-xs font-semibold leading-snug" style={{ color: cream }}>
+                            {rec.material}
+                          </p>
+                          <span className="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded-full"
+                            style={{ backgroundColor: amber + "25", color: amber }}>
+                            {rec.carbonImpact}
+                          </span>
                           <p className="text-[11px] leading-relaxed" style={{ color: "rgba(245,242,236,0.65)" }}>
                             {rec.rationale}
                           </p>
