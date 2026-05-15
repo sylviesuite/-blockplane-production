@@ -31,6 +31,7 @@ import TermsOfService from "./pages/TermsOfService";
 import HowItWorks from "./pages/HowItWorks";
 import CarbonCalculator from "./pages/CarbonCalculator";
 import Benchmark from "./pages/Benchmark";
+import MyProjects from "./pages/MyProjects";
 import AuthGate from "./components/AuthGate";
 
 function DefaultRoute() {
@@ -55,6 +56,9 @@ function Router() {
       <Route path="/materials/:id" component={MaterialDetailEnhanced} />
       <Route path="/projects">
         {() => <AuthGate redirect><ProjectAnalysis /></AuthGate>}
+      </Route>
+      <Route path="/my-projects">
+        {() => <AuthGate redirect><MyProjects /></AuthGate>}
       </Route>
       <Route path="/admin">
         {() => <AuthGate redirect><AdminDashboard /></AuthGate>}

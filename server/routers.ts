@@ -16,6 +16,7 @@ import { publicAPIRouter } from './routers/publicAPI';
 import { supplierRouter } from './routers/supplier';
 import { materialAPIRouter } from './routers/materialAPI';
 import { benchmarkRouter } from './routers/benchmark';
+import { projectsRouter } from './routers/projects';
 import { selectRelevantMemories } from './ai/memoryGate';
 
 const MEMORY_BEHAVIOR_RULE =
@@ -244,6 +245,9 @@ export const appRouter = router({
 
   // Benchmark 2000 reference building model
   benchmark: benchmarkRouter,
+
+  // User-saved projects (Material Browser / Benchmark snapshots)
+  projects: projectsRouter,
 
   // Material recommendations
   recommendations: router({

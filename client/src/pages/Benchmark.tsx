@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Header } from "@/components/Header";
 import MinimalFooter from "@/components/MinimalFooter";
-import { X, Sparkles, TrendingDown, TrendingUp, ChevronRight } from "lucide-react";
+import { X, Sparkles, TrendingDown, TrendingUp, ChevronRight, Bookmark } from "lucide-react";
+import { SaveProjectModal } from "@/components/SaveProjectModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { useLocation } from "wouter";
 
 const forest = "#1a2e1f";
 const cream = "#f5f2ec";
@@ -90,12 +93,27 @@ function risColor(ris: number) {
 }
 
 export default function Benchmark() {
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
   const { data, isLoading } = trpc.benchmark.getSpec.useQuery(undefined, { staleTime: Infinity });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiText, setAiText] = useState<string | null>(null);
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const aiChat = trpc.ai.chat.useMutation();
+
+  // Load from saved project if ?load=<id> is present
+  const [loadProjectId] = useState(() => new URLSearchParams(window.location.search).get('load'));
+  const { data: loadedProject } = trpc.projects.get.useQuery(
+    { id: loadProjectId! },
+    { enabled: !!loadProjectId && !!user }
+  );
+  useEffect(() => {
+    if (!loadedProject) return;
+    const savedActiveId = (loadedProject as any).project_data?.activeId;
+    if (savedActiveId) setActiveId(savedActiveId);
+  }, [loadedProject]);
 
   const activeAssembly = activeId && data ? (data.assemblies.find(a => a.id === activeId) ?? null) : null;
   const activeMeta = activeId ? (ASSEMBLY_META[activeId] ?? null) : null;
@@ -161,20 +179,35 @@ export default function Benchmark() {
       <main className="flex-1 w-full max-w-[1400px] mx-auto px-4 sm:px-6 py-8">
 
         {/* Page header */}
-        <div className="mb-6">
-          <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "rgba(245,242,236,0.45)" }}>
-            Reference standard
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: cream }}>
-            {house.name}
-          </h1>
-          <p className="mt-1 text-sm" style={{ color: "rgba(245,242,236,0.6)" }}>
-            {house.description} · {house.footprint} footprint · Garage: {house.garage}
-          </p>
-          <p className="mt-1.5 text-xs" style={{ color: "rgba(245,242,236,0.35)" }}>
-            Click a labeled zone on the house to explore carbon data, RIS score, and swap alternatives
-          </p>
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-wider mb-1" style={{ color: "rgba(245,242,236,0.45)" }}>
+              Reference standard
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: cream }}>
+              {house.name}
+            </h1>
+            <p className="mt-1 text-sm" style={{ color: "rgba(245,242,236,0.6)" }}>
+              {house.description} · {house.footprint} footprint · Garage: {house.garage}
+            </p>
+            <p className="mt-1.5 text-xs" style={{ color: "rgba(245,242,236,0.35)" }}>
+              Click a labeled zone on the house to explore carbon data, RIS score, and swap alternatives
+            </p>
+          </div>
+          <button
+            onClick={() => user ? setShowSaveModal(true) : navigate("/login")}
+            className="flex items-center gap-2 text-sm px-3 py-1.5 rounded border transition-colors shrink-0"
+            style={{ color: "rgba(245,242,236,0.7)", borderColor: "rgba(245,242,236,0.25)", backgroundColor: "transparent" }}
+          >
+            <Bookmark className="w-4 h-4" />
+            Save View
+          </button>
         </div>
+        <SaveProjectModal
+          open={showSaveModal}
+          onClose={() => setShowSaveModal(false)}
+          projectData={{ type: "benchmark", activeId }}
+        />
 
         {/* Main two-column layout */}
         <div className="flex flex-col lg:flex-row gap-5 items-start">

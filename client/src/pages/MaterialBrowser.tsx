@@ -16,34 +16,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
 } from "@/components/ui/select";
-import { 
-  Search, 
-  Filter, 
-  Leaf, 
-  TrendingDown, 
-  DollarSign, 
-  ChevronLeft, 
+import {
+  Search,
+  Filter,
+  Leaf,
+  TrendingDown,
+  DollarSign,
+  ChevronLeft,
   ChevronRight,
   AlertCircle,
   CheckCircle,
-  Info
+  Info,
+  Bookmark,
+  PlusCircle
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Header } from "@/components/Header";
 import { SubmitMaterialModal } from "@/components/SubmitMaterialModal";
-import { PlusCircle } from "lucide-react";
+import { SaveProjectModal } from "@/components/SaveProjectModal";
+import { useAuth } from "@/contexts/AuthContext";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
 export default function MaterialBrowser() {
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
   const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+
+  // Load from saved project if ?load=<id> is present
+  const [loadProjectId] = useState(() => new URLSearchParams(window.location.search).get('load'));
 
   // Search and filter state
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,6 +64,24 @@ export default function MaterialBrowser() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 12;
+
+  // Restore state from a saved project
+  const { data: loadedProject } = trpc.projects.get.useQuery(
+    { id: loadProjectId! },
+    { enabled: !!loadProjectId && !!user }
+  );
+  useEffect(() => {
+    if (!loadedProject) return;
+    const f = (loadedProject as any).project_data?.filters;
+    if (!f) return;
+    if (f.searchQuery !== undefined) setSearchQuery(f.searchQuery);
+    if (f.selectedCategories) setSelectedCategories(f.selectedCategories);
+    if (f.minRIS !== undefined) setMinRIS(f.minRIS);
+    if (f.maxCarbonSqFt !== undefined) setMaxCarbonSqFt(f.maxCarbonSqFt);
+    if (f.regenerativeOnly !== undefined) setRegenerativeOnly(f.regenerativeOnly);
+    if (f.sortBy) setSortBy(f.sortBy);
+    if (f.sortOrder) setSortOrder(f.sortOrder);
+  }, [loadedProject]);
 
   // Fetch materials with current filters
   const { data: searchResults, isLoading } = trpc.materialAPI.search.useQuery({
@@ -131,17 +158,36 @@ export default function MaterialBrowser() {
               Imperial units · Northern Michigan region
             </p>
           </div>
-          <Button
-            onClick={() => setShowSubmitModal(true)}
-            className="flex items-center gap-2 shrink-0"
-            style={{ backgroundColor: '#c17f24', color: '#fff', border: 'none' }}
-          >
-            <PlusCircle className="w-4 h-4" />
-            Submit a Material
-          </Button>
+          <div className="flex items-center gap-2 shrink-0">
+            <Button
+              variant="outline"
+              onClick={() => user ? setShowSaveModal(true) : navigate("/login")}
+              className="flex items-center gap-2"
+              style={{ backgroundColor: 'transparent', color: '#f5f2ec', borderColor: 'rgba(245,242,236,0.35)' }}
+            >
+              <Bookmark className="w-4 h-4" />
+              Save View
+            </Button>
+            <Button
+              onClick={() => setShowSubmitModal(true)}
+              className="flex items-center gap-2"
+              style={{ backgroundColor: '#c17f24', color: '#fff', border: 'none' }}
+            >
+              <PlusCircle className="w-4 h-4" />
+              Submit a Material
+            </Button>
+          </div>
         </div>
       </div>
       <SubmitMaterialModal open={showSubmitModal} onClose={() => setShowSubmitModal(false)} />
+      <SaveProjectModal
+        open={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        projectData={{
+          type: "material_browser",
+          filters: { searchQuery, selectedCategories, minRIS, maxCarbonSqFt, regenerativeOnly, sortBy, sortOrder },
+        }}
+      />
 
       <div className="container py-5">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

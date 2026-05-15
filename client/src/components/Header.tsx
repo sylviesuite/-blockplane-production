@@ -50,9 +50,9 @@ export function Header() {
         <div className="ml-auto flex items-center gap-4 text-sm">
           {user ? (
             <>
-              <Link href="/projects">
+              <Link href="/my-projects">
                 <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
-                  Account
+                  My Projects
                 </span>
               </Link>
               <button
