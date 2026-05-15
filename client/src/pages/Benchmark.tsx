@@ -98,10 +98,15 @@ export default function Benchmark() {
   const { data, isLoading } = trpc.benchmark.getSpec.useQuery(undefined, { staleTime: Infinity });
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiText, setAiText] = useState<string | null>(null);
   const [showSaveModal, setShowSaveModal] = useState(false);
-  const aiChat = trpc.ai.chat.useMutation();
+
+  type AiRec = { material: string; carbonImpact: string; rationale: string; climateNote?: string };
+  type AiResult =
+    | { hasRecommendations: true; recommendations: AiRec[] }
+    | { hasRecommendations: false; noAlternativeMessage: string };
+  const [aiResult, setAiResult] = useState<AiResult | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const getRecs = trpc.benchmark.getRecommendations.useMutation();
 
   // Load from saved project if ?load=<id> is present
   const [loadProjectId] = useState(() => new URLSearchParams(window.location.search).get('load'));
@@ -129,21 +134,27 @@ export default function Benchmark() {
       setActiveId(null);
     } else {
       setActiveId(id);
-      setAiText(null);
+      setAiResult(null);
     }
   }
 
   async function getAiRec() {
     if (!activeAssembly || !activeMeta) return;
     setAiLoading(true);
-    setAiText(null);
+    setAiResult(null);
     try {
-      const result = await aiChat.mutateAsync({
-        question: `Give a specific recommendation for improving the embodied carbon of the "${activeAssembly.name}" in a conventional 2,000 sq ft wood-frame home in Northern Michigan (Climate Zone 6). Current: ${activeAssembly.carbonTotal.toLocaleString()} kg CO₂e (${activeAssembly.carbonPerSqFt.toFixed(2)} kg/sq ft). RIS ${activeMeta.ris}/100. What 1–2 alternative materials would meaningfully reduce carbon while maintaining performance in a cold climate? Be specific and concise.`,
+      const result = await getRecs.mutateAsync({
+        assemblyName: activeAssembly.name,
+        carbonTotal: activeAssembly.carbonTotal,
+        carbonPerSqFt: activeAssembly.carbonPerSqFt,
+        ris: activeMeta.ris,
       });
-      setAiText(typeof result.answer === "string" ? result.answer : "See recommendation above.");
+      setAiResult(result as AiResult);
     } catch {
-      setAiText("AI recommendation unavailable. Please try again.");
+      setAiResult({
+        hasRecommendations: false,
+        noAlternativeMessage: "AI recommendation unavailable. Please try again.",
+      });
     } finally {
       setAiLoading(false);
     }
@@ -473,9 +484,9 @@ export default function Benchmark() {
                   </div>
                 )}
 
-                {/* AI recommendation */}
+                {/* AI recommendations */}
                 <div className="px-4 py-3.5">
-                  {!aiText ? (
+                  {!aiResult && (
                     <button
                       onClick={getAiRec}
                       disabled={aiLoading}
@@ -483,23 +494,54 @@ export default function Benchmark() {
                       style={{ backgroundColor: amber, color: forest, opacity: aiLoading ? 0.7 : 1 }}
                     >
                       <Sparkles className="h-4 w-4" />
-                      {aiLoading ? "Getting recommendation…" : "Get AI Recommendation"}
+                      {aiLoading ? "Analyzing alternatives…" : "Get AI Recommendations"}
                     </button>
-                  ) : (
-                    <div className="space-y-2">
+                  )}
+
+                  {aiResult && (
+                    <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
                         <p className="text-[10px] font-semibold uppercase tracking-wider"
                           style={{ color: "rgba(245,242,236,0.45)" }}>
-                          AI Recommendation
+                          AI Recommendations
                         </p>
-                        <button onClick={() => setAiText(null)} className="text-xs"
+                        <button onClick={() => setAiResult(null)} className="text-xs"
                           style={{ color: "rgba(245,242,236,0.35)" }}>
                           Dismiss
                         </button>
                       </div>
-                      <p className="text-xs leading-relaxed" style={{ color: "rgba(245,242,236,0.82)" }}>
-                        {aiText}
-                      </p>
+
+                      {!aiResult.hasRecommendations && (
+                        <div className="rounded-lg px-3 py-2.5"
+                          style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(245,242,236,0.08)" }}>
+                          <p className="text-xs leading-relaxed" style={{ color: "rgba(245,242,236,0.55)" }}>
+                            {aiResult.noAlternativeMessage}
+                          </p>
+                        </div>
+                      )}
+
+                      {aiResult.hasRecommendations && aiResult.recommendations.map((rec, i) => (
+                        <div key={i} className="rounded-lg p-3 space-y-1.5"
+                          style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(245,242,236,0.1)" }}>
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-xs font-semibold leading-snug" style={{ color: cream }}>
+                              {rec.material}
+                            </p>
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 whitespace-nowrap"
+                              style={{ backgroundColor: amber + "25", color: amber }}>
+                              {rec.carbonImpact}
+                            </span>
+                          </div>
+                          <p className="text-[11px] leading-relaxed" style={{ color: "rgba(245,242,236,0.65)" }}>
+                            {rec.rationale}
+                          </p>
+                          {rec.climateNote && (
+                            <p className="text-[10px] italic" style={{ color: "rgba(245,242,236,0.4)" }}>
+                              {rec.climateNote}
+                            </p>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
                 </div>
