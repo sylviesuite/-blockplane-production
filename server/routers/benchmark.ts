@@ -1,17 +1,38 @@
 import { z } from "zod";
 import { router, publicProcedure } from "../_core/trpc";
-import { invokeLLM } from "../_core/llm";
 import { BENCHMARK_HOUSE, BENCHMARK_ASSEMBLIES, BENCHMARK_REFERENCE_TOTAL_KG } from "../data/benchmark2000";
 
-function extractText(content: unknown): string {
-  if (typeof content === "string") return content;
-  if (Array.isArray(content)) {
-    return content
-      .filter((p: any) => p?.type === "text")
-      .map((p: any) => p.text ?? "")
-      .join("");
+const FALLBACK = {
+  hasRecommendations: false as const,
+  noAlternativeMessage: "AI recommendation service unavailable. Please try again later.",
+};
+
+async function callClaude(prompt: string): Promise<string> {
+  const apiKey = process.env.CLAUDE_API_KEY;
+  if (!apiKey) throw new Error("CLAUDE_API_KEY is not configured");
+
+  const model = process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6";
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 1024,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text().catch(() => "");
+    throw new Error(`Claude API error ${res.status}: ${err.slice(0, 200)}`);
   }
-  return "";
+
+  const data: any = await res.json();
+  return data.content?.[0]?.text ?? "";
 }
 
 export const benchmarkRouter = router({
@@ -31,16 +52,18 @@ export const benchmarkRouter = router({
       ris: z.number(),
     }))
     .mutation(async ({ input }) => {
-      const result = await invokeLLM({
-        messages: [{
-          role: "user",
-          content:
+      const risLabel = input.ris >= 70 ? "Regenerative"
+        : input.ris >= 40 ? "Low-impact"
+        : input.ris >= 25 ? "Standard"
+        : "High-impact";
+
+      const prompt =
 `You are a sustainable building materials expert for Northern Michigan residential construction (Climate Zone 6, heavy snow, high moisture risk).
 
 Evaluate this building assembly and identify whether better material alternatives exist:
 - Assembly: ${input.assemblyName}
 - Current embodied carbon: ${input.carbonTotal.toLocaleString()} kg CO₂e total (${input.carbonPerSqFt.toFixed(2)} kg CO₂e/sq ft)
-- RIS (Regenerative Impact Score): ${input.ris}/100 — ${input.ris >= 70 ? "Regenerative" : input.ris >= 40 ? "Low-impact" : input.ris >= 25 ? "Standard" : "High-impact"}
+- RIS (Regenerative Impact Score): ${input.ris}/100 — ${risLabel}
 
 Rules:
 - Only recommend alternatives that would meaningfully reduce embodied carbon (>10% improvement)
@@ -55,19 +78,18 @@ If alternatives exist:
 {"hasRecommendations":true,"recommendations":[{"material":"specific material name","carbonImpact":"~X% lower embodied carbon","rationale":"1–2 sentences on why this works for this assembly","climateNote":"1 sentence on cold-climate performance"}]}
 
 If no meaningful alternative:
-{"hasRecommendations":false,"noAlternativeMessage":"Specific explanation of why the current material is already performing well or why no meaningful swap exists."}`,
-        }],
-      });
+{"hasRecommendations":false,"noAlternativeMessage":"Specific explanation of why the current material is already performing well or why no meaningful swap exists."}`;
 
-      const text = extractText(result.choices[0]?.message?.content);
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-
-      if (!jsonMatch) {
-        return {
-          hasRecommendations: false as const,
-          noAlternativeMessage: "Unable to generate recommendations right now. Please try again.",
-        };
+      let text: string;
+      try {
+        text = await callClaude(prompt);
+      } catch (err) {
+        console.error("[benchmark.getRecommendations] Claude call failed:", err);
+        return FALLBACK;
       }
+
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) return FALLBACK;
 
       try {
         const parsed = JSON.parse(jsonMatch[0]);
@@ -75,8 +97,7 @@ If no meaningful alternative:
           return {
             hasRecommendations: false as const,
             noAlternativeMessage:
-              parsed.noAlternativeMessage ??
-              "No significant improvement found for this assembly.",
+              parsed.noAlternativeMessage ?? "No significant improvement found for this assembly.",
           };
         }
         const recs = ((parsed.recommendations ?? []) as any[]).slice(0, 3).map((r: any) => ({
@@ -87,10 +108,7 @@ If no meaningful alternative:
         }));
         return { hasRecommendations: true as const, recommendations: recs };
       } catch {
-        return {
-          hasRecommendations: false as const,
-          noAlternativeMessage: "Unable to parse recommendations. Please try again.",
-        };
+        return FALLBACK;
       }
     }),
 });
