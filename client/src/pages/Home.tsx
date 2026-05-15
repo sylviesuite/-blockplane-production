@@ -122,8 +122,7 @@ function Hero() {
           Smart material choices for builders, architects, and anyone who cares what goes into their project.
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
-          Block Plane gives you verified embodied carbon data for 243 regional building
-          materials.
+          260+ materials scored for embodied carbon, regenerative impact, and regional feasibility.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
