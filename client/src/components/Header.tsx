@@ -12,14 +12,14 @@ export function Header() {
   return (
     <header style={{ backgroundColor: forest }} className="sticky top-0 z-50 w-full">
       <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="mr-6 shrink-0">
-          <img
-            src="/assets/logo-blockplane.png"
-            alt="BlockPlane"
-            height="44"
-            width="44"
-            style={{ display: 'block', borderRadius: '50%' }}
-          />
+        <Link href="/" className="mr-6">
+          <div style={{ height: '44px', width: '44px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              src="/assets/logo-blockplane.png"
+              alt="BlockPlane"
+              style={{ display: 'block', height: '44px', width: '44px', borderRadius: '50%', mixBlendMode: 'normal', outline: 'none' }}
+            />
+          </div>
         </Link>
 
         <nav className="flex flex-1 items-center gap-6 text-sm">

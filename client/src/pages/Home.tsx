@@ -21,12 +21,13 @@ function Nav() {
     <nav className="border-b" style={{ backgroundColor: forest, borderColor: borderOnDark }}>
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-2">
-          <img
-            src="/assets/logo-blockplane.png"
-            alt="BlockPlane"
-            height="40"
-            style={{ display: 'block' }}
-          />
+          <div style={{ height: '44px', width: '44px', borderRadius: '50%', overflow: 'hidden', flexShrink: 0 }}>
+            <img
+              src="/assets/logo-blockplane.png"
+              alt="BlockPlane"
+              style={{ display: 'block', height: '44px', width: '44px', borderRadius: '50%', mixBlendMode: 'normal', outline: 'none' }}
+            />
+          </div>
         </Link>
 
         <div className="flex items-center gap-7">
