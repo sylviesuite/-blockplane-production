@@ -9,7 +9,7 @@ import { openaiProvider } from "@/lib/ai/providers/openaiProvider";
 
 const hasOpenAiKey = Boolean(import.meta.env.VITE_OPENAI_API_KEY);
 
-const providerPreference = (import.meta.env.VITE_AI_PROVIDER as AIProviderName | undefined) ?? "mock";
+const providerPreference = (import.meta.env.VITE_AI_PROVIDER as AIProviderName | undefined) ?? "claude";
 
 const mockProvider: InsightProvider = {
   async generateMaterialInsight(input: MaterialInsightInput): Promise<InsightGenerationResult> {

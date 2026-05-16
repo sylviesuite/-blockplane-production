@@ -195,13 +195,15 @@ export default function MaterialDetailEnhanced() {
                 <Leaf className="w-3 h-3 mr-1" /> Regenerative
               </Badge>
             )}
-            <span
-              className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border ${confidenceBadgeClass[confidenceLevel]}`}
-            >
-              <ConfidenceIcon />
-              {confidenceLevel} confidence
-            </span>
-            {(confidenceLevel === "Low" || confidenceLevel === "None") && (
+            {confidenceLevel && confidenceLevel !== "None" && (
+              <span
+                className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border ${confidenceBadgeClass[confidenceLevel]}`}
+              >
+                <ConfidenceIcon />
+                {confidenceLevel} confidence
+              </span>
+            )}
+            {confidenceLevel === "Low" && (
               <span className="inline-flex items-center gap-1 text-xs text-amber-300">
                 <AlertCircle className="w-3 h-3" /> Verify before use
               </span>
@@ -390,15 +392,17 @@ export default function MaterialDetailEnhanced() {
                 <CardTitle className="text-sm font-semibold">Data Quality</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-3 pt-1 space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Confidence</span>
-                  <span
-                    className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border ${confidenceBadgeClass[confidenceLevel]}`}
-                  >
-                    <ConfidenceIcon />
-                    {confidenceLevel}
-                  </span>
-                </div>
+                {confidenceLevel && confidenceLevel !== "None" && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Confidence</span>
+                    <span
+                      className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border ${confidenceBadgeClass[confidenceLevel]}`}
+                    >
+                      <ConfidenceIcon />
+                      {confidenceLevel}
+                    </span>
+                  </div>
+                )}
                 {material.dataQualityScore != null && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Quality score</span>
