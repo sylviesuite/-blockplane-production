@@ -64,7 +64,7 @@ const CATEGORY_NOTES: Record<string, string> = {
   Finishes: "Interior finish material",
   Foundation: "Foundation or subgrade system",
   Landscaping: "Site or landscaping material",
-  "Wall Systems": "Wall assembly system",
+  "wall_systems": "Wall assembly system",
   Composites: "Composite material",
   Mechanical: "Mechanical system component",
 };
