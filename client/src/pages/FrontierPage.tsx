@@ -31,24 +31,23 @@ const LIS_BADGE: Record<string, { bg: string; color: string; desc: string }> = {
   "Early":    { bg: "#FAEEDA", color: "#633806", desc: "Estimated" },
 };
 
-const GL_HIGH = new Set(["Timber", "Earth", "Insulation", "Landscaping"]);
-
-function deriveRISSignal(ris: number | null): "Very High" | "High" | "Moderate" | null {
-  if (ris === null) return null;
-  if (ris >= 90) return "Very High";
-  if (ris >= 80) return "High";
-  if (ris >= 60) return "Moderate";
-  return null;
+function deriveRISSignal(ris: number | null): "Very High" | "High" | "Moderate" {
+  if (ris !== null && ris >= 90) return "Very High";
+  if (ris !== null && ris >= 80) return "High";
+  return "Moderate";
 }
 
 function deriveLIS(lisScore: number, sourceUrl: string | null): "Strong" | "Emerging" | "Early" {
   if (sourceUrl) return "Strong";
-  if (lisScore > 0) return "Emerging";
+  if (lisScore > 60) return "Emerging";
   return "Early";
 }
 
 function deriveGL(category: string): "High" | "Moderate" | "Low" {
-  return GL_HIGH.has(category) ? "High" : "Moderate";
+  const cat = category?.toLowerCase() || '';
+  if (['timber', 'earth', 'insulation', 'landscaping', 'flooring', 'roofing', 'reclaimed', 'cladding', 'siding'].some(c => cat.includes(c))) return 'High';
+  if (['biofabricated', 'cement', 'concrete', 'composite'].some(c => cat.includes(c))) return 'Moderate';
+  return 'Moderate';
 }
 
 const CATEGORY_NOTES: Record<string, string> = {
