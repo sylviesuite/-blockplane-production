@@ -10,9 +10,13 @@ build/
 # Environment variables
 .env
 .env.local
+.env.production
+.env*.local
 .env.development.local
 .env.test.local
 .env.production.local
+server/.env
+client/.env
 
 # IDE and editor files
 .vscode/
@@ -103,6 +107,8 @@ temp/
 
 # Local dev scripts (not for version control)
 server/scripts/run-agent.ts
+query-supabase.mjs
+scripts/insert-frontier.mjs
 
 # Database
 *.db
