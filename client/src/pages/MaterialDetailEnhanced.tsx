@@ -195,7 +195,7 @@ export default function MaterialDetailEnhanced() {
                 <Leaf className="w-3 h-3 mr-1" /> Regenerative
               </Badge>
             )}
-            {confidenceLevel && confidenceLevel !== "None" && (
+            {confidenceLevel && confidenceLevel.toLowerCase() !== "none" && (
               <span
                 className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border ${confidenceBadgeClass[confidenceLevel]}`}
               >
@@ -392,7 +392,7 @@ export default function MaterialDetailEnhanced() {
                 <CardTitle className="text-sm font-semibold">Data Quality</CardTitle>
               </CardHeader>
               <CardContent className="px-4 pb-3 pt-1 space-y-2">
-                {confidenceLevel && confidenceLevel !== "None" && (
+                {confidenceLevel && confidenceLevel.toLowerCase() !== "none" && (
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Confidence</span>
                     <span

@@ -35,7 +35,7 @@ async function handleInsight(req: Request, res: Response) {
       body: JSON.stringify({
         model: CLAUDE_MODEL,
         max_tokens: 300,
-        system: "You are a building material analyst. Write a calm, practical 3-sentence summary of this material's sustainability performance based on its LIS, RIS, and CPI scores.",
+        system: "You are a building material analyst for BlockPlane Metric. Write a calm, practical 3-sentence summary of this material's sustainability performance based on its LIS, RIS, and CPI scores. Be specific and useful to a builder or architect.",
         messages: [{ role: "user", content: userMessage }],
       }),
     });
