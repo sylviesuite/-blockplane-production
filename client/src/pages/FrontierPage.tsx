@@ -45,8 +45,10 @@ function deriveLIS(lisScore: number, sourceUrl: string | null): "Strong" | "Emer
 
 function deriveGL(category: string): "High" | "Moderate" | "Low" {
   const cat = category?.toLowerCase() || '';
-  if (['timber', 'earth', 'insulation', 'landscaping', 'flooring', 'roofing', 'reclaimed', 'cladding', 'siding'].some(c => cat.includes(c))) return 'High';
-  if (['biofabricated', 'cement', 'concrete', 'composite'].some(c => cat.includes(c))) return 'Moderate';
+  const high = ['timber', 'earth', 'insulation', 'landscaping', 'flooring', 'roofing', 'reclaimed', 'cladding', 'siding', 'walls', 'wall_systems', 'masonry', 'engineered_wood'];
+  const moderate = ['biofabricated', 'cement', 'concrete', 'composite', 'coatings', 'windows', 'mechanical'];
+  if (high.some(c => cat.includes(c))) return 'High';
+  if (moderate.some(c => cat.includes(c))) return 'Moderate';
   return 'Moderate';
 }
 
