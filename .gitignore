@@ -107,8 +107,6 @@ temp/
 
 # Local dev scripts (not for version control)
 server/scripts/run-agent.ts
-query-supabase.mjs
-scripts/insert-frontier.mjs
 
 # Database
 *.db
