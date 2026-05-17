@@ -21,6 +21,7 @@ import { registerChatRoutes } from "../routes/chat";
 import { registerAgentRoutes } from "../routes/agent";
 import { registerFlagMaterialRoutes } from "../routes/flagMaterial";
 import { registerCompareInsightRoutes } from "../routes/compareInsight";
+import { registerEc3Routes } from "../routes/ec3";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -80,6 +81,7 @@ async function startServer() {
   registerAgentRoutes(app);
   registerFlagMaterialRoutes(app);
   registerCompareInsightRoutes(app);
+  registerEc3Routes(app);
 
   // Diagnostic endpoint — checks env vars and Supabase reachability
   app.get("/api/diag", async (req, res) => {
