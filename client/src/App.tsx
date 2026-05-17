@@ -33,6 +33,7 @@ import CarbonCalculator from "./pages/CarbonCalculator";
 import Benchmark from "./pages/Benchmark";
 import MyProjects from "./pages/MyProjects";
 import FrontierPage from "./pages/FrontierPage";
+import ComparePage from "./pages/ComparePage";
 import AuthGate from "./components/AuthGate";
 
 function DefaultRoute() {
@@ -74,6 +75,7 @@ function Router() {
         {() => <AuthGate redirect><GlobalImpactDashboard /></AuthGate>}
       </Route>
       <Route path="/frontier" component={FrontierPage} />
+      <Route path="/compare" component={ComparePage} />
       <Route path="/materials" component={MaterialBrowser} />
       <Route path="/api-docs" component={APIDocumentation} />
       <Route path="/login" component={Login} />

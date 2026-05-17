@@ -126,7 +126,7 @@ function Hero() {
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
-            href="/materials"
+            href="/compare"
             className="rounded-md px-6 py-3.5 text-base font-semibold text-white transition-colors"
             style={{ backgroundColor: amber }}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = amberHover)}
