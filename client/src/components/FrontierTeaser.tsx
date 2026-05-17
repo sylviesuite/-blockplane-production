@@ -105,13 +105,13 @@ export function FrontierTeaser() {
                       </span>
                     </div>
 
-                    {/* Material name — clamped to 2 lines for uniform card height */}
+                    {/* Material name */}
                     <h3
-                      className="mt-3 line-clamp-2 text-base font-semibold leading-snug"
+                      className="mt-3 text-base font-semibold leading-snug"
                       style={{ color: cream }}
                       title={m.name}
                     >
-                      {m.name}
+                      {m.name.length > 40 ? m.name.slice(0, 40).trimEnd() + '...' : m.name}
                     </h3>
 
                     {/* Manufacturer */}
