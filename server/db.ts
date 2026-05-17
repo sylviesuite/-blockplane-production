@@ -157,6 +157,7 @@ function mapRow(r: any) {
     lastVerified: r.last_verified ?? null,
     isRegenerative: (risScore ?? 0) > 70 ? 1 : 0,
     reclaimed: r.reclaimed === true,
+    scoreConfidence: (r.score_confidence ?? "placeholder") as "verified" | "estimated" | "placeholder",
     lifecycle: [] as any[],
     epdMetadata: [] as any[],
     dataQuality: dataQualityScore != null ? JSON.stringify({ score: dataQualityScore }) : null,
@@ -213,7 +214,7 @@ export async function getAllMaterials() {
     }
 
     const rows = await supabaseFetch(
-      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=2000"
+      "materials?select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,score_confidence,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=2000"
     );
     let materials = mapRowsToMaterials(rows as any[]);
     if (materials.length === 0 && useFallback) {
@@ -244,7 +245,7 @@ export async function getMaterialById(id: string) {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
     if (supabaseUrl && supabaseKey) {
       const rows = await supabaseFetch(
-        `materials?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=1`
+        `materials?id=eq.${encodeURIComponent(id)}&select=id,name,category,subcategory,manufacturer,description,data_quality_score,source,source_url,last_verified,score_confidence,carbon_footprints(total_carbon_cradle_to_gate,functional_unit),lis_ris_scores(lis_score,ris_score)&limit=1`
       );
       if ((rows as any[]).length) return mapRow((rows as any[])[0]);
     }

@@ -3,6 +3,8 @@ import { trpc } from "@/lib/trpc";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { Settings2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
 
 const teal = "#0F6E56";
 const forest = "#1a2e1f";
@@ -73,8 +75,12 @@ const CATEGORY_NOTES: Record<string, string> = {
 
 export default function FrontierPage() {
   const { data: raw = [], isLoading } = trpc.materialAPI.getFrontier.useQuery();
+  const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
+
   const [activeCategory, setActiveCategory] = useState("All");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [showUnreviewed, setShowUnreviewed] = useState(false);
   const [filterRIS, setFilterRIS] = useState("All");
   const [filterGL, setFilterGL] = useState("All");
   const [filterLIS, setFilterLIS] = useState("All");
@@ -95,19 +101,20 @@ export default function FrontierPage() {
 
   const filtered = useMemo(() =>
     enriched.filter((m) => {
+      if (!showUnreviewed && m.scoreConfidence === "placeholder") return false;
       if (activeCategory !== "All" && m.category !== activeCategory) return false;
       if (filterRIS !== "All" && m.risSignal !== filterRIS) return false;
       if (filterGL !== "All" && m.glFeasibility !== filterGL) return false;
       if (filterLIS !== "All" && m.lisSignal !== filterLIS) return false;
       return true;
     }),
-  [enriched, activeCategory, filterRIS, filterGL, filterLIS]);
+  [enriched, showUnreviewed, activeCategory, filterRIS, filterGL, filterLIS]);
 
   const stats = useMemo(() => ({
-    total: enriched.length,
-    categories: new Set(enriched.map((m) => m.category)).size,
-    highGL: enriched.filter((m) => m.glFeasibility === "High").length,
-  }), [enriched]);
+    total: filtered.length,
+    categories: new Set(filtered.map((m) => m.category)).size,
+    highGL: filtered.filter((m) => m.glFeasibility === "High").length,
+  }), [filtered]);
 
   function clearFilters() {
     setActiveCategory("All");
@@ -185,16 +192,28 @@ export default function FrontierPage() {
             ))}
           </div>
 
-          {/* Advanced filters toggle */}
+          {/* Toolbar: advanced filters + admin unreviewed toggle */}
+          <div className="flex items-center gap-4 mb-4 flex-wrap">
           <button
             onClick={() => setShowAdvanced((v) => !v)}
-            className="flex items-center gap-1.5 text-sm mb-4 transition-opacity hover:opacity-70"
+            className="flex items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
             style={{ color: muted }}
           >
             <Settings2 className="w-3.5 h-3.5" />
             Advanced filters
             <span className="ml-1 text-[10px]">{showAdvanced ? "▲" : "▼"}</span>
           </button>
+
+          {isAdmin && (
+            <button
+              onClick={() => setShowUnreviewed((v) => !v)}
+              className="flex items-center gap-1.5 text-sm transition-opacity hover:opacity-70"
+              style={{ color: showUnreviewed ? amber : muted }}
+            >
+              {showUnreviewed ? "Hide unreviewed" : "Show unreviewed"}
+            </button>
+          )}
+          </div>
 
           {showAdvanced && (
             <div className="flex flex-wrap gap-3 mb-6">
@@ -404,6 +423,11 @@ export default function FrontierPage() {
                         >
                           {m.lisSignal} LIS
                         </span>
+                      </div>
+
+                      {/* Score confidence */}
+                      <div className="mb-2">
+                        <ScoreConfidenceBadge confidence={m.scoreConfidence} />
                       </div>
 
                       {/* Bottom note */}

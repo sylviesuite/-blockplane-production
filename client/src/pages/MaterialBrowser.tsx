@@ -42,6 +42,7 @@ import { Header } from "@/components/Header";
 import { SubmitMaterialModal } from "@/components/SubmitMaterialModal";
 import { SaveProjectModal } from "@/components/SaveProjectModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
 
 type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
@@ -420,6 +421,9 @@ export default function MaterialBrowser() {
                                 Regenerative Material
                               </Badge>
                             )}
+
+                            {/* Score Confidence */}
+                            <ScoreConfidenceBadge confidence={(material as any).scoreConfidence} />
 
                             {/* Frontier Badge */}
                             {(material.risScore >= 80 || (material as any).sourceUrl) && (

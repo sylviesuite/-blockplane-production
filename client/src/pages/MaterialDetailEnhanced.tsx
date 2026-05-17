@@ -19,6 +19,7 @@ import { Link } from "wouter";
 import { Header } from "@/components/Header";
 import { InsightBoxV2 } from "@/components/insights/InsightBoxV2";
 import AuthGate from "@/components/AuthGate";
+import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
 
 const forest = "#1a2e1f";
 const amber  = "#c17f24";
@@ -266,6 +267,11 @@ export default function MaterialDetailEnhanced() {
               )}
               <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>Higher is better</p>
             </div>
+          </div>
+
+          {/* Score confidence */}
+          <div className="mb-3">
+            <ScoreConfidenceBadge confidence={(material as any).scoreConfidence} />
           </div>
 
           {/* InsightBox */}
