@@ -31,9 +31,6 @@ import {
   DollarSign,
   ChevronLeft,
   ChevronRight,
-  AlertCircle,
-  CheckCircle,
-  Info,
   Bookmark,
   PlusCircle
 } from "lucide-react";
@@ -43,8 +40,6 @@ import { SubmitMaterialModal } from "@/components/SubmitMaterialModal";
 import { SaveProjectModal } from "@/components/SaveProjectModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
-
-type ConfidenceLevel = "High" | "Medium" | "Low" | "None";
 
 export default function MaterialBrowser() {
   const { user } = useAuth();
@@ -122,26 +117,6 @@ export default function MaterialBrowser() {
     setMaxCarbonSqFt(undefined);
     setRegenerativeOnly(false);
     setCurrentPage(1);
-  };
-
-  // Get confidence badge color
-  const getConfidenceBadgeVariant = (confidence: ConfidenceLevel) => {
-    switch (confidence) {
-      case "High": return "default";
-      case "Medium": return "secondary";
-      case "Low": return "outline";
-      case "None": return "destructive";
-    }
-  };
-
-  // Get confidence icon
-  const getConfidenceIcon = (confidence: ConfidenceLevel) => {
-    switch (confidence) {
-      case "High": return <CheckCircle className="w-3 h-3" />;
-      case "Medium": return <Info className="w-3 h-3" />;
-      case "Low": return <AlertCircle className="w-3 h-3" />;
-      case "None": return <AlertCircle className="w-3 h-3" />;
-    }
   };
 
   return (
@@ -359,13 +334,6 @@ export default function MaterialBrowser() {
                           <CardHeader>
                             <div className="flex justify-between items-start mb-2">
                               <Badge variant="outline">{material.category}</Badge>
-                              <Badge
-                                variant={getConfidenceBadgeVariant(material.confidenceLevel)}
-                                className="flex items-center gap-1"
-                              >
-                                {getConfidenceIcon(material.confidenceLevel)}
-                                {material.confidenceLevel}
-                              </Badge>
                             </div>
                             <CardTitle className="text-lg">{material.name}</CardTitle>
                             <CardDescription className="line-clamp-2">
