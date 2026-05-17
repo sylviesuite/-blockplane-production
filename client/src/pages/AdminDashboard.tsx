@@ -62,12 +62,13 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="import">Bulk Import</TabsTrigger>
           <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="flags">Flags</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -88,6 +89,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="submissions" className="space-y-4">
           <SubmissionsTab />
+        </TabsContent>
+
+        <TabsContent value="flags" className="space-y-4">
+          <FlagsTab />
         </TabsContent>
       </Tabs>
     </div>
@@ -671,6 +676,160 @@ function SubmissionsTab() {
             {sub.reviewer_notes && (
               <p className="text-xs text-gray-500 border-t pt-2"><span className="font-medium">Notes:</span> {sub.reviewer_notes}</p>
             )}
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// FlagsTab
+// ---------------------------------------------------------------------------
+
+function FlagsTab() {
+  const base = import.meta.env.VITE_API_URL ?? "";
+  const [statusFilter, setStatusFilter] = useState<'pending' | 'reviewed' | 'resolved' | 'dismissed' | 'all'>('pending');
+  const [flags, setFlags] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  const load = async (s: string) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${base}/api/admin/flags?status=${encodeURIComponent(s)}`);
+      const data = await res.json();
+      setFlags(Array.isArray(data) ? data : []);
+    } catch {
+      toast.error("Failed to load flags");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(statusFilter); }, [statusFilter]);
+
+  const updateStatus = async (id: string, status: string) => {
+    setUpdating(id);
+    try {
+      const res = await fetch(`${base}/api/admin/flags/${encodeURIComponent(id)}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error();
+      toast.success("Status updated");
+      load(statusFilter);
+    } catch {
+      toast.error("Failed to update status");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const FLAG_TYPE_LABELS: Record<string, string> = {
+    wrong_data:     "Incorrect data",
+    missing_data:   "Missing data",
+    wrong_category: "Wrong category",
+    duplicate:      "Duplicate entry",
+    other:          "Other",
+  };
+
+  const pendingCount = statusFilter === 'pending' ? flags.length : null;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <h2 className="text-2xl font-bold">Data Flags</h2>
+          {pendingCount != null && pendingCount > 0 && (
+            <Badge variant="destructive">{pendingCount} pending</Badge>
+          )}
+        </div>
+        <div className="flex gap-2">
+          {(['pending', 'reviewed', 'resolved', 'dismissed', 'all'] as const).map((s) => (
+            <Button
+              key={s}
+              variant={statusFilter === s ? 'default' : 'outline'}
+              size="sm"
+              className="capitalize"
+              onClick={() => setStatusFilter(s)}
+            >
+              {s}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {loading && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">Loading flags…</CardContent>
+        </Card>
+      )}
+
+      {!loading && flags.length === 0 && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">
+            No {statusFilter === 'all' ? '' : statusFilter} flags
+          </CardContent>
+        </Card>
+      )}
+
+      {!loading && flags.map((flag: any) => (
+        <Card key={flag.id}>
+          <CardHeader className="pb-2">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle className="text-base">{flag.materials?.name ?? flag.material_id}</CardTitle>
+                <CardDescription className="mt-0.5">
+                  {FLAG_TYPE_LABELS[flag.flag_type] ?? flag.flag_type}
+                  {flag.created_at && (
+                    <span className="ml-2 text-gray-400">
+                      · {new Date(flag.created_at).toLocaleDateString()}
+                    </span>
+                  )}
+                </CardDescription>
+              </div>
+              <span className={`text-xs font-medium px-2 py-1 rounded-full capitalize ${
+                flag.status === 'pending'   ? 'bg-yellow-100 text-yellow-800' :
+                flag.status === 'resolved'  ? 'bg-green-100 text-green-800'  :
+                flag.status === 'dismissed' ? 'bg-gray-100 text-gray-600'    :
+                'bg-blue-100 text-blue-800'
+              }`}>{flag.status}</span>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-0">
+            {flag.notes && (
+              <p className="text-sm text-gray-700 bg-gray-50 rounded p-2">{flag.notes}</p>
+            )}
+            {flag.user_id && (
+              <p className="text-xs text-gray-500">User: {flag.user_id}</p>
+            )}
+            <div className="flex gap-2 pt-1">
+              {(['reviewed', 'resolved', 'dismissed'] as const).filter(s => s !== flag.status).map((s) => (
+                <Button
+                  key={s}
+                  size="sm"
+                  variant="outline"
+                  className="capitalize h-7 text-xs"
+                  disabled={updating === flag.id}
+                  onClick={() => updateStatus(flag.id, s)}
+                >
+                  Mark {s}
+                </Button>
+              ))}
+              {flag.status !== 'pending' && (
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="h-7 text-xs"
+                  disabled={updating === flag.id}
+                  onClick={() => updateStatus(flag.id, 'pending')}
+                >
+                  Reopen
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
       ))}
