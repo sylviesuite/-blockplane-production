@@ -26,7 +26,9 @@ function formatCategory(raw: string): string {
 
 export function FrontierTeaser() {
   const { data: allFrontier = [], isLoading } = trpc.materialAPI.getFrontier.useQuery();
-  const top6 = allFrontier.slice(0, 6);
+  const top6 = allFrontier
+    .filter((m) => m.manufacturer && m.manufacturer.trim() !== "" && m.manufacturer !== "Various")
+    .slice(0, 6);
 
   return (
     <section style={{ backgroundColor: forest }}>
@@ -108,7 +110,7 @@ export function FrontierTeaser() {
                       className="mt-3 text-base font-semibold leading-snug"
                       style={{ color: cream }}
                     >
-                      {m.name}
+                      {m.name.length > 40 ? m.name.slice(0, 40).trimEnd() + "…" : m.name}
                     </h3>
 
                     {/* Manufacturer */}
