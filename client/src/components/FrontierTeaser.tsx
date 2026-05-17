@@ -75,7 +75,7 @@ export function FrontierTeaser() {
               const medal = getMedal(ris);
               const ms = MEDAL[medal];
               return (
-                <Link key={m.id} href={`/materials/${m.id}`}>
+                <Link key={m.id} href={`/materials/${m.id}`} className="block h-full">
                   <article
                     className="flex h-full cursor-pointer flex-col p-6 transition-colors"
                     style={{
