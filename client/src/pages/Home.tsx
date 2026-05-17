@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { FrontierTeaser } from "@/components/FrontierTeaser";
+import { trpc } from "@/lib/trpc";
 
 // ── Design tokens (matching Lovable redesign) ─────────────────────────────────
 const forest = "#1a2e1f";
@@ -37,6 +38,13 @@ function Nav() {
             style={{ color: "rgba(245,242,236,0.6)" }}
           >
             Materials
+          </Link>
+          <Link
+            href="/compare"
+            className="hidden text-sm font-medium md:inline transition-colors"
+            style={{ color: "rgba(245,242,236,0.6)" }}
+          >
+            Compare
           </Link>
           <Link
             href="/frontier"
@@ -103,6 +111,9 @@ function Nav() {
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 function Hero() {
+  const { data: countData } = trpc.materialAPI.search.useQuery({ pageSize: 1 });
+  const materialCount = countData?.totalItems;
+
   return (
     <section style={{ backgroundColor: forest }}>
       <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
@@ -122,7 +133,7 @@ function Hero() {
           Smart material choices for builders, architects, and anyone who cares what goes into their project.
         </p>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
-          260+ materials scored for embodied carbon, regenerative impact, and regional feasibility.
+          {materialCount ? `${materialCount}+` : "390+"} materials scored for embodied carbon, regenerative impact, and regional feasibility.
         </p>
         <div className="mt-10 flex flex-wrap gap-3">
           <Link

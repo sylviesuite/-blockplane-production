@@ -60,7 +60,7 @@ export function Header() {
           </Link>
         </nav>
 
-        <div className="ml-auto flex items-center gap-4 text-sm">
+        <div className="ml-6 flex items-center gap-4 text-sm border-l pl-6" style={{ borderColor: "rgba(245,242,236,0.15)" }}>
           {user ? (
             <>
               <Link href="/my-projects">
