@@ -20,6 +20,10 @@ import { Header } from "@/components/Header";
 import { InsightBoxV2 } from "@/components/insights/InsightBoxV2";
 import AuthGate from "@/components/AuthGate";
 import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
+import { FlagMaterialButton } from "@/components/FlagMaterialButton";
+import { useAuth } from "@/contexts/AuthContext";
+import SEO from "@/components/SEO";
+import { Helmet } from "react-helmet-async";
 
 const forest = "#1a2e1f";
 const amber  = "#c17f24";
@@ -106,6 +110,7 @@ function buildInsightText(
 export default function MaterialDetailEnhanced() {
   const [, params] = useRoute("/materials/:id");
   const materialId = params?.id ?? null;
+  const { user } = useAuth();
 
   const { data: material, isLoading } = trpc.materialAPI.getById.useQuery(
     { id: materialId! },
@@ -166,8 +171,44 @@ export default function MaterialDetailEnhanced() {
   const methodologyText = buildMethodologyText(material.category, material.risScore, material.lisScore, confidenceLevel);
   const sourceLabel = (material as any).source ? formatSourceLabel((material as any).source) : null;
 
+  const seoDescription = [
+    material.manufacturer ? `${material.name} by ${material.manufacturer}.` : `${material.name}.`,
+    `LIS ${material.lisScore}, RIS ${material.risScore ?? "pending"}.`,
+    material.description ?? "",
+  ].filter(Boolean).join(" ").slice(0, 200);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: material.name,
+    description: material.description ?? undefined,
+    brand: material.manufacturer
+      ? { "@type": "Brand", name: material.manufacturer }
+      : undefined,
+    category: material.category,
+    additionalProperty: [
+      { "@type": "PropertyValue", name: "LIS Score", value: material.lisScore },
+      ...(material.risScore !== null
+        ? [{ "@type": "PropertyValue", name: "RIS Score", value: material.risScore }]
+        : []),
+      {
+        "@type": "PropertyValue",
+        name: "Embodied Carbon",
+        value: `${(parseFloat(material.totalCarbon) / 10.764).toFixed(2)} kg CO2e/sq ft`,
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title={material.name}
+        description={seoDescription}
+        url={`https://blockplanemetric.com/materials/${material.id}`}
+      />
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
       <Header />
 
       {/* ── Hero strip — forest green ── */}
@@ -489,6 +530,11 @@ export default function MaterialDetailEnhanced() {
             </a>
           </div>
         )}
+
+        {/* Flag this data */}
+        <div className="flex justify-end pb-4">
+          <FlagMaterialButton materialId={material.id} userId={user?.openId} />
+        </div>
       </div>
     </div>
   );

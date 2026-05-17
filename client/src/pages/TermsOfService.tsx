@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import SEO from "@/components/SEO";
 
 const sections = [
   {
@@ -63,6 +64,7 @@ const sections = [
 export default function TermsOfService() {
   return (
     <div className="min-h-screen px-4 py-16">
+      <SEO title="Terms of Service" url="https://blockplanemetric.com/terms" />
       <div className="mx-auto w-full max-w-2xl space-y-10">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">BlockPlane Metric — Terms of Service</h1>

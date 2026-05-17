@@ -5,6 +5,7 @@ import { Link } from "wouter";
 import { Settings2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
+import SEO from "@/components/SEO";
 
 const teal = "#0F6E56";
 const forest = "#1a2e1f";
@@ -125,6 +126,11 @@ export default function FrontierPage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: cream, color: text }}>
+      <SEO
+        title="Frontier Materials"
+        description="Next-generation building materials with a plausible pathway into real-world construction. Scored for regenerative impact, lifecycle performance, and Great Lakes regional feasibility."
+        url="https://blockplanemetric.com/frontier"
+      />
       <Header />
 
       {/* Hero */}

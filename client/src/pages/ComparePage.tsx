@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Header } from "@/components/Header";
 import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
+import SEO from "@/components/SEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -160,6 +161,11 @@ export default function ComparePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Compare Materials"
+        description="Compare building materials side by side — embodied carbon, cost, LIS, RIS scores, and AI-powered analysis for your Great Lakes project."
+        url="https://blockplanemetric.com/compare"
+      />
       <Header />
 
       {/* Hero strip */}

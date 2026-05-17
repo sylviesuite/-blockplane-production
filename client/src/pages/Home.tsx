@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useAuth } from "@/contexts/AuthContext";
 import { FrontierTeaser } from "@/components/FrontierTeaser";
 import { trpc } from "@/lib/trpc";
+import SEO from "@/components/SEO";
 
 // ── Design tokens (matching Lovable redesign) ─────────────────────────────────
 const forest = "#1a2e1f";
@@ -731,6 +732,11 @@ function LandingFooter() {
 export default function Home() {
   return (
     <main style={{ backgroundColor: cream, color: text }}>
+      <SEO
+        title="BlockPlane Metric — Material decision intelligence for sustainable construction"
+        description="Smart material choices for builders, architects, and contractors in the Great Lakes region. 394+ materials scored for embodied carbon, regenerative impact, and regional feasibility."
+        url="https://blockplanemetric.com"
+      />
       <Nav />
       <Hero />
       <ExampleStrip />

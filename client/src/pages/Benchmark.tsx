@@ -6,6 +6,7 @@ import { X, Sparkles, ChevronRight, Bookmark } from "lucide-react";
 import { SaveProjectModal } from "@/components/SaveProjectModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLocation } from "wouter";
+import SEO from "@/components/SEO";
 
 const forest = "#1a2e1f";
 const cream = "#f5f2ec";
@@ -169,6 +170,11 @@ export default function Benchmark() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: forest }}>
+      <SEO
+        title="Benchmark 2000"
+        description="A 2,000 sq ft reference home for comparing building material carbon impact. Explore assembly alternatives and AI-powered recommendations."
+        url="https://blockplanemetric.com/benchmark"
+      />
       <style>{`
         @keyframes pill-pulse {
           0%, 100% { box-shadow: 0 0 0 0 rgba(193,127,36,0); }

@@ -40,6 +40,7 @@ import { SubmitMaterialModal } from "@/components/SubmitMaterialModal";
 import { SaveProjectModal } from "@/components/SaveProjectModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { ScoreConfidenceBadge } from "@/components/ScoreConfidenceBadge";
+import SEO from "@/components/SEO";
 
 export default function MaterialBrowser() {
   const { user } = useAuth();
@@ -121,6 +122,11 @@ export default function MaterialBrowser() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SEO
+        title="Materials Database"
+        description="Browse 394+ sustainable building materials with verified embodied carbon data, LIS and RIS scores, and Great Lakes regional feasibility ratings."
+        url="https://blockplanemetric.com/materials"
+      />
       <Header />
       {/* Page header */}
       <div style={{ backgroundColor: '#1a2e1f' }}>
