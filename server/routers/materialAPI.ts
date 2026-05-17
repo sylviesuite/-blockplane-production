@@ -261,6 +261,11 @@ export const materialAPIRouter = router({
   /**
    * Get all available categories with material counts
    */
+  count: publicProcedure.query(async () => {
+    const all = await getAllMaterials();
+    return { count: all.length };
+  }),
+
   getCategories: publicProcedure.query(async () => {
     const allMaterials = await getAllMaterials();
     const counts = new Map<string, number>();

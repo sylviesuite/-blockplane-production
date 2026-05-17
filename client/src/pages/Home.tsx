@@ -111,8 +111,8 @@ function Nav() {
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 function Hero() {
-  const { data: countData } = trpc.materialAPI.search.useQuery({ pageSize: 1 });
-  const materialCount = countData?.totalItems;
+  const { data: countData } = trpc.materialAPI.count.useQuery();
+  const materialCount = countData?.count;
 
   return (
     <section style={{ backgroundColor: forest }}>
