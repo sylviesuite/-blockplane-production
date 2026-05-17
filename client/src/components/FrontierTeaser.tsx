@@ -1,106 +1,162 @@
-import { useMemo } from "react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
-const teal = "#0F6E56";
+const forest = "#1a2e1f";
+const cream = "#f5f2ec";
 const amber = "#c17f24";
-const text = "#1c1c1a";
-const muted = "#5a5a56";
-const borderSoft = "rgba(28,28,26,0.08)";
+const borderOnDark = "rgba(245,242,236,0.12)";
 
-const GL_HIGH = new Set(["Timber", "Earth", "Insulation", "Landscaping"]);
+type RISMedal = "gold" | "silver" | "bronze";
 
-function deriveRISSignal(ris: number | null): "Very High" | "High" | null {
-  if (!ris) return null;
-  if (ris >= 90) return "Very High";
-  if (ris >= 80) return "High";
-  return null;
+function getMedal(ris: number): RISMedal {
+  if (ris >= 90) return "gold";
+  if (ris >= 85) return "silver";
+  return "bronze";
 }
 
-const RIS_STYLE: Record<string, { bg: string; color: string }> = {
-  "Very High": { bg: "#EAF3DE", color: "#27500A" },
-  "High":      { bg: "#E1F5EE", color: "#085041" },
+const MEDAL: Record<RISMedal, { bg: string; color: string; label: string }> = {
+  gold:   { bg: "#D4AF37", color: "#1a2e1f", label: "Gold" },
+  silver: { bg: "#A8A9AD", color: "#1a2e1f", label: "Silver" },
+  bronze: { bg: "#CD7F32", color: "#1a2e1f", label: "Bronze" },
 };
 
+function formatCategory(raw: string): string {
+  return raw.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export function FrontierTeaser() {
-  const { data: raw = [] } = trpc.materialAPI.getFrontier.useQuery();
-
-  const top6 = useMemo(() =>
-    (raw as any[])
-      .filter((m) => {
-        const sig = deriveRISSignal(m.risScore);
-        return sig === "Very High" && GL_HIGH.has(m.category);
-      })
-      .slice(0, 6),
-  [raw]);
-
-  if (top6.length === 0) return null;
+  const { data: allFrontier = [], isLoading } = trpc.materialAPI.getFrontier.useQuery();
+  const top6 = allFrontier.slice(0, 6);
 
   return (
-    <section style={{ backgroundColor: "#f5f2ec" }}>
+    <section style={{ backgroundColor: forest }}>
       <div
-        className="mx-auto max-w-6xl px-6 py-16"
-        style={{ borderTop: `1px solid ${borderSoft}` }}
+        className="mx-auto max-w-6xl px-6 py-20"
+        style={{ borderTop: `1px solid ${borderOnDark}` }}
       >
-        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+        {/* Header */}
+        <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p
+            <span
               className="text-xs font-semibold uppercase tracking-wider"
-              style={{ color: teal }}
+              style={{ color: amber }}
             >
-              Frontier
-            </p>
+              Frontier Materials
+            </span>
             <h2
-              className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl"
-              style={{ color: text }}
+              className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl"
+              style={{ color: cream }}
             >
-              Frontier materials
+              The highest-performing sustainable materials in our database.
             </h2>
-            <p className="mt-1 text-sm" style={{ color: muted }}>
-              Emerging high-impact options for your next project
+            <p className="mt-2 text-sm" style={{ color: "rgba(245,242,236,0.55)" }}>
+              Ranked by Regenerative Impact Score — materials that sequester carbon, restore ecosystems, or enable true circularity.
             </p>
           </div>
-          <Link href="/frontier" className="text-sm font-medium" style={{ color: amber }}>
-            View all →
-          </Link>
         </div>
 
-        <div
-          className="rounded-lg p-4"
-          style={{
-            backgroundColor: "rgba(28,28,26,0.03)",
-            border: `1px solid ${borderSoft}`,
-          }}
-        >
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {top6.map((m: any) => {
-              const sig = deriveRISSignal(m.risScore);
-              const badge = sig ? RIS_STYLE[sig] : null;
+        {/* Card grid */}
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-40 animate-pulse rounded-sm"
+                style={{ backgroundColor: "rgba(255,255,255,0.06)" }}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {top6.map((m) => {
+              const ris = m.risScore ?? 0;
+              const medal = getMedal(ris);
+              const ms = MEDAL[medal];
               return (
                 <Link key={m.id} href={`/materials/${m.id}`}>
-                  <div
-                    className="cursor-pointer rounded-md p-3 transition-shadow hover:shadow-sm"
-                    style={{ backgroundColor: "white", border: `1px solid ${borderSoft}` }}
+                  <article
+                    className="flex h-full cursor-pointer flex-col p-6 transition-colors"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.07)",
+                      border: "1px solid rgba(255,255,255,0.13)",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.11)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.07)")
+                    }
                   >
-                    <p
-                      className="mb-1.5 text-xs font-medium leading-snug"
-                      style={{ color: text }}
+                    {/* Top row: category + medal badge */}
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        className="truncate text-xs uppercase tracking-wider"
+                        style={{ color: "#9a9588" }}
+                      >
+                        {formatCategory(m.category)}
+                      </span>
+                      <span
+                        className="flex-shrink-0 rounded-sm px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+                        style={{ backgroundColor: ms.bg, color: ms.color }}
+                      >
+                        {ms.label}
+                      </span>
+                    </div>
+
+                    {/* Material name */}
+                    <h3
+                      className="mt-3 text-base font-semibold leading-snug"
+                      style={{ color: cream }}
                     >
                       {m.name}
-                    </p>
-                    {badge && (
-                      <span
-                        className="rounded-full px-2 py-0.5 text-[10px] font-semibold"
-                        style={{ backgroundColor: badge.bg, color: badge.color }}
+                    </h3>
+
+                    {/* Manufacturer */}
+                    {m.manufacturer && (
+                      <p
+                        className="mt-1 truncate text-xs"
+                        style={{ color: "rgba(245,242,236,0.45)" }}
                       >
-                        {sig} RIS
-                      </span>
+                        {m.manufacturer}
+                      </p>
                     )}
-                  </div>
+
+                    {/* RIS score */}
+                    <div className="mt-auto flex items-baseline gap-1.5 pt-5">
+                      <span
+                        className="text-3xl font-semibold tabular-nums"
+                        style={{ color: ms.bg }}
+                      >
+                        {ris}
+                      </span>
+                      <span className="text-xs" style={{ color: "#9a9588" }}>
+                        RIS
+                      </span>
+                    </div>
+                  </article>
                 </Link>
               );
             })}
           </div>
+        )}
+
+        {/* CTA */}
+        <div className="mt-8 text-center">
+          <Link
+            href="/frontier"
+            className="inline-block rounded-md border px-6 py-3 text-sm font-semibold transition-colors"
+            style={{
+              borderColor: borderOnDark,
+              color: cream,
+              backgroundColor: "transparent",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "rgba(245,242,236,0.06)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
+          >
+            View all Frontier Materials →
+          </Link>
         </div>
       </div>
     </section>
