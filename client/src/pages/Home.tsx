@@ -228,6 +228,9 @@ const tierColor: Record<Material["risTier"], string> = {
 };
 
 function ExampleStrip() {
+  const { data: countData } = trpc.materialAPI.count.useQuery();
+  const count = countData?.count ?? 390;
+
   return (
     <section id="materials" style={{ backgroundColor: forest }}>
       <div
@@ -343,7 +346,7 @@ function ExampleStrip() {
             }
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
           >
-            Browse all 243 materials →
+            Browse all {count} materials →
           </Link>
         </div>
       </div>
@@ -633,6 +636,8 @@ function Confidence() {
 // ── Bottom CTA ────────────────────────────────────────────────────────────────
 function BottomCTA() {
   const { user } = useAuth();
+  const { data: countData } = trpc.materialAPI.count.useQuery();
+  const count = countData?.count ?? 390;
 
   return (
     <section style={{ backgroundColor: cream }}>
@@ -644,7 +649,7 @@ function BottomCTA() {
           className="mx-auto max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl"
           style={{ color: text }}
         >
-          243 materials. Growing every day.
+          {count} materials. Growing every day.
         </h2>
         <p
           className="mx-auto mt-5 max-w-xl text-base leading-relaxed"
