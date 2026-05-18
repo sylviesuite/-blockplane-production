@@ -16,6 +16,7 @@ export type SessionUser = {
   name: string | null;
   email: string | null;
   role: "user" | "admin";
+  onboarding_complete: boolean;
 };
 
 // ---------------------------------------------------------------------------
@@ -105,6 +106,7 @@ function mapProfile(row: Record<string, unknown>, email: string): SessionUser {
     name: (row.full_name as string | null) ?? null,
     email,
     role: isOwner ? "admin" : dbRole,
+    onboarding_complete: (row.onboarding_complete as boolean | null) ?? false,
   };
 }
 
@@ -152,8 +154,7 @@ export async function getRequestUser(req: Request): Promise<SessionUser | null> 
     name: session.name || null,
     email: session.email || null,
     role: ENV.ownerOpenId && session.openId === ENV.ownerOpenId ? "admin" : "user",
-    // Note: role defaults to "user" here because there is no profile row to read from.
-    // Once the profile is created and role is set in user_profiles, mapProfile() picks it up.
+    onboarding_complete: false,
   };
 }
 
@@ -217,6 +218,14 @@ export async function supabaseSignUp(
     throw new Error("Signup failed — no user returned");
   }
   return { access_token: data.access_token, user: { id: userId, email: userEmail } };
+}
+
+export async function setOnboardingComplete(userId: string): Promise<void> {
+  await supabaseRest(`/rest/v1/user_profiles?id=eq.${encodeURIComponent(userId)}`, {
+    method: "PATCH",
+    headers: { Prefer: "return=minimal" },
+    body: JSON.stringify({ onboarding_complete: true }),
+  });
 }
 
 // ---------------------------------------------------------------------------

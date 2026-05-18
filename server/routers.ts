@@ -1,10 +1,10 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { invokeLLM } from "./_core/llm";
 import { z } from "zod";
-import { supabaseSignIn, supabaseSignUp, upsertUserRow, setSessionCookie, insertBetaSignup } from "./lib/auth";
+import { supabaseSignIn, supabaseSignUp, upsertUserRow, setSessionCookie, insertBetaSignup, setOnboardingComplete } from "./lib/auth";
 import { getAllMaterials, getMaterialsByCategory, getMaterialById } from './db';
 import { logAnalyticsEvent, getKPIMetrics, getTopAlternatives } from './analytics-db';
 import { findAlternatives, getRecommendationSummary } from './recommendations';
@@ -81,6 +81,11 @@ export const appRouter = router({
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, cookieOptions);
+      return { success: true } as const;
+    }),
+
+    completeOnboarding: protectedProcedure.mutation(async ({ ctx }) => {
+      await setOnboardingComplete(ctx.user.id);
       return { success: true } as const;
     }),
   }),

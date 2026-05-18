@@ -36,6 +36,16 @@ import MyProjects from "./pages/MyProjects";
 import FrontierPage from "./pages/FrontierPage";
 import ComparePage from "./pages/ComparePage";
 import AuthGate from "./components/AuthGate";
+import OnboardingModal from "./components/OnboardingModal";
+import { useState } from "react";
+import { useAuth } from "./contexts/AuthContext";
+
+function OnboardingGate() {
+  const { user } = useAuth();
+  const [dismissed, setDismissed] = useState(false);
+  if (!user || user.onboarding_complete || dismissed) return null;
+  return <OnboardingModal onDismiss={() => setDismissed(true)} />;
+}
 
 function DefaultRoute() {
   return <Home />;
@@ -98,6 +108,7 @@ function App() {
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
+              <OnboardingGate />
               <Router />
             </TooltipProvider>
           </AuthProvider>

@@ -8,6 +8,7 @@ type AuthUser = {
   name: string | null;
   email: string | null;
   role: "user" | "admin";
+  onboarding_complete: boolean;
 };
 
 type AuthContextValue = {
