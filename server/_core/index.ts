@@ -20,6 +20,7 @@ import { registerInsightRoutes } from "../routes/insight";
 import { registerChatRoutes } from "../routes/chat";
 import { registerAgentRoutes } from "../routes/agent";
 import { registerFlagMaterialRoutes } from "../routes/flagMaterial";
+import { registerIncompleteMaterialsRoutes } from "../routes/incompleteMaterials";
 import { registerCompareInsightRoutes } from "../routes/compareInsight";
 import { registerEc3Routes } from "../routes/ec3";
 
@@ -80,6 +81,7 @@ async function startServer() {
   registerChatRoutes(app);
   registerAgentRoutes(app);
   registerFlagMaterialRoutes(app);
+  registerIncompleteMaterialsRoutes(app);
   registerCompareInsightRoutes(app);
   registerEc3Routes(app);
 

@@ -86,15 +86,32 @@ async function fetchPlaceholderMaterials(): Promise<PlaceholderMaterial[]> {
 // Score a material via Claude
 // ---------------------------------------------------------------------------
 
-const SYSTEM_PROMPT = `You are a building materials lifecycle scorer for Great Lakes region construction projects. Given material details, return ONLY a valid JSON object — no markdown, no code fences, no explanation.
+const SYSTEM_PROMPT = `You are a construction materials data assistant working on a sustainability database. Your primary obligation is data integrity over completeness.
+
+CRITICAL RULES:
+1. If you do not know the manufacturer of a material with confidence, return manufacturer: null. Never invent or guess a manufacturer name.
+2. If you cannot estimate a score with reasonable confidence based on known material properties, return null for that score field and set score_confidence to 'insufficient_data'.
+3. If a material is outside your knowledge (obscure, proprietary, or too new), say so explicitly in a notes field rather than estimating.
+4. Low scores are valid and valuable. A material with RIS 15 and solid data is more useful than a material with RIS 85 and fabricated data.
+5. When uncertain, use this exact pattern: 'Insufficient data to estimate [field] with confidence.'
+
+Honest gaps are always preferred over confident fabrications.
+
+---
+
+You are also a building materials lifecycle scorer for Great Lakes region construction projects. Given material details, return ONLY a valid JSON object — no markdown, no code fences, no explanation.
 
 Return exactly this shape:
 {
-  "lisScore": integer 0–100,
-  "risScore": integer 0–100,
-  "cpiBand": "good" | "watch" | "warning" | "extreme",
-  "reasoning": "one sentence"
+  "lisScore": integer 0–100 or null,
+  "risScore": integer 0–100 or null,
+  "cpiBand": "good" | "watch" | "warning" | "extreme" | null,
+  "score_confidence": "estimated" | "insufficient_data",
+  "reasoning": "one sentence",
+  "notes": "optional — required when score_confidence is insufficient_data, explain what data is missing"
 }
+
+Set score_confidence to 'insufficient_data' and null out any score fields you cannot estimate with reasonable confidence. Do not fill in plausible-sounding numbers when you are not confident.
 
 LIS (Lifecycle Impact Score): 0 = worst lifecycle impact, 100 = best. Invert carbon intensity — low-carbon materials score high. If carbon data is provided, weight it heavily.
 
@@ -110,13 +127,15 @@ CPI (Cost Performance Index — cost per tonne CO2e avoided):
   warning $151–300/tCO2e
   extreme > $300/tCO2e (or material has poor carbon performance relative to cost)
 
-Never default to middle values. Use the anchors precisely.`;
+Never default to middle values. Use the anchors precisely. Never fabricate scores for materials you do not recognise.`;
 
 interface ScoreResult {
-  lisScore: number;
-  risScore: number;
-  cpiBand: string;
+  lisScore: number | null;
+  risScore: number | null;
+  cpiBand: string | null;
+  score_confidence: "estimated" | "insufficient_data";
   reasoning: string;
+  notes?: string;
 }
 
 async function scoreMaterial(mat: PlaceholderMaterial): Promise<ScoreResult | null> {
@@ -135,7 +154,7 @@ async function scoreMaterial(mat: PlaceholderMaterial): Promise<ScoreResult | nu
     `Description: ${mat.description ?? "none"}`,
     carbonLine,
     "",
-    "Return the JSON object with lisScore, risScore, cpiBand, and reasoning.",
+    "Return the JSON object with lisScore, risScore, cpiBand, score_confidence, reasoning, and notes (if applicable).",
   ].join("\n");
 
   const res = await fetch(CLAUDE_API_URL, {
@@ -147,7 +166,7 @@ async function scoreMaterial(mat: PlaceholderMaterial): Promise<ScoreResult | nu
     },
     body: JSON.stringify({
       model: AGENT_MODEL,
-      max_tokens: 256,
+      max_tokens: 512,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userMessage }],
     }),
@@ -169,11 +188,17 @@ async function scoreMaterial(mat: PlaceholderMaterial): Promise<ScoreResult | nu
 
   try {
     const parsed = JSON.parse(raw.slice(firstBrace, lastBrace + 1));
+    const confidence: "estimated" | "insufficient_data" =
+      parsed.score_confidence === "insufficient_data" ? "insufficient_data" : "estimated";
+    const lisRaw = parsed.lisScore;
+    const risRaw = parsed.risScore;
     return {
-      lisScore: Math.min(100, Math.max(0, Math.round(Number(parsed.lisScore) || 0))),
-      risScore: Math.min(100, Math.max(0, Math.round(Number(parsed.risScore) || 0))),
-      cpiBand: String(parsed.cpiBand ?? "watch"),
+      lisScore: lisRaw != null ? Math.min(100, Math.max(0, Math.round(Number(lisRaw)))) : null,
+      risScore: risRaw != null ? Math.min(100, Math.max(0, Math.round(Number(risRaw)))) : null,
+      cpiBand: parsed.cpiBand != null ? String(parsed.cpiBand) : null,
+      score_confidence: confidence,
       reasoning: String(parsed.reasoning ?? ""),
+      notes: parsed.notes != null ? String(parsed.notes) : undefined,
     };
   } catch {
     return null;
@@ -219,11 +244,14 @@ async function upsertScore(materialId: string, lisScore: number, risScore: numbe
 // Update score_confidence on materials table
 // ---------------------------------------------------------------------------
 
-async function markEstimated(materialId: string): Promise<void> {
+async function markConfidence(
+  materialId: string,
+  confidence: "estimated" | "insufficient_data"
+): Promise<void> {
   await supabaseRest(`/rest/v1/materials?id=eq.${materialId}`, {
     method: "PATCH",
     headers: { Prefer: "return=minimal" },
-    body: JSON.stringify({ score_confidence: "estimated" }),
+    body: JSON.stringify({ score_confidence: confidence }),
   });
 }
 
@@ -250,31 +278,37 @@ async function main() {
     const oldLis = mat.lis_ris_scores?.[0]?.lis_score ?? null;
     const oldRis = mat.lis_ris_scores?.[0]?.ris_score ?? null;
 
-    process.stdout.write(
-      `[${i + 1}/${materials.length}] ${mat.name.slice(0, 55).padEnd(55)} `
-    );
+    console.log(`\nScoring material ${i + 1} of ${materials.length} — ${mat.name}`);
 
     try {
       const result = await scoreMaterial(mat);
       if (!result) {
-        console.log("SKIP (no score returned)");
+        console.log("  SKIP (no score returned)");
+        errors++;
+      } else if (result.score_confidence === "insufficient_data") {
+        console.log(`  INSUFFICIENT_DATA — ${result.notes ?? result.reasoning}`);
+        if (!DRY_RUN) {
+          await markConfidence(mat.id, "insufficient_data");
+        }
         errors++;
       } else {
         const oldStr = `LIS=${oldLis ?? "—"} RIS=${oldRis ?? "—"}`;
-        const newStr = `LIS=${result.lisScore} RIS=${result.risScore} CPI=${result.cpiBand}`;
-        console.log(`${oldStr} → ${newStr}`);
+        const newStr = `LIS=${result.lisScore ?? "—"} RIS=${result.risScore ?? "—"} CPI=${result.cpiBand ?? "—"}`;
+        console.log(`  ${oldStr} → ${newStr}`);
         if (result.reasoning) {
-          console.log(`           ${result.reasoning}`);
+          console.log(`  ${result.reasoning}`);
         }
 
         if (!DRY_RUN) {
-          await upsertScore(mat.id, result.lisScore, result.risScore);
-          await markEstimated(mat.id);
+          if (result.lisScore != null && result.risScore != null) {
+            await upsertScore(mat.id, result.lisScore, result.risScore);
+          }
+          await markConfidence(mat.id, "estimated");
         }
         scored++;
       }
     } catch (err: any) {
-      console.log(`ERROR: ${err.message}`);
+      console.log(`  ERROR: ${err.message}`);
       errors++;
     }
 

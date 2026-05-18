@@ -19,6 +19,7 @@ import {
   Trash2,
   Edit,
   Globe,
+  AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { trpc } from '@/lib/trpc';
@@ -62,13 +63,14 @@ export default function AdminDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="materials">Materials</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="import">Bulk Import</TabsTrigger>
           <TabsTrigger value="submissions">Submissions</TabsTrigger>
           <TabsTrigger value="flags">Flags</TabsTrigger>
+          <TabsTrigger value="incomplete">Incomplete</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -93,6 +95,10 @@ export default function AdminDashboard() {
 
         <TabsContent value="flags" className="space-y-4">
           <FlagsTab />
+        </TabsContent>
+
+        <TabsContent value="incomplete" className="space-y-4">
+          <IncompleteMaterialsTab />
         </TabsContent>
       </Tabs>
     </div>
@@ -833,6 +839,203 @@ function FlagsTab() {
           </CardContent>
         </Card>
       ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// IncompleteMaterialsTab
+// ---------------------------------------------------------------------------
+
+function IncompleteMaterialsTab() {
+  const base = import.meta.env.VITE_API_URL ?? "";
+  const [items, setItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${base}/api/admin/incomplete-materials`);
+      const data = await res.json();
+      setItems(Array.isArray(data) ? data : []);
+    } catch {
+      toast.error("Failed to load incomplete materials");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const markResearched = async (id: string) => {
+    setUpdating(id);
+    try {
+      const res = await fetch(
+        `${base}/api/admin/incomplete-materials/${encodeURIComponent(id)}/mark-researched`,
+        { method: "PATCH", headers: { "Content-Type": "application/json" } }
+      );
+      if (!res.ok) throw new Error();
+      toast.success("Marked as researched — score_confidence set to estimated");
+      load();
+    } catch {
+      toast.error("Failed to update material");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const flagForResearch = async (id: string) => {
+    setUpdating(id);
+    try {
+      const res = await fetch(
+        `${base}/api/admin/incomplete-materials/${encodeURIComponent(id)}/flag-research`,
+        { method: "POST", headers: { "Content-Type": "application/json" } }
+      );
+      if (!res.ok) throw new Error();
+      toast.success("Flagged for research — visible in Flags tab");
+      load();
+    } catch {
+      toast.error("Failed to flag material");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const handleDelete = async (id: string, name: string) => {
+    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    setUpdating(id);
+    try {
+      const res = await fetch(
+        `${base}/api/admin/incomplete-materials/${encodeURIComponent(id)}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error();
+      toast.success("Material deleted");
+      load();
+    } catch {
+      toast.error("Failed to delete material");
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3">
+        <h2 className="text-2xl font-bold">Incomplete Materials</h2>
+        {items.length > 0 && (
+          <Badge variant="destructive">{items.length} need attention</Badge>
+        )}
+      </div>
+      <p className="text-sm text-gray-500">
+        Materials missing critical fields or flagged as unscoreable by the agent.
+        Fill in gaps manually, then click "Mark Researched" to move them to{' '}
+        <code className="text-xs bg-gray-100 px-1 rounded">estimated</code> confidence.
+      </p>
+
+      {loading && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">Loading…</CardContent>
+        </Card>
+      )}
+
+      {!loading && items.length === 0 && (
+        <Card>
+          <CardContent className="py-12 text-center text-gray-500">
+            Queue is clear — no incomplete materials found.
+          </CardContent>
+        </Card>
+      )}
+
+      {!loading && items.length > 0 && (
+        <Card>
+          <CardContent className="pt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="pb-2 pr-4 font-medium">Material</th>
+                  <th className="pb-2 pr-4 font-medium">Category</th>
+                  <th className="pb-2 pr-4 font-medium">What's Missing</th>
+                  <th className="pb-2 pr-4 font-medium">Date Added</th>
+                  <th className="pb-2 font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((mat: any) => (
+                  <tr key={mat.id} className="border-b last:border-0 align-top">
+                    <td className="py-3 pr-4">
+                      <div className="font-medium max-w-[180px] truncate">{mat.name}</div>
+                      {mat.manufacturer && (
+                        <div className="text-xs text-gray-400 truncate">{mat.manufacturer}</div>
+                      )}
+                    </td>
+                    <td className="py-3 pr-4 text-gray-600 whitespace-nowrap">{mat.category}</td>
+                    <td className="py-3 pr-4">
+                      <div className="flex flex-wrap gap-1">
+                        {(mat.missing ?? []).map((field: string) => (
+                          <span
+                            key={field}
+                            className="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full whitespace-nowrap"
+                          >
+                            {field}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-3 pr-4 text-gray-500 whitespace-nowrap">
+                      {mat.created_at ? new Date(mat.created_at).toLocaleDateString() : '—'}
+                    </td>
+                    <td className="py-3">
+                      <div className="flex gap-1 flex-wrap">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs gap-1"
+                          disabled={updating === mat.id}
+                          onClick={() => toast.info('Edit feature coming soon')}
+                        >
+                          <Edit className="h-3 w-3" />
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs gap-1"
+                          disabled={updating === mat.id}
+                          onClick={() => flagForResearch(mat.id)}
+                        >
+                          <AlertTriangle className="h-3 w-3" />
+                          Flag
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs gap-1 text-green-700 border-green-200 hover:bg-green-50"
+                          disabled={updating === mat.id}
+                          onClick={() => markResearched(mat.id)}
+                        >
+                          <CheckCircle className="h-3 w-3" />
+                          Researched
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-7 w-7 p-0 text-red-400 hover:text-red-600"
+                          disabled={updating === mat.id}
+                          onClick={() => handleDelete(mat.id, mat.name)}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
