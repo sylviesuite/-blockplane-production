@@ -23,6 +23,12 @@ const DELAY_MS = 2_000;
 
 const DRY_RUN = process.argv.includes("--dry-run");
 
+// --skip="substring1,substring2" — exclude materials whose names contain any of the substrings (case-insensitive)
+const SKIP_SUBSTRINGS: string[] = (() => {
+  const arg = process.argv.find((a) => a.startsWith("--skip="));
+  return arg ? arg.slice(7).split(",").map((s) => s.trim().toLowerCase()).filter(Boolean) : [];
+})();
+
 // ---------------------------------------------------------------------------
 // Supabase REST
 // ---------------------------------------------------------------------------
@@ -72,6 +78,11 @@ interface PlaceholderMaterial {
 }
 
 async function fetchPlaceholderMaterials(): Promise<PlaceholderMaterial[]> {
+  // Fetches ONLY score_confidence = 'placeholder'. Other values are intentionally excluded:
+  //   'estimated'               — already scored, skip
+  //   'verified'                — manually verified, skip
+  //   'insufficient_data'       — agent flagged as unscorable, skip
+  //   'pending_category_review' — parked for category framework decision (e.g. MEP), skip
   const rows = await supabaseRest(
     "/rest/v1/materials?score_confidence=eq.placeholder" +
       "&select=id,name,category,manufacturer,description," +
@@ -262,8 +273,16 @@ async function markConfidence(
 async function main() {
   console.log(`[ScorePlaceholders] Starting${DRY_RUN ? " (DRY RUN — no writes)" : ""}...`);
 
-  const materials = await fetchPlaceholderMaterials();
-  console.log(`[ScorePlaceholders] Found ${materials.length} placeholder materials\n`);
+  const all = await fetchPlaceholderMaterials();
+  const materials = SKIP_SUBSTRINGS.length
+    ? all.filter((m) => !SKIP_SUBSTRINGS.some((s) => m.name.toLowerCase().includes(s)))
+    : all;
+  const skipped = all.length - materials.length;
+  console.log(
+    `[ScorePlaceholders] Found ${all.length} placeholder materials` +
+      (skipped > 0 ? `, skipping ${skipped} by --skip filter` : "") +
+      "\n"
+  );
 
   if (materials.length === 0) {
     console.log("[ScorePlaceholders] Nothing to do.");
