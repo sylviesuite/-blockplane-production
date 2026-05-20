@@ -37,6 +37,7 @@ import FrontierPage from "./pages/FrontierPage";
 import ComparePage from "./pages/ComparePage";
 import AuthGate from "./components/AuthGate";
 import OnboardingModal from "./components/OnboardingModal";
+import AnonWelcomeModal from "./components/AnonWelcomeModal";
 import { useState } from "react";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -45,6 +46,22 @@ function OnboardingGate() {
   const [dismissed, setDismissed] = useState(false);
   if (!user || user.onboarding_complete || dismissed) return null;
   return <OnboardingModal onDismiss={() => setDismissed(true)} />;
+}
+
+function AnonWelcomeGate() {
+  const { user, isLoading } = useAuth();
+  const [dismissed, setDismissed] = useState(false);
+
+  // Wait for auth to resolve so we never flash the modal at a logged-in user.
+  if (isLoading || user) return null;
+  if (dismissed || localStorage.getItem("bp_welcomed")) return null;
+
+  function handleDismiss() {
+    localStorage.setItem("bp_welcomed", "true");
+    setDismissed(true);
+  }
+
+  return <AnonWelcomeModal onDismiss={handleDismiss} />;
 }
 
 function DefaultRoute() {
@@ -109,6 +126,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <OnboardingGate />
+              <AnonWelcomeGate />
               <Router />
             </TooltipProvider>
           </AuthProvider>
