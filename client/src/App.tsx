@@ -38,6 +38,7 @@ import ComparePage from "./pages/ComparePage";
 import AuthGate from "./components/AuthGate";
 import OnboardingModal from "./components/OnboardingModal";
 import AnonWelcomeModal from "./components/AnonWelcomeModal";
+import FootprintOnboarding from "./components/FootprintOnboarding";
 import { useState } from "react";
 import { useAuth } from "./contexts/AuthContext";
 
@@ -46,6 +47,21 @@ function OnboardingGate() {
   const [dismissed, setDismissed] = useState(false);
   if (!user || user.onboarding_complete || dismissed) return null;
   return <OnboardingModal onDismiss={() => setDismissed(true)} />;
+}
+
+function FootprintOnboardingGate() {
+  const { user, isLoading } = useAuth();
+  const [dismissed, setDismissed] = useState(false);
+
+  if (isLoading || !user) return null;
+  if (dismissed || localStorage.getItem("bp_footprint_onboarding_seen")) return null;
+
+  function handleDismiss() {
+    localStorage.setItem("bp_footprint_onboarding_seen", "true");
+    setDismissed(true);
+  }
+
+  return <FootprintOnboarding onDismiss={handleDismiss} />;
 }
 
 function AnonWelcomeGate() {
@@ -125,6 +141,7 @@ function App() {
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
+              <FootprintOnboardingGate />
               <OnboardingGate />
               <AnonWelcomeGate />
               <Router />

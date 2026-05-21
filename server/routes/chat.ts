@@ -1,5 +1,6 @@
 import type { Application, Request, Response } from "express";
 import { getAllMaterials } from "../db";
+import { logFootprint } from "../lib/footprintLogger";
 
 const BASE_SYSTEM_PROMPT = `You are the BlockPlane AI Builder's Assistant — an expert in sustainable construction materials, embodied carbon, and lifecycle analysis. You have access to the BlockPlane material database.
 
@@ -17,7 +18,7 @@ MATERIAL DATABASE:
 
 export function registerChatRoutes(app: Application) {
   app.post("/api/chat", async (req: Request, res: Response) => {
-    const { messages } = req.body as { messages: { role: string; content: string }[] };
+    const { messages, session_id } = req.body as { messages: { role: string; content: string }[]; session_id?: string };
 
     if (!Array.isArray(messages) || messages.length === 0) {
       res.status(400).json({ error: "messages array is required" });
@@ -72,6 +73,16 @@ export function registerChatRoutes(app: Application) {
 
       const data = await response.json() as any;
       const text: string = data?.content?.[0]?.text ?? "";
+
+      logFootprint({
+        session_id: session_id ?? null,
+        feature_name: "ai_chat",
+        provider: "anthropic",
+        model,
+        input_tokens: data?.usage?.input_tokens ?? null,
+        output_tokens: data?.usage?.output_tokens ?? null,
+      });
+
       res.json({ text, model });
     } catch (err) {
       console.error("[Chat] Error:", err);

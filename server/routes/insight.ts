@@ -1,14 +1,17 @@
 import type { Application, Request, Response } from "express";
+import { logFootprint } from "../lib/footprintLogger";
 
 interface InsightRequestBody {
   materialName?: string;
   lis?: number;
   ris?: number;
   cpi?: number;
+  session_id?: string;
+  project_id?: string;
 }
 
 async function handleInsight(req: Request, res: Response) {
-  const { materialName = "this material", lis, ris, cpi } = req.body as InsightRequestBody;
+  const { materialName = "this material", lis, ris, cpi, session_id, project_id } = req.body as InsightRequestBody;
 
   const CLAUDE_API_KEY = process.env.CLAUDE_API_KEY;
   const CLAUDE_MODEL = (process.env.CLAUDE_MODEL ?? "claude-sonnet-4-6").trim().replace(/^["']|["']$/g, "");
@@ -48,6 +51,16 @@ async function handleInsight(req: Request, res: Response) {
 
     const json: any = await response.json();
     const text: string = json?.content?.[0]?.text ?? "";
+
+    logFootprint({
+      session_id: session_id ?? null,
+      feature_name: "insightbox",
+      provider: "anthropic",
+      model: CLAUDE_MODEL,
+      input_tokens: json?.usage?.input_tokens ?? null,
+      output_tokens: json?.usage?.output_tokens ?? null,
+      project_id: project_id ?? null,
+    });
 
     return res.json({ text });
   } catch (err) {

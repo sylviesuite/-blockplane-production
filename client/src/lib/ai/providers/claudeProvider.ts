@@ -1,4 +1,5 @@
 import type { InsightProvider, MaterialInsightInput } from "@/lib/ai/insightProviderTypes";
+import { getSessionId } from "@/lib/sessionId";
 
 export const claudeProvider: InsightProvider = {
   async generateMaterialInsight(input: MaterialInsightInput) {
@@ -11,6 +12,7 @@ export const claudeProvider: InsightProvider = {
         lis: input.lis,
         ris: input.ris,
         cpi: input.cpi,
+        session_id: getSessionId(),
       }),
     });
     if (!res.ok) throw new Error(`Insight API error: ${res.status}`);

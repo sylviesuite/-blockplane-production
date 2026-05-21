@@ -1,4 +1,5 @@
 import type { Application, Request, Response } from "express";
+import { logFootprint } from "../lib/footprintLogger";
 
 interface CompareMaterial {
   name: string;
@@ -8,7 +9,7 @@ interface CompareMaterial {
 }
 
 async function handleCompareInsight(req: Request, res: Response) {
-  const { materials } = req.body as { materials?: CompareMaterial[] };
+  const { materials, session_id } = req.body as { materials?: CompareMaterial[]; session_id?: string };
 
   if (!Array.isArray(materials) || materials.length < 2) {
     return res.status(400).json({ error: "At least two materials are required" });
@@ -59,6 +60,16 @@ async function handleCompareInsight(req: Request, res: Response) {
 
     const json: any = await response.json();
     const text: string = json?.content?.[0]?.text ?? "";
+
+    logFootprint({
+      session_id: session_id ?? null,
+      feature_name: "insightbox_compare",
+      provider: "anthropic",
+      model: CLAUDE_MODEL,
+      input_tokens: json?.usage?.input_tokens ?? null,
+      output_tokens: json?.usage?.output_tokens ?? null,
+    });
+
     return res.json({ text });
   } catch (err) {
     console.error("[compare-insight] Unexpected error:", err);
