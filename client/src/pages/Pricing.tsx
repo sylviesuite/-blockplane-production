@@ -1,12 +1,6 @@
 import { Link } from "wouter";
 import { Check } from "lucide-react";
 import { Header } from "@/components/Header";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import SEO from "@/components/SEO";
 
 const forest = "#1a2e1f";
@@ -221,28 +215,25 @@ export default function Pricing() {
             Questions
           </p>
 
-          <Accordion type="multiple" className="border rounded-xl overflow-hidden" style={{ borderColor: borderSoft }}>
+          <div className="space-y-0 rounded-xl border overflow-hidden" style={{ borderColor: borderSoft }}>
             {FAQS.map((faq, i) => (
-              <AccordionItem
+              <div
                 key={i}
-                value={`faq-${i}`}
-                className="px-6"
-                style={{ borderColor: borderSoft }}
+                className="px-7 py-6"
+                style={{
+                  borderBottom: i < FAQS.length - 1 ? `1px solid ${borderSoft}` : undefined,
+                  backgroundColor: "#fff",
+                }}
               >
-                <AccordionTrigger
-                  className="text-sm font-medium py-5 hover:no-underline"
-                  style={{ color: "#1c1c1a" }}
-                >
+                <p className="text-sm font-semibold mb-3" style={{ color: "#1c1c1a" }}>
                   {faq.q}
-                </AccordionTrigger>
-                <AccordionContent>
-                  <p className="pb-5 text-sm leading-relaxed" style={{ color: muted }}>
-                    {faq.a}
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: muted }}>
+                  {faq.a}
+                </p>
+              </div>
             ))}
-          </Accordion>
+          </div>
         </div>
       </section>
 
