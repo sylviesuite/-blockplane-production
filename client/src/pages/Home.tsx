@@ -75,6 +75,13 @@ function Nav() {
           >
             How It Works
           </Link>
+          <Link
+            href="/pricing"
+            className="hidden text-sm font-medium md:inline transition-colors"
+            style={{ color: "rgba(245,242,236,0.6)" }}
+          >
+            Pricing
+          </Link>
 
           {user ? (
             <>
@@ -156,6 +163,17 @@ function Hero() {
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
           >
             Explore the database
+          </Link>
+        </div>
+        <div className="mt-5">
+          <Link
+            href="/pricing"
+            className="text-sm transition-colors"
+            style={{ color: "rgba(245,242,236,0.5)" }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(245,242,236,0.8)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(245,242,236,0.5)")}
+          >
+            See what beta testers get free →
           </Link>
         </div>
       </div>

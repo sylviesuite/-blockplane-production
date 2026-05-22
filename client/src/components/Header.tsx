@@ -58,6 +58,11 @@ export function Header() {
               Calculator
             </span>
           </Link>
+          <Link href="/pricing">
+            <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
+              Pricing
+            </span>
+          </Link>
         </nav>
 
         <div className="ml-6 flex items-center gap-4 text-sm border-l pl-6" style={{ borderColor: "rgba(245,242,236,0.15)" }}>

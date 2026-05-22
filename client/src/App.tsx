@@ -35,6 +35,7 @@ import Benchmark from "./pages/Benchmark";
 import MyProjects from "./pages/MyProjects";
 import FrontierPage from "./pages/FrontierPage";
 import ComparePage from "./pages/ComparePage";
+import Pricing from "./pages/Pricing";
 import AuthGate from "./components/AuthGate";
 import OnboardingModal from "./components/OnboardingModal";
 import AnonWelcomeModal from "./components/AnonWelcomeModal";
@@ -124,6 +125,7 @@ function Router() {
       <Route path="/api-docs" component={APIDocumentation} />
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
+      <Route path="/pricing" component={Pricing} />
       <Route path="/beta" component={BetaSignup} />
       <Route path="/terms" component={TermsOfService} />
       <Route path="/how-it-works" component={HowItWorks} />
