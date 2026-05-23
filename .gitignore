@@ -105,6 +105,9 @@ jspm_packages/
 tmp/
 temp/
 
+# Netlify CLI build artifacts
+.netlify/
+
 # Local dev scripts (not for version control)
 server/scripts/run-agent.ts
 
