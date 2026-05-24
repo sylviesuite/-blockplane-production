@@ -875,7 +875,7 @@ export default function Home() {
   return (
     <main style={{ backgroundColor: cream, color: text }}>
       <SEO
-        title="BlockPlane Metric — Material decision intelligence for sustainable construction"
+        title="Block Plane — Low-carbon material decisions for architects"
         description="Smart material choices for builders, architects, and contractors in the Great Lakes region. 394+ materials scored for embodied carbon, regenerative impact, and regional feasibility."
         url="https://blockplanemetric.com"
       />
