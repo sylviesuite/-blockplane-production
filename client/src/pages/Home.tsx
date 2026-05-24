@@ -119,30 +119,32 @@ function Nav() {
 
 // ── Hero ──────────────────────────────────────────────────────────────────────
 function Hero() {
-  const { data: countData } = trpc.materialAPI.count.useQuery();
-  const materialCount = countData?.count;
-
   return (
     <section style={{ backgroundColor: forest }}>
-      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
+      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
+
+        {/* Eyebrow */}
         <span
-          className="inline-block rounded-full border px-3 py-1 text-xs font-medium uppercase tracking-wider"
-          style={{ borderColor: borderOnDark, color: "#d8d4c8" }}
+          className="text-xs font-semibold uppercase"
+          style={{ color: amber, letterSpacing: "0.08em" }}
         >
-          Northern Michigan · Great Lakes Region
+          Embodied carbon intelligence
         </span>
+
+        {/* Headline */}
         <h1
-          className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
+          className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           style={{ color: cream }}
         >
-          BlockPlane — helping craft a sustainable future.
+          BlockPlane — helping craft a sustainable future through clear environmental impact data.
         </h1>
-        <p className="mt-3 text-base" style={{ color: "rgba(245,242,236,0.55)" }}>
-          Smart material choices for builders, architects, and anyone who cares what goes into their project.
-        </p>
+
+        {/* Subheadline */}
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
-          {materialCount ? `${materialCount}+` : "390+"} materials scored for embodied carbon, regenerative impact, and regional feasibility.
+          260+ construction materials scored on lifecycle impact, regenerative value, and carbon efficiency. An AI assistant that explains every number in plain language. Built for builders, architects, and contractors.
         </p>
+
+        {/* CTA buttons */}
         <div className="mt-10 flex flex-wrap gap-3">
           <Link
             href="/compare"
@@ -157,9 +159,7 @@ function Hero() {
             href="/materials"
             className="rounded-md border px-6 py-3.5 text-base font-semibold transition-colors"
             style={{ borderColor: borderOnDark, color: cream, backgroundColor: "transparent" }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.backgroundColor = "rgba(245,242,236,0.06)")
-            }
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(245,242,236,0.06)")}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "transparent")}
           >
             Explore the database
@@ -175,6 +175,138 @@ function Hero() {
           >
             See what beta testers get free →
           </Link>
+        </div>
+
+        {/* Divider */}
+        <div className="mt-16 border-t" style={{ borderColor: borderOnDark }} />
+
+        {/* Two-column product demo */}
+        <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+
+          {/* Left — InsightBox chat demo */}
+          <div>
+            <p
+              className="mb-4 text-[10px] font-semibold uppercase"
+              style={{ color: "rgba(245,242,236,0.38)", letterSpacing: "0.1em" }}
+            >
+              InsightBox — AI Builder's Assistant
+            </p>
+            <div
+              className="overflow-hidden rounded-xl"
+              style={{ backgroundColor: "rgba(255,255,255,0.04)", border: `1px solid ${borderOnDark}` }}
+            >
+              {/* User message */}
+              <div
+                className="flex items-start gap-3 px-5 py-4"
+                style={{ borderBottom: `1px solid ${borderOnDark}`, backgroundColor: "rgba(255,255,255,0.03)" }}
+              >
+                <div
+                  className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold"
+                  style={{ backgroundColor: "rgba(245,242,236,0.12)", color: cream }}
+                >
+                  U
+                </div>
+                <p className="text-sm leading-relaxed" style={{ color: "#d8d4c8" }}>
+                  What's the lowest-carbon insulation for a wood-frame wall in Michigan?
+                </p>
+              </div>
+
+              {/* InsightBox response */}
+              <div className="px-5 py-4" style={{ backgroundColor: "rgba(193,127,36,0.07)" }}>
+                <p
+                  className="mb-2 text-[10px] font-semibold uppercase"
+                  style={{ color: amber, letterSpacing: "0.08em" }}
+                >
+                  InsightBox
+                </p>
+                <p className="text-sm leading-relaxed" style={{ color: "#d8d4c8" }}>
+                  Dense-pack cellulose — LIS 31, RIS 74 (Silver). Outperforms mineral wool on lifecycle impact, within 5% on installed cost. Want a full wall assembly comparison?
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right — Material score cards */}
+          <div>
+            <p
+              className="mb-4 text-[10px] font-semibold uppercase"
+              style={{ color: "rgba(245,242,236,0.38)", letterSpacing: "0.1em" }}
+            >
+              Material scores
+            </p>
+            <div className="space-y-2">
+
+              {/* Cross-laminated timber — Frontier */}
+              <div
+                className="flex items-center justify-between rounded-lg px-4 py-3"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: `1px solid ${borderOnDark}` }}
+              >
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: cream }}>Cross-laminated timber</p>
+                  <p className="mt-0.5 text-xs" style={{ color: "rgba(245,242,236,0.4)" }}>Structural</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>RIS</p>
+                    <p className="text-xl font-bold leading-none" style={{ color: cream }}>82</p>
+                  </div>
+                  <span
+                    className="rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                    style={{ backgroundColor: "rgba(34,197,94,0.14)", color: "#4ade80" }}
+                  >
+                    Frontier
+                  </span>
+                </div>
+              </div>
+
+              {/* Dense-pack cellulose — Silver */}
+              <div
+                className="flex items-center justify-between rounded-lg px-4 py-3"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: `1px solid ${borderOnDark}` }}
+              >
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: cream }}>Dense-pack cellulose</p>
+                  <p className="mt-0.5 text-xs" style={{ color: "rgba(245,242,236,0.4)" }}>Insulation</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>RIS</p>
+                    <p className="text-xl font-bold leading-none" style={{ color: cream }}>74</p>
+                  </div>
+                  <span
+                    className="rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                    style={{ backgroundColor: "rgba(193,127,36,0.2)", color: amber }}
+                  >
+                    Silver
+                  </span>
+                </div>
+              </div>
+
+              {/* Standard concrete — Problematic */}
+              <div
+                className="flex items-center justify-between rounded-lg px-4 py-3"
+                style={{ backgroundColor: "rgba(255,255,255,0.05)", border: `1px solid ${borderOnDark}` }}
+              >
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: cream }}>Standard concrete</p>
+                  <p className="mt-0.5 text-xs" style={{ color: "rgba(245,242,236,0.4)" }}>Structural</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[10px]" style={{ color: "rgba(245,242,236,0.4)" }}>RIS</p>
+                    <p className="text-xl font-bold leading-none" style={{ color: cream }}>28</p>
+                  </div>
+                  <span
+                    className="rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                    style={{ backgroundColor: "rgba(239,68,68,0.14)", color: "#f87171" }}
+                  >
+                    Problematic
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </section>
