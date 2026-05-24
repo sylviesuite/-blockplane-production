@@ -123,25 +123,17 @@ function Hero() {
     <section style={{ backgroundColor: forest }}>
       <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
 
-        {/* Eyebrow */}
-        <span
-          className="text-xs font-semibold uppercase"
-          style={{ color: amber, letterSpacing: "0.08em" }}
-        >
-          Embodied carbon intelligence
-        </span>
-
         {/* Headline */}
         <h1
           className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           style={{ color: cream }}
         >
-          BlockPlane — helping craft a sustainable future through clear environmental impact data.
+          Block Plane helps architects choose low-carbon materials in seconds, not hours.
         </h1>
 
         {/* Subheadline */}
         <p className="mt-6 max-w-2xl text-lg leading-relaxed" style={{ color: "#cfcabf" }}>
-          260+ construction materials scored on lifecycle impact, regenerative value, and carbon efficiency. An AI assistant that explains every number in plain language. Built for builders, architects, and contractors.
+          425+ materials scored for embodied carbon, regenerative impact, and regional feasibility — built for AEC professionals who need answers fast.
         </p>
 
         {/* CTA buttons */}
@@ -167,13 +159,13 @@ function Hero() {
         </div>
         <div className="mt-5">
           <Link
-            href="/pricing"
+            href="/how-it-works"
             className="text-sm transition-colors"
             style={{ color: "rgba(245,242,236,0.5)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(245,242,236,0.8)")}
             onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(245,242,236,0.5)")}
           >
-            See what beta testers get free →
+            See how it works →
           </Link>
         </div>
 
