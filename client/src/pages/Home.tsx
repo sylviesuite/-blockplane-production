@@ -128,7 +128,7 @@ function Hero() {
           className="mt-4 max-w-3xl text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl md:text-6xl"
           style={{ color: cream }}
         >
-          Block Plane helps architects choose low-carbon materials in seconds, not hours.
+          Block Plane helps builders and small design firms choose low-carbon materials in seconds, not hours.
         </h1>
 
         {/* Subheadline */}
@@ -145,7 +145,7 @@ function Hero() {
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = amberHover)}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = amber)}
           >
-            Start a material compare
+            Compare a material
           </Link>
           <Link
             href="/materials"
@@ -157,7 +157,10 @@ function Hero() {
             Explore the database
           </Link>
         </div>
-        <div className="mt-5">
+        <p className="mt-5 text-sm" style={{ color: "rgba(245,242,236,0.45)" }}>
+          Professional-grade carbon thinking, built for everyday construction decisions.
+        </p>
+        <div className="mt-4">
           <Link
             href="/how-it-works"
             className="text-sm transition-colors"
