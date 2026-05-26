@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { Header } from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
+import SEO from "@/components/SEO";
 
 interface Section {
   id: string;
@@ -72,6 +73,11 @@ const REGENERATIVE_NO = [
 export default function HowItWorks() {
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="How It Works — BlockPlane"
+        description="Learn how BlockPlane scores construction materials on lifecycle impact (LIS), regenerative value (RIS), and carbon efficiency (CPI). Built for builders and architects."
+        url="https://blockplanemetric.com/how-it-works"
+      />
       <Header />
 
       <main className="flex-1 px-4 py-16">

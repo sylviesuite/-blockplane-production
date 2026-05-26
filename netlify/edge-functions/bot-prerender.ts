@@ -45,6 +45,12 @@ const ROUTES: Record<string, RouteMeta> = {
     ogTitle: "Material Analysis — BlockPlane",
     ogDescription: "LIS vs RIS scatter analysis across 260+ construction materials. Identify high-performance, low-impact materials for your next project.",
   },
+  "/how-it-works": {
+    title: "How It Works — BlockPlane",
+    description: "Learn how BlockPlane scores construction materials on lifecycle impact (LIS), regenerative value (RIS), and carbon efficiency (CPI). Built for builders and architects.",
+    ogTitle: "How It Works — BlockPlane",
+    ogDescription: "The scoring methodology behind LIS, RIS, and CPI — how BlockPlane turns EPD data into actionable material intelligence for builders and architects.",
+  },
 };
 
 function buildHTML(url: URL, meta: RouteMeta): string {

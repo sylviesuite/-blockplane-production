@@ -69,6 +69,7 @@ export default function Pricing() {
       <SEO
         title="Pricing — BlockPlane"
         description="BlockPlane is free for beta testers. Full material database, LIS/RIS/CPI scoring, and InsightBox AI — at no cost, forever."
+        url="https://blockplanemetric.com/pricing"
       />
 
       <Header />
