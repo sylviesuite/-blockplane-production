@@ -1,3 +1,5 @@
+import { searchEPDs } from "../services/ec3Client";
+
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const AGENT_MODEL = "claude-sonnet-4-20250514";
 const QUERY_DELAY_MS = 90_000;
@@ -431,24 +433,45 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
   if (!materialId) return { inserted: false, skipped: true };
 
   const wasNew = Array.isArray(inserted) && inserted.length > 0;
-  const totalCarbon = safeNum(data.totalCarbon);
   const c1c4 = safeNum(data.c1c4);
+
+  // Try EC3 enrichment — prefer verified EPD data over Claude web-search estimate
+  let carbonTotal = safeNum(data.totalCarbon);
+  let carbonA1a3 = safeNum(data.a1a3);
+  let carbonSource = (data.source ?? "Web research").slice(0, 255);
+  let carbonVerification = confidenceToVerification(data.confidenceLevel);
+
+  try {
+    const ec3 = await searchEPDs(data.name, data.category);
+    if (ec3.lowestCarbon !== null) {
+      carbonTotal = ec3.lowestCarbon;
+      carbonA1a3 = ec3.lowestCarbon;
+      carbonSource = (ec3.epdId
+        ? `EC3:${ec3.epdId} — ${ec3.epdName ?? data.name}`
+        : `EC3 — ${ec3.epdName ?? data.name}`
+      ).slice(0, 255);
+      carbonVerification = "third_party";
+      console.log(`[MaterialResearchAgent] EC3 enriched "${data.name}": ${carbonTotal} kg CO₂e (${ec3.epdName ?? "unknown EPD"})`);
+    }
+  } catch (e: any) {
+    console.warn(`[MaterialResearchAgent] EC3 lookup skipped for "${data.name}": ${e.message}`);
+  }
 
   await supabaseRest("/rest/v1/carbon_footprints", {
     method: "POST",
     headers: { Prefer: "return=minimal,resolution=ignore-duplicates" },
     body: JSON.stringify({
       material_id: materialId,
-      a1_a3_manufacturing: safeNum(data.a1a3),
+      a1_a3_manufacturing: carbonA1a3,
       a4_transport: safeNum(data.a4),
       a5_installation: safeNum(data.a5),
       b1_b7_use_phase: safeNum(data.b),
       c1_c4_end_of_life: c1c4,
-      total_carbon_cradle_to_gate: totalCarbon,
-      total_carbon_cradle_to_grave: totalCarbon + c1c4,
+      total_carbon_cradle_to_gate: carbonTotal,
+      total_carbon_cradle_to_grave: carbonTotal + c1c4,
       functional_unit: (data.functionalUnit ?? "sq ft").slice(0, 50),
-      source: (data.source ?? "Web research").slice(0, 255),
-      verification_status: confidenceToVerification(data.confidenceLevel),
+      source: carbonSource,
+      verification_status: carbonVerification,
     }),
   }).catch((e) => console.warn(`[MaterialResearchAgent] carbon_footprints skipped: ${e.message}`));
 

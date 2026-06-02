@@ -18,7 +18,7 @@ const BETA_FEATURES = [
   "Wall Systems analysis",
   "Frontier material badges",
   "Bulk CSV import",
-  "EC3-verified EPD data (coming soon)",
+  "EC3-verified EPD data",
   "Unlimited projects",
   "Priority feature requests",
   "Locked in free when paid tiers launch",
