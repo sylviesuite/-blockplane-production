@@ -115,18 +115,15 @@ function mapRecord(r: any): EC3EPD {
  */
 export async function searchEPDs(
   materialName: string,
-  category: string,
+  _category: string,
 ): Promise<EC3Result> {
+  // EC3 category filter requires their internal UUID taxonomy, not plain strings,
+  // so we omit it and let the keyword search do the filtering.
   const params: Record<string, string> = {
     q: materialName,
     page_size: "25",
-    // Only return EPDs that haven't expired
     epd_types: "Product EPD,Industry-wide EPD",
   };
-
-  if (category) {
-    params.category = category;
-  }
 
   const data = await ec3Fetch("/materials", params);
 
