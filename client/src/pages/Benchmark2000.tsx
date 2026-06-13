@@ -25,6 +25,8 @@ interface Zone {
   confidence: string;
   note: string;
   methodology: string;
+  contractorNote: string;
+  whyMatters: string;
 }
 
 interface SwapFeedback {
@@ -41,6 +43,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 2000, confidence: "High",
     note: "Poured concrete slab; Portland cement process emissions are well-characterized across EC3 EPDs.",
     methodology: "Source data: EC3 ready-mix concrete EPDs, US average. Calculation: slab volume × concrete GWP factor (kg CO₂e/m³); baseline assumes 100% Portland cement with no SCM substitution. EPD notes: Manufacturer EPDs in EC3 range 285–380 kg CO₂e/m³ depending on mix design. Caveats: Regional aggregate transport excluded; fly-ash or slag substitution can shift GWP by 30–50%.",
+    contractorNote: "Commonly available in Michigan · Minimal cost premium",
+    whyMatters: "Foundation is responsible for 51% of this home's embodied carbon. Most of that impact comes from Portland cement manufacturing, one of the largest industrial CO₂ sources globally.",
     insight: "Your poured concrete foundation accounts for over half this home's embodied carbon. Portland cement is responsible for roughly 8% of global CO₂ emissions. Specifying a mix with 40–50% fly ash or slag substitution is a low-cost, high-impact change that most Michigan contractors can source locally.",
     swaps: [
       { name: "Fly Ash Concrete (40%)", delta: -3200, rd: 6, desc: "Replace 40% of Portland cement with fly ash — a power-plant byproduct that cuts process emissions significantly." },
@@ -55,6 +59,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 2000, confidence: "Medium",
     note: "OSB and engineered lumber; regional EPD data coverage varies by manufacturer.",
     methodology: "Source data: APA industry-average OSB EPD; engineered lumber (LVL, I-joist) EPDs from EC3. Calculation: floor area × panel thickness × density × GWP factor, plus framing volume × lumber GWP. EPD notes: Biogenic carbon storage not credited per EC3 convention; OSB EPDs available from major North American producers. Caveats: Regional mill energy intensity can shift GWP ±15%; adhesive and fastener impacts excluded.",
+    contractorNote: "Engineered lumber standard in Michigan · Comparable cost",
+    whyMatters: "Floor systems carry significant structural load and material volume. Engineered and reclaimed options can cut carbon without compromising performance.",
     insight: "OSB sheathing and engineered lumber in the floor assembly are the second-largest carbon contributor. Mass timber panels sequester biogenic carbon while often simplifying installation. Recycled-content OSB is a drop-in replacement with a lower footprint.",
     swaps: [
       { name: "Recycled-Content OSB", delta: -800, rd: 4, desc: "OSB made with higher recycled fiber content and low-VOC binders — same spec, better GWP." },
@@ -68,6 +74,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 2200, confidence: "Medium",
     note: "Petroleum-derived asphalt; limited EPD coverage in the US market.",
     methodology: "Source data: Industry average for fiberglass-reinforced asphalt shingles; limited manufacturer EPDs in EC3 as of 2024. Calculation: roof area × shingle weight per square × GWP factor. EPD notes: Only one published North American manufacturer EPD for asphalt shingles; estimate based on material composition (bitumen, fiberglass, mineral granules). Caveats: 20–25 year lifespan not amortized; underlayment and fasteners excluded.",
+    contractorNote: "Metal roofing available through most suppliers · Moderate cost premium",
+    whyMatters: "Asphalt shingles require replacement multiple times over a building's life, compounding lifecycle emissions. Material choice here affects decades of impact.",
     insight: "Asphalt shingles are petroleum-derived and last only 20–25 years before going to landfill. A steel standing seam roof lasts 50+ years, can contain significant recycled content, and is fully recyclable at end of life — turning a maintenance item into a long-term asset.",
     swaps: [
       { name: "Steel Standing Seam", delta: -180, rd: 8, desc: "50-year lifespan, often 25–35% recycled content, fully recyclable at end of life." },
@@ -81,6 +89,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 280, confidence: "Medium",
     note: "Aluminum frame assumed; glazing EPDs vary by coating type and manufacturer.",
     methodology: "Source data: Aluminum window frame and flat-glass EPDs from EC3 and manufacturer disclosures. Calculation: window area × composite frame-and-glass GWP per m². EPD notes: Frame type dominates — aluminum carries 3–5× the GWP of wood or fiberglass frames; low-e coatings add minor GWP. Caveats: Thermally broken aluminum frame assumed; SHGC and U-value performance not reflected in the carbon figure; installation materials excluded.",
+    contractorNote: "Triple-pane available from regional suppliers · Higher upfront cost, long-term savings",
+    whyMatters: "Manufacturing energy dominates window carbon footprint, but durability and thermal performance can offset that impact significantly over time.",
     insight: "Aluminum-framed windows carry high embodied carbon from energy-intensive smelting. Wood or fiberglass frames reduce that impact substantially while improving the thermal break — critical in Michigan's Zone 6 climate where windows are a primary heat-loss path.",
     swaps: [
       { name: "Wood-Frame Triple Pane", delta: -600, rd: 6, desc: "FSC-certified wood frames with triple low-e glazing — lower carbon, better U-value." },
@@ -94,6 +104,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 2000, confidence: "High",
     note: "Blown fiberglass; industry average EPD applied from leading US manufacturers.",
     methodology: "Source data: North American blown fiberglass EPDs; industry average applied. Calculation: attic area × installed depth × settled density × GWP factor. EPD notes: Manufacturing energy is the primary driver; some products use blowing agents with additional GWP; cellulose carries biogenic carbon credit under certain accounting conventions. Caveats: R-value performance differences not captured in GWP alone; air sealing materials excluded.",
+    contractorNote: "Blown cellulose widely available · Similar or lower cost than fiberglass",
+    whyMatters: "Insulation choice affects both embodied carbon and operational energy. High-performance options reduce lifetime emissions well beyond the install date.",
     insight: "Blown fiberglass has a global warming potential roughly 5× higher than cellulose due to manufacturing energy. Dense-pack cellulose is 85% recycled newspaper, performs better in cold attics by reducing convective loops, and sequesters biogenic carbon as a bonus.",
     swaps: [
       { name: "Dense-Pack Cellulose", delta: -700, rd: 5, desc: "85% recycled content, carbon-negative biogenic material, superior cold-climate performance." },
@@ -107,6 +119,8 @@ const ZONES: Record<string, Zone> = {
     sqft: 1450, confidence: "High",
     note: "Dimensional lumber; regional mill EPDs available in EC3 database.",
     methodology: "Source data: Dimension lumber EPDs from Pacific Northwest and Great Lakes mills (EC3). Calculation: framing volume from 2×6 studs at 16\" o.c. with standard corners and headers × GWP factor. EPD notes: Biogenic carbon storage not credited per EC3 convention; FSC-certified vs uncertified lumber carries the same GWP in most EPDs. Caveats: Drywall, sheathing, housewrap, and insulation tracked separately; moisture content at installation not accounted for.",
+    contractorNote: "FSC lumber widely stocked in Michigan · No cost premium",
+    whyMatters: "Wall framing is already relatively low-carbon, but material sourcing and advanced framing techniques can reduce waste and improve the overall build score.",
     insight: "Conventional 2×6 framing is already a low-carbon structural option. Advanced framing (OVE) reduces lumber use by 20–25% while adding more insulation cavity — a win on both embodied and operational carbon. The savings are modest but essentially free at the design stage.",
     swaps: [
       { name: "Advanced Framing (OVE)", delta: -200, rd: 5, desc: "24\" o.c. framing with two-stud corners cuts lumber 20–25% without compromising structure." },
@@ -673,6 +687,11 @@ export default function Benchmark2000() {
                     </button>
                   </div>
 
+                  {/* Why This Matters */}
+                  <div style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.55)", lineHeight: 1.65, marginBottom: "0.75rem" }}>
+                    {zone.whyMatters}
+                  </div>
+
                   {/* Insight */}
                   <div style={{
                     fontSize: "0.82rem", lineHeight: 1.65, color: "rgba(245,242,236,0.72)",
@@ -684,8 +703,11 @@ export default function Benchmark2000() {
                   </div>
 
                   {/* Swaps */}
-                  <div style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.4)", marginBottom: "0.5rem" }}>
+                  <div style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.4)", marginBottom: "0.35rem" }}>
                     Material Swaps
+                  </div>
+                  <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.4)", marginBottom: "0.5rem" }}>
+                    {zone.contractorNote}
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                     {zone.swaps.map((sw, i) => {
@@ -908,6 +930,11 @@ export default function Benchmark2000() {
                 {zone.note}
               </div>
 
+              {/* Why This Matters */}
+              <div style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.55)", lineHeight: 1.65, marginBottom: "0.75rem" }}>
+                {zone.whyMatters}
+              </div>
+
               {/* Insight — sentence per line */}
               <div style={{ fontSize: "0.8rem", color: "rgba(245,242,236,0.68)", lineHeight: 1.6, marginBottom: "1rem" }}>
                 {zone.insight.split('. ').map((sentence, i, arr) => (
@@ -921,7 +948,7 @@ export default function Benchmark2000() {
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: "0.8rem" }} />
 
               {/* Swaps label + Learn more */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.45rem" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.3rem" }}>
                 <div style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.38)" }}>
                   Swap Alternatives
                 </div>
@@ -936,6 +963,11 @@ export default function Benchmark2000() {
                 >
                   Learn more
                 </button>
+              </div>
+
+              {/* Contractor note */}
+              <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.4)", marginBottom: "0.45rem" }}>
+                {zone.contractorNote}
               </div>
 
               {/* Swap cards */}
