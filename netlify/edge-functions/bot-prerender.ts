@@ -135,8 +135,14 @@ export default async function handler(request: Request, context: Context) {
   // the path. Bare context.next() only resolves static files; it does not
   // apply redirect rules, so paths that previously had static files (like
   // /benchmark2000) would 404 once that file is removed.
+  // Cache-Control: no-store prevents the CDN from caching the edge function
+  // response at the original URL path — otherwise a deploy cache purge clears
+  // /index.html but the cached response for /benchmark2000, /, etc. persists.
   if (!BOT_UA.test(ua)) {
-    return context.next(new Request(new URL("/index.html", request.url).toString()));
+    const res = await context.next(new Request(new URL("/index.html", request.url).toString()));
+    const headers = new Headers(res.headers);
+    headers.set("Cache-Control", "no-store");
+    return new Response(res.body, { status: res.status, headers });
   }
 
   // Match route (strip trailing slash except for root)
@@ -145,7 +151,10 @@ export default async function handler(request: Request, context: Context) {
 
   // Unknown bot route — fall back to index.html
   if (!meta) {
-    return context.next(new Request(new URL("/index.html", request.url).toString()));
+    const res = await context.next(new Request(new URL("/index.html", request.url).toString()));
+    const headers = new Headers(res.headers);
+    headers.set("Cache-Control", "no-store");
+    return new Response(res.body, { status: res.status, headers });
   }
 
   return new Response(buildHTML(url, meta), {
