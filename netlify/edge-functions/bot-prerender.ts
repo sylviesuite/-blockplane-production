@@ -51,6 +51,12 @@ const ROUTES: Record<string, RouteMeta> = {
     ogTitle: "How It Works — BlockPlane",
     ogDescription: "The scoring methodology behind LIS, RIS, and CPI — how BlockPlane turns EPD data into actionable material intelligence for builders and architects.",
   },
+  "/benchmark2000": {
+    title: "Benchmark 2000 — Interactive Carbon Simulator | BlockPlane",
+    description: "Explore how material choices affect embodied carbon in a 2,000 sq ft Northern Michigan home. EC3-verified baseline of 31,926 kg CO₂e. Swap materials and see your impact score change in real time.",
+    ogTitle: "Benchmark 2000 — Interactive Carbon Simulator",
+    ogDescription: "An EC3-verified 2,000 sq ft home with 31,926 kg CO₂e baseline. Swap concrete, framing, insulation, and more — see the carbon and RIS impact instantly.",
+  },
 };
 
 function buildHTML(url: URL, meta: RouteMeta): string {
@@ -118,19 +124,28 @@ export default async function handler(request: Request, context: Context) {
     return context.next();
   }
 
-  // Only intercept known bots
-  const ua = request.headers.get("user-agent") ?? "";
-  if (!BOT_UA.test(ua)) {
+  // API calls — pass through so the /api/* proxy redirect applies
+  if (url.pathname.startsWith("/api/")) {
     return context.next();
+  }
+
+  const ua = request.headers.get("user-agent") ?? "";
+
+  // Regular browser: explicitly fetch index.html so the SPA router handles
+  // the path. Bare context.next() only resolves static files; it does not
+  // apply redirect rules, so paths that previously had static files (like
+  // /benchmark2000) would 404 once that file is removed.
+  if (!BOT_UA.test(ua)) {
+    return context.next(new Request(new URL("/index.html", request.url).toString()));
   }
 
   // Match route (strip trailing slash except for root)
   const path = url.pathname === "/" ? "/" : url.pathname.replace(/\/$/, "");
   const meta = ROUTES[path];
 
-  // Unknown route — let Netlify serve index.html normally
+  // Unknown bot route — fall back to index.html
   if (!meta) {
-    return context.next();
+    return context.next(new Request(new URL("/index.html", request.url).toString()));
   }
 
   return new Response(buildHTML(url, meta), {
