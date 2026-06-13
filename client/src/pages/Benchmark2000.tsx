@@ -569,6 +569,8 @@ export default function Benchmark2000() {
             display: "flex",
             flexDirection: "column",
             overflowY: "auto",
+            maxHeight: "calc(100vh - 255px)",
+            minHeight: 0,
           }}>
             {/* Empty state */}
             {!selected && (
@@ -624,7 +626,7 @@ export default function Benchmark2000() {
               const next = nextBestZone(selected, swaps);
 
               return (
-                <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 0, flexShrink: 0 }}>
                   {/* Title row */}
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.75rem" }}>
                     <div>
@@ -648,7 +650,7 @@ export default function Benchmark2000() {
                   </div>
 
                   {/* Compact data row */}
-                  <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.58)", marginBottom: "0.55rem" }}>
+                  <div style={{ fontSize: "0.74rem", color: "rgba(245,242,236,0.72)", marginBottom: "0.55rem" }}>
                     Per sq ft: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{perSqft} kg</strong>
                     {" · "}
                     Quantity: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.sqft.toLocaleString()} sq ft</strong>
@@ -854,7 +856,7 @@ export default function Benchmark2000() {
           return (
             <>
               {/* Header */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "1rem" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.35rem" }}>
                 <div style={{ fontSize: "1.2rem", fontWeight: 700, color: "#f5f2ec" }}>{zone.name}</div>
                 <button
                   onClick={() => setSelected(null)}
@@ -866,8 +868,18 @@ export default function Benchmark2000() {
                 >✕</button>
               </div>
 
+              {/* Carbon / share line */}
+              <div style={{ display: "flex", gap: "1rem", marginBottom: "0.6rem" }}>
+                <span style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.5)" }}>
+                  <strong style={{ color: "#f5f2ec" }}>{curCarbon.toLocaleString()} kg</strong> CO₂e
+                </span>
+                <span style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.5)" }}>
+                  <strong style={{ color: "#f5f2ec" }}>{Math.round(curCarbon / BASE_CARBON * 100)}%</strong> of total
+                </span>
+              </div>
+
               {/* Compact data row */}
-              <div style={{ fontSize: "0.75rem", color: "rgba(245,242,236,0.48)", marginBottom: "0.85rem", lineHeight: 1.5 }}>
+              <div style={{ fontSize: "0.74rem", color: "rgba(245,242,236,0.72)", marginBottom: "0.75rem", lineHeight: 1.5 }}>
                 Per sq ft: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{perSqft} kg</strong>
                 {" · "}
                 Quantity: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.sqft.toLocaleString()} sq ft</strong>
@@ -908,9 +920,22 @@ export default function Benchmark2000() {
               {/* Divider */}
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: "0.8rem" }} />
 
-              {/* Swaps label */}
-              <div style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.38)", marginBottom: "0.45rem" }}>
-                Swap Alternatives
+              {/* Swaps label + Learn more */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.45rem" }}>
+                <div style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.38)" }}>
+                  Swap Alternatives
+                </div>
+                <button
+                  onClick={() => setLearnMoreOpen(true)}
+                  style={{
+                    background: "none", border: "none", padding: 0,
+                    fontSize: "0.69rem", color: "rgba(245,242,236,0.35)",
+                    cursor: "pointer", textDecoration: "underline",
+                    letterSpacing: "0.01em",
+                  }}
+                >
+                  Learn more
+                </button>
               </div>
 
               {/* Swap cards */}
