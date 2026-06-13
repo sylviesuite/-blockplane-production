@@ -648,12 +648,27 @@ export default function Benchmark2000() {
                   </div>
 
                   {/* Compact data row */}
-                  <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.42)", marginBottom: "0.65rem" }}>
+                  <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.58)", marginBottom: "0.55rem" }}>
                     Per sq ft: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{perSqft} kg</strong>
                     {" · "}
                     Quantity: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.sqft.toLocaleString()} sq ft</strong>
                     {" · "}
                     Confidence: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.confidence}</strong>
+                  </div>
+
+                  {/* Learn More — kept in the title area so it's never clipped */}
+                  <div style={{ marginBottom: "0.75rem", textAlign: "right" }}>
+                    <button
+                      onClick={() => setLearnMoreOpen(true)}
+                      style={{
+                        background: "none", border: "none", padding: 0,
+                        fontSize: "0.69rem", color: "rgba(245,242,236,0.35)",
+                        cursor: "pointer", textDecoration: "underline",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      Learn more
+                    </button>
                   </div>
 
                   {/* Insight */}
@@ -756,20 +771,6 @@ export default function Benchmark2000() {
                       {coach.text}
                     </div>
                   )}
-                  {/* Learn More */}
-                  <div style={{ marginTop: "0.8rem", textAlign: "right" }}>
-                    <button
-                      onClick={() => setLearnMoreOpen(true)}
-                      style={{
-                        background: "none", border: "none", padding: 0,
-                        fontSize: "0.69rem", color: "rgba(245,242,236,0.3)",
-                        cursor: "pointer", textDecoration: "underline",
-                        letterSpacing: "0.01em",
-                      }}
-                    >
-                      Learn more
-                    </button>
-                  </div>
                 </div>
               );
             })()}
