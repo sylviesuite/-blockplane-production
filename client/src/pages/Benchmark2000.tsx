@@ -143,6 +143,22 @@ const ZONES: Record<string, Zone> = {
       { name: "Mini-Split System (R-454B)", delta: -160, rd: 5, desc: "Ductless multi-zone system with ultra-low GWP refrigerant; eliminates duct losses and material." },
     ],
   },
+  drywall: {
+    name: "Drywall",
+    carbon: 1200, ris: 55, color: "amber",
+    pill: { left: "30%", top: "45%" },
+    sqft: 8500, confidence: "High",
+    note: "Standard 1/2\" gypsum board; US manufacturer EPDs are well-established in EC3.",
+    methodology: "Source data: Gypsum board EPDs from USG, Georgia-Pacific, and National Gypsum in EC3. Calculation: wall and ceiling area × board weight per area × GWP factor. EPD notes: Calcination of gypsum is the primary emission source; recycled content varies by manufacturer. Caveats: Joint compound, tape, and primer excluded; ceiling drywall included in sqft total.",
+    contractorNote: "High-recycled-content drywall available from major suppliers · No cost premium",
+    whyMatters: "Drywall covers every interior wall and ceiling surface — the sheer area makes even small per-unit improvements add up across the whole house.",
+    insight: "Standard gypsum board calcination releases CO₂ during manufacturing. High-recycled-content drywall from manufacturers like USG Sheetrock EcoSmart uses synthetic gypsum — a power-plant byproduct — cutting process emissions significantly with no performance difference.",
+    swaps: [
+      { name: "Recycled-Content Gypsum (USG EcoSmart)", delta: -280, rd: 5, desc: "Synthetic gypsum from FGD process; same install, lower manufacturing emissions." },
+      { name: "Lime Plaster Finish", delta: -160, rd: 6, desc: "Natural hydraulic lime plaster — vapor-permeable, durable, and lower GWP than gypsum board manufacturing." },
+      { name: "Hempcrete Interior Panels", delta: -480, rd: 8, desc: "Carbon-sequestering hemp-lime panels for interior partitions; biogenic carbon credit." },
+    ],
+  },
   cladding: {
     name: "Exterior Cladding",
     carbon: 610, ris: 48, color: "amber",
@@ -161,7 +177,7 @@ const ZONES: Record<string, Zone> = {
   },
 };
 
-const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing", "hvac", "cladding"];
+const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing", "hvac", "cladding", "drywall"];
 
 // SVG paths in viewBox 0 0 1000 667
 const ZONE_SHAPES: Record<string, string> = {
@@ -173,6 +189,7 @@ const ZONE_SHAPES: Record<string, string> = {
   foundation: "M50,520 H500 V620 H50 Z",
   hvac:       "M430,370 H570 V500 H430 Z",
   cladding:   "M750,140 H870 V520 H750 Z",
+  drywall:    "M115,250 H770 V405 H115 Z",
 };
 
 const COLOR_HEX: Record<ZoneColor, string> = {
@@ -221,6 +238,11 @@ const SWAP_FEEDBACK: Record<string, SwapFeedback[]> = {
     { tone: "green", msg: "Easy swap. Fiber cement is the standard upgrade from vinyl — better carbon, better durability, familiar installation." },
     { tone: "green", msg: "Strong swap. Cedar sequesters biogenic carbon and lasts 30–50 years with minimal maintenance in Michigan's climate." },
     { tone: "amber", msg: "Regenerative swap. Sourcing reclaimed wood takes lead time but the embodied carbon is essentially zero." },
+  ],
+  drywall: [
+    { tone: "green", msg: "Clean swap. Same install process, same performance, meaningfully lower manufacturing emissions — easy to specify on any project." },
+    { tone: "amber", msg: "Specialty swap. Lime plaster has a learning curve but suits high-performance and vapor-open assemblies well." },
+    { tone: "amber", msg: "Ambitious swap. Hempcrete panels sequester carbon but require specialized installation — best for new construction with a willing contractor." },
   ],
 };
 
