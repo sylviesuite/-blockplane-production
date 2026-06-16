@@ -159,6 +159,21 @@ const ZONES: Record<string, Zone> = {
       { name: "Hempcrete Interior Panels", delta: -480, rd: 8, desc: "Carbon-sequestering hemp-lime panels for interior partitions; biogenic carbon credit." },
     ],
   },
+  interiorFinishes: {
+    name: "Interior Finishes",
+    carbon: 550, ris: 50, color: "amber",
+    pill: { left: "30%", top: "55%" },
+    sqft: 2000, confidence: "Low",
+    note: "Flooring, paint, trim, and cabinetry combined; EPD coverage is sparse and highly variable.",
+    methodology: "Source data: Composite estimate from flooring EPDs (vinyl plank, carpet, hardwood), paint EPDs, and cabinet industry averages. Calculation: floor area × flooring GWP + wall area × paint coverage × GWP + cabinet lineal footage × GWP. EPD notes: Vinyl flooring carries the highest GWP; hardwood and tile are moderate; paint GWP is low per coat but covers significant area. Caveats: Confidence is Low due to wide product variability; no single EPD covers this composite category.",
+    contractorNote: "Low-VOC paint and FSC flooring widely available · Minimal to no cost premium",
+    whyMatters: "Interior finishes are highly variable and often overlooked, but flooring choice in particular can meaningfully shift the carbon profile of the interior package.",
+    insight: "Vinyl luxury plank flooring is one of the highest-GWP flooring options due to PVC content. FSC-certified hardwood or reclaimed wood floors carry biogenic carbon storage. Low-VOC paint adds minimal carbon impact but meaningfully improves indoor air quality — a co-benefit worth specifying.",
+    swaps: [
+      { name: "FSC Hardwood Flooring", delta: -140, rd: 5, desc: "Certified sustainable hardwood sequesters biogenic carbon and lasts the life of the building." },
+      { name: "Reclaimed Wood Floors", delta: -220, rd: 8, desc: "Near-zero embodied carbon; salvaged material skips new manufacturing entirely." },
+    ],
+  },
   cladding: {
     name: "Exterior Cladding",
     carbon: 610, ris: 48, color: "amber",
@@ -177,7 +192,7 @@ const ZONES: Record<string, Zone> = {
   },
 };
 
-const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing", "hvac", "cladding", "drywall"];
+const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing", "hvac", "cladding", "drywall", "interiorFinishes"];
 
 // SVG paths in viewBox 0 0 1000 667
 const ZONE_SHAPES: Record<string, string> = {
@@ -189,7 +204,8 @@ const ZONE_SHAPES: Record<string, string> = {
   foundation: "M50,520 H500 V620 H50 Z",
   hvac:       "M430,370 H570 V500 H430 Z",
   cladding:   "M750,140 H870 V520 H750 Z",
-  drywall:    "M115,250 H770 V405 H115 Z",
+  drywall:          "M115,250 H770 V405 H115 Z",
+  interiorFinishes: "M300,500 H570 V580 H300 Z",
 };
 
 const COLOR_HEX: Record<ZoneColor, string> = {
@@ -243,6 +259,10 @@ const SWAP_FEEDBACK: Record<string, SwapFeedback[]> = {
     { tone: "green", msg: "Clean swap. Same install process, same performance, meaningfully lower manufacturing emissions — easy to specify on any project." },
     { tone: "amber", msg: "Specialty swap. Lime plaster has a learning curve but suits high-performance and vapor-open assemblies well." },
     { tone: "amber", msg: "Ambitious swap. Hempcrete panels sequester carbon but require specialized installation — best for new construction with a willing contractor." },
+  ],
+  interiorFinishes: [
+    { tone: "green", msg: "Durable swap. FSC hardwood lasts the life of the building and sequesters biogenic carbon in the process." },
+    { tone: "green", msg: "Regenerative swap. Reclaimed floors are the lowest-carbon option available — worth the sourcing effort." },
   ],
 };
 
