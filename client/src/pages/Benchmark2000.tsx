@@ -11,6 +11,7 @@ interface Swap {
   delta: number;
   rd: number;
   desc: string;
+  costDelta?: string;
 }
 
 interface Zone {
@@ -26,7 +27,7 @@ interface Zone {
   note: string;
   methodology: string;
   contractorNote: string;
-  whyMatters: string;
+  whyMatters?: string;
 }
 
 interface SwapFeedback {
@@ -44,12 +45,11 @@ const ZONES: Record<string, Zone> = {
     note: "Poured concrete slab; Portland cement process emissions are well-characterized across EC3 EPDs.",
     methodology: "Source data: EC3 ready-mix concrete EPDs, US average. Calculation: slab volume × concrete GWP factor (kg CO₂e/m³); baseline assumes 100% Portland cement with no SCM substitution. EPD notes: Manufacturer EPDs in EC3 range 285–380 kg CO₂e/m³ depending on mix design. Caveats: Regional aggregate transport excluded; fly-ash or slag substitution can shift GWP by 30–50%.",
     contractorNote: "Commonly available in Michigan · Minimal cost premium",
-    whyMatters: "Foundation is responsible for 51% of this home's embodied carbon. Most of that impact comes from Portland cement manufacturing, one of the largest industrial CO₂ sources globally.",
-    insight: "Your poured concrete foundation accounts for over half this home's embodied carbon. Portland cement is responsible for roughly 8% of global CO₂ emissions. Specifying a mix with 40–50% fly ash or slag substitution is a low-cost, high-impact change that most Michigan contractors can source locally.",
+    insight: "Foundation accounts for 51% of this home's embodied carbon, primarily due to Portland cement manufacturing. Low-carbon mixes using fly ash or slag can reduce foundation emissions by 20–30% with minimal cost impact.",
     swaps: [
-      { name: "Fly Ash Concrete (40%)", delta: -3200, rd: 6, desc: "Replace 40% of Portland cement with fly ash — a power-plant byproduct that cuts process emissions significantly." },
-      { name: "Slag-Blended Mix (50%)", delta: -4800, rd: 9, desc: "GGBS at 50% substitution; maintains structural strength while dramatically reducing GWP." },
-      { name: "Optimized Structural Mix", delta: -1600, rd: 4, desc: "Reduce concrete volume 10–15% via structural optimization without changing the mix design." },
+      { name: "Fly Ash Concrete (40%)", delta: -3200, rd: 6, desc: "Replace 40% of Portland cement with fly ash — a power-plant byproduct that cuts process emissions significantly.", costDelta: "No cost premium" },
+      { name: "Slag-Blended Mix (50%)", delta: -4800, rd: 9, desc: "GGBS at 50% substitution; maintains structural strength while dramatically reducing GWP.", costDelta: "+$800–1,500 est." },
+      { name: "Optimized Structural Mix", delta: -1600, rd: 4, desc: "Reduce concrete volume 10–15% via structural optimization without changing the mix design.", costDelta: "No cost premium" },
     ],
   },
   sheathing: {
@@ -60,11 +60,11 @@ const ZONES: Record<string, Zone> = {
     note: "OSB and engineered lumber; regional EPD data coverage varies by manufacturer.",
     methodology: "Source data: APA industry-average OSB EPD; engineered lumber (LVL, I-joist) EPDs from EC3. Calculation: floor area × panel thickness × density × GWP factor, plus framing volume × lumber GWP. EPD notes: Biogenic carbon storage not credited per EC3 convention; OSB EPDs available from major North American producers. Caveats: Regional mill energy intensity can shift GWP ±15%; adhesive and fastener impacts excluded.",
     contractorNote: "Engineered lumber standard in Michigan · Comparable cost",
-    whyMatters: "Floor systems carry significant structural load and material volume. Engineered and reclaimed options can cut carbon without compromising performance.",
-    insight: "OSB sheathing and engineered lumber in the floor assembly are the second-largest carbon contributor. Mass timber panels sequester biogenic carbon while often simplifying installation. Recycled-content OSB is a drop-in replacement with a lower footprint.",
+    insight: "Floor systems carry significant material volume and structural load. Engineered options reduce carbon without compromising performance.",
     swaps: [
-      { name: "Recycled-Content OSB", delta: -800, rd: 4, desc: "OSB made with higher recycled fiber content and low-VOC binders — same spec, better GWP." },
-      { name: "Cross-Laminated Timber", delta: -1800, rd: 8, desc: "CLT panels sequester biogenic carbon and replace multiple OSB layers in one product." },
+      { name: "Engineered Wood Joists", delta: -800, rd: 4, desc: "OSB made with higher recycled fiber content and low-VOC binders — same spec, better GWP.", costDelta: "No cost premium" },
+      { name: "Cross-Laminated Timber (CLT)", delta: -1800, rd: 8, desc: "CLT panels sequester biogenic carbon and replace multiple OSB layers in one product.", costDelta: "+$2,000–4,000 est." },
+      { name: "Reclaimed Douglas Fir", delta: -1400, rd: 6, desc: "Salvaged structural lumber from decommissioned barns or buildings — near-zero new production, high character.", costDelta: "+$1,000–2,500 est." },
     ],
   },
   roofing: {
@@ -75,11 +75,11 @@ const ZONES: Record<string, Zone> = {
     note: "Petroleum-derived asphalt; limited EPD coverage in the US market.",
     methodology: "Source data: Industry average for fiberglass-reinforced asphalt shingles; limited manufacturer EPDs in EC3 as of 2024. Calculation: roof area × shingle weight per square × GWP factor. EPD notes: Only one published North American manufacturer EPD for asphalt shingles; estimate based on material composition (bitumen, fiberglass, mineral granules). Caveats: 20–25 year lifespan not amortized; underlayment and fasteners excluded.",
     contractorNote: "Metal roofing available through most suppliers · Moderate cost premium",
-    whyMatters: "Asphalt shingles require replacement multiple times over a building's life, compounding lifecycle emissions. Material choice here affects decades of impact.",
-    insight: "Asphalt shingles are petroleum-derived and last only 20–25 years before going to landfill. A steel standing seam roof lasts 50+ years, can contain significant recycled content, and is fully recyclable at end of life — turning a maintenance item into a long-term asset.",
+    insight: "Asphalt shingles require replacement multiple times over a building's life, compounding emissions. Metal roofing lasts 2–3x longer and cuts long-term carbon impact significantly.",
     swaps: [
-      { name: "Steel Standing Seam", delta: -180, rd: 8, desc: "50-year lifespan, often 25–35% recycled content, fully recyclable at end of life." },
-      { name: "Reclaimed Slate", delta: -260, rd: 11, desc: "Near-zero embodied carbon; reused material skips new manufacturing entirely." },
+      { name: "Steel Standing Seam", delta: -180, rd: 8, desc: "50-year lifespan, often 25–35% recycled content, fully recyclable at end of life.", costDelta: "+$4,000–8,000 est." },
+      { name: "Reclaimed Slate", delta: -260, rd: 11, desc: "Near-zero embodied carbon; reused material skips new manufacturing entirely.", costDelta: "+$6,000–12,000 est." },
+      { name: "Recycled Content Shingles", delta: -110, rd: 2, desc: "Shingles with post-consumer recycled rubber or plastic content — same installation, slightly lower production footprint.", costDelta: "No cost premium" },
     ],
   },
   windows: {
@@ -90,11 +90,11 @@ const ZONES: Record<string, Zone> = {
     note: "Aluminum frame assumed; glazing EPDs vary by coating type and manufacturer.",
     methodology: "Source data: Aluminum window frame and flat-glass EPDs from EC3 and manufacturer disclosures. Calculation: window area × composite frame-and-glass GWP per m². EPD notes: Frame type dominates — aluminum carries 3–5× the GWP of wood or fiberglass frames; low-e coatings add minor GWP. Caveats: Thermally broken aluminum frame assumed; SHGC and U-value performance not reflected in the carbon figure; installation materials excluded.",
     contractorNote: "Triple-pane available from regional suppliers · Higher upfront cost, long-term savings",
-    whyMatters: "Manufacturing energy dominates window carbon footprint, but durability and thermal performance can offset that impact significantly over time.",
-    insight: "Aluminum-framed windows carry high embodied carbon from energy-intensive smelting. Wood or fiberglass frames reduce that impact substantially while improving the thermal break — critical in Michigan's Zone 6 climate where windows are a primary heat-loss path.",
+    insight: "Window manufacturing is energy-intensive, but durability and thermal performance offset that impact over time. Triple-pane options from regional suppliers pay back in energy savings.",
     swaps: [
-      { name: "Wood-Frame Triple Pane", delta: -600, rd: 6, desc: "FSC-certified wood frames with triple low-e glazing — lower carbon, better U-value." },
-      { name: "Fiberglass Frame Windows", delta: -420, rd: 4, desc: "Pultruded fiberglass composite: low carbon, excellent thermal break, 40+ year lifespan." },
+      { name: "Triple-Pane Fiberglass", delta: -600, rd: 6, desc: "FSC-certified wood frames with triple low-e glazing — lower carbon, better U-value.", costDelta: "+$2,000–4,000 est." },
+      { name: "Double-Pane Low-E Upgrade", delta: -240, rd: 2, desc: "Upgraded low-e coatings reduce solar gain and heat loss with minimal added material impact over standard double-pane.", costDelta: "+$500–1,000 est." },
+      { name: "Fiberglass Frame Upgrade", delta: -420, rd: 4, desc: "Pultruded fiberglass composite: low carbon, excellent thermal break, 40+ year lifespan.", costDelta: "+$800–1,500 est." },
     ],
   },
   attic: {
@@ -105,11 +105,11 @@ const ZONES: Record<string, Zone> = {
     note: "Blown fiberglass; industry average EPD applied from leading US manufacturers.",
     methodology: "Source data: North American blown fiberglass EPDs; industry average applied. Calculation: attic area × installed depth × settled density × GWP factor. EPD notes: Manufacturing energy is the primary driver; some products use blowing agents with additional GWP; cellulose carries biogenic carbon credit under certain accounting conventions. Caveats: R-value performance differences not captured in GWP alone; air sealing materials excluded.",
     contractorNote: "Blown cellulose widely available · Similar or lower cost than fiberglass",
-    whyMatters: "Insulation choice affects both embodied carbon and operational energy. High-performance options reduce lifetime emissions well beyond the install date.",
-    insight: "Blown fiberglass has a global warming potential roughly 5× higher than cellulose due to manufacturing energy. Dense-pack cellulose is 85% recycled newspaper, performs better in cold attics by reducing convective loops, and sequesters biogenic carbon as a bonus.",
+    insight: "Insulation affects both embodied carbon and lifetime energy performance. Blown cellulose is widely available in Michigan at similar or lower cost than fiberglass.",
     swaps: [
-      { name: "Dense-Pack Cellulose", delta: -700, rd: 5, desc: "85% recycled content, carbon-negative biogenic material, superior cold-climate performance." },
-      { name: "Mineral Wool Batt", delta: -350, rd: 3, desc: "Slag-based mineral wool — non-combustible, moisture-resistant, moderate carbon improvement." },
+      { name: "Blown Cellulose (R-49)", delta: -700, rd: 5, desc: "85% recycled content, carbon-negative biogenic material, superior cold-climate performance.", costDelta: "No cost premium" },
+      { name: "Mineral Wool Batts", delta: -350, rd: 3, desc: "Slag-based mineral wool — non-combustible, moisture-resistant, moderate carbon improvement.", costDelta: "+$300–600 est." },
+      { name: "Recycled Denim Batts", delta: -420, rd: 3, desc: "Made from post-consumer denim scraps — high recycled content, no chemical irritants, similar R-value to fiberglass.", costDelta: "+$200–400 est." },
     ],
   },
   framing: {
@@ -120,16 +120,48 @@ const ZONES: Record<string, Zone> = {
     note: "Dimensional lumber; regional mill EPDs available in EC3 database.",
     methodology: "Source data: Dimension lumber EPDs from Pacific Northwest and Great Lakes mills (EC3). Calculation: framing volume from 2×6 studs at 16\" o.c. with standard corners and headers × GWP factor. EPD notes: Biogenic carbon storage not credited per EC3 convention; FSC-certified vs uncertified lumber carries the same GWP in most EPDs. Caveats: Drywall, sheathing, housewrap, and insulation tracked separately; moisture content at installation not accounted for.",
     contractorNote: "FSC lumber widely stocked in Michigan · No cost premium",
-    whyMatters: "Wall framing is already relatively low-carbon, but material sourcing and advanced framing techniques can reduce waste and improve the overall build score.",
-    insight: "Conventional 2×6 framing is already a low-carbon structural option. Advanced framing (OVE) reduces lumber use by 20–25% while adding more insulation cavity — a win on both embodied and operational carbon. The savings are modest but essentially free at the design stage.",
+    insight: "Wall framing is relatively low-carbon but material sourcing matters. FSC-certified lumber and advanced framing techniques reduce waste with no cost premium.",
     swaps: [
-      { name: "Advanced Framing (OVE)", delta: -200, rd: 5, desc: "24\" o.c. framing with two-stud corners cuts lumber 20–25% without compromising structure." },
-      { name: "FSC-Certified Lumber", delta: -80, rd: 2, desc: "Chain-of-custody certified sustainable forestry — same product, verified responsible sourcing." },
+      { name: "Advanced Framing (24\" o.c.)", delta: -200, rd: 5, desc: "24\" o.c. framing with two-stud corners cuts lumber 20–25% without compromising structure.", costDelta: "-$200–400 savings" },
+      { name: "FSC-Certified Lumber", delta: -80, rd: 2, desc: "Chain-of-custody certified sustainable forestry — same product, verified responsible sourcing.", costDelta: "+$300–600 est." },
+      { name: "Engineered Lumber (LVL)", delta: -150, rd: 4, desc: "LVL uses precision-cut veneers — less material waste, consistent strength, and lower volume per lineal foot.", costDelta: "+$500–900 est." },
+    ],
+  },
+  hvac: {
+    name: "HVAC",
+    carbon: 950, ris: 42, color: "red",
+    pill: { left: "52%", top: "60%" },
+    sqft: 2000, confidence: "Medium",
+    note: "Forced-air gas furnace with central AC; equipment manufacturing EPDs are limited in the US market.",
+    methodology: "Source data: Industry estimates for residential HVAC equipment manufacturing GWP; no widely published EPDs exist for HVAC systems as of 2024. Calculation: equipment weight × material composition GWP (steel, aluminum, copper, refrigerants). EPD notes: Refrigerant GWP is a significant wildcard — R-410A has a GWP of 2,088 vs R-32 at 675. Caveats: Operational emissions excluded (embodied carbon only); ductwork and installation materials tracked separately.",
+    contractorNote: "Heat pump systems available from major distributors · Higher upfront cost, lower operating cost",
+    whyMatters: "HVAC equipment manufacturing carries meaningful embodied carbon, and refrigerant choice can significantly amplify or reduce that impact over the system's life.",
+    insight: "Conventional gas furnace + AC systems use R-410A refrigerant with a global warming potential over 2,000× that of CO₂. Cold-climate heat pumps with low-GWP refrigerants (R-32, R-454B) cut both embodied carbon and operating emissions — critical for Michigan's heating-dominated climate.",
+    swaps: [
+      { name: "Cold-Climate Heat Pump (R-32)", delta: -210, rd: 6, desc: "Air-source heat pump with low-GWP R-32 refrigerant — efficient to -13°F, widely available in Michigan." },
+      { name: "Ground-Source Heat Pump", delta: -340, rd: 9, desc: "Geothermal system with minimal refrigerant charge; highest embodied carbon reduction, higher install cost." },
+      { name: "Mini-Split System (R-454B)", delta: -160, rd: 5, desc: "Ductless multi-zone system with ultra-low GWP refrigerant; eliminates duct losses and material." },
+    ],
+  },
+  cladding: {
+    name: "Exterior Cladding",
+    carbon: 610, ris: 48, color: "amber",
+    pill: { left: "74%", top: "50%" },
+    sqft: 1450, confidence: "Medium",
+    note: "Vinyl siding assumed; EPD coverage for residential cladding is improving but still limited.",
+    methodology: "Source data: Vinyl siding EPDs from US manufacturers; fiber cement and wood siding EPDs from EC3 and manufacturer disclosures. Calculation: wall area × cladding weight per area × GWP factor. EPD notes: Vinyl is PVC-based with high process emissions; fiber cement has moderate GWP; wood and reclaimed materials carry lower or negative biogenic carbon. Caveats: Paint, trim, and flashing excluded; installation hardware GWP not included.",
+    contractorNote: "Fiber cement widely available in Michigan · Comparable to vinyl cost",
+    whyMatters: "Cladding covers the entire exterior and is replaced or repainted multiple times over a building's life. Material choice affects both embodied carbon and long-term maintenance cycles.",
+    insight: "Vinyl siding is petrochemical-derived and difficult to recycle at end of life. Fiber cement offers comparable durability with a lower carbon footprint, while reclaimed wood or naturally durable species like cedar eliminate most manufacturing emissions entirely.",
+    swaps: [
+      { name: "Fiber Cement (James Hardie)", delta: -120, rd: 4, desc: "50-year warranty, fire-resistant, lower GWP than vinyl — the most common Michigan upgrade." },
+      { name: "FSC-Certified Cedar Siding", delta: -220, rd: 7, desc: "Naturally durable wood with biogenic carbon storage; FSC certification verifies responsible sourcing." },
+      { name: "Reclaimed Wood Cladding", delta: -340, rd: 10, desc: "Near-zero embodied carbon; salvaged material skips manufacturing entirely. Sourcing requires lead time." },
     ],
   },
 };
 
-const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing"];
+const ZONE_ORDER = ["sheathing", "foundation", "framing", "windows", "attic", "roofing", "hvac", "cladding"];
 
 // SVG paths in viewBox 0 0 1000 667
 const ZONE_SHAPES: Record<string, string> = {
@@ -139,6 +171,8 @@ const ZONE_SHAPES: Record<string, string> = {
   windows:    "M80,280 H280 V427 H80 Z",
   sheathing:  "M250,414 H800 V494 H250 Z",
   foundation: "M50,520 H500 V620 H50 Z",
+  hvac:       "M430,370 H570 V500 H430 Z",
+  cladding:   "M750,140 H870 V520 H750 Z",
 };
 
 const COLOR_HEX: Record<ZoneColor, string> = {
@@ -156,22 +190,37 @@ const SWAP_FEEDBACK: Record<string, SwapFeedback[]> = {
   sheathing: [
     { tone: "green", msg: "Easy swap. Same installation, lower footprint. Worth specifying on every project." },
     { tone: "amber", msg: "Ambitious swap. CLT sequesters carbon and simplifies the assembly — best suited for projects where the budget supports it." },
+    { tone: "amber", msg: "Reclaimed option. High-character material that skips new manufacturing — ask your supplier about regional availability." },
   ],
   roofing: [
     { tone: "amber", msg: "Long-term swap. Higher upfront cost but lasts 50+ years and is fully recyclable — strong lifecycle argument." },
     { tone: "green", msg: "Regenerative swap. Near-zero embodied carbon. Availability varies but worth asking about in Northern Michigan." },
+    { tone: "green", msg: "Easy swap. Recycled content shingles carry the same installation spec with a lower carbon footprint — no premium." },
   ],
   windows: [
     { tone: "amber", msg: "Premium swap. Best thermal and carbon performance. Higher cost but strong for high-performance builds." },
+    { tone: "green", msg: "Practical upgrade. Low-e coating cuts operational energy at moderate cost — solid improvement over standard double-pane." },
     { tone: "green", msg: "Incremental swap. Better thermal performance and modest carbon reduction — solid upgrade." },
   ],
   attic: [
     { tone: "green", msg: "Clean swap. Recycled content, same performance, lower carbon. Easy upgrade." },
     { tone: "green", msg: "Solid alternative. Non-combustible and moisture-resistant — practical for Michigan's climate." },
+    { tone: "amber", msg: "Sustainable swap. Recycled denim is comfortable to install and comes with high recycled content — good option for health-conscious builds." },
   ],
   framing: [
     { tone: "green", msg: "Smart swap. Reduces lumber use without changing the build process — easy to specify." },
     { tone: "amber", msg: "Sourcing swap. Same product, verified responsible forestry. Low effort, good story." },
+    { tone: "amber", msg: "Engineering swap. LVL uses less material with tighter tolerances — good for span conditions and reducing overall lumber volume." },
+  ],
+  hvac: [
+    { tone: "green", msg: "Smart swap. Cold-climate heat pumps work well in Michigan winters and the R-32 refrigerant dramatically lowers lifecycle GWP." },
+    { tone: "green", msg: "High-impact swap. Ground-source systems have significant upfront cost but the carbon and operating savings are substantial." },
+    { tone: "amber", msg: "Practical swap. Mini-splits eliminate duct losses and the low-GWP refrigerant is a meaningful improvement over R-410A." },
+  ],
+  cladding: [
+    { tone: "green", msg: "Easy swap. Fiber cement is the standard upgrade from vinyl — better carbon, better durability, familiar installation." },
+    { tone: "green", msg: "Strong swap. Cedar sequesters biogenic carbon and lasts 30–50 years with minimal maintenance in Michigan's climate." },
+    { tone: "amber", msg: "Regenerative swap. Sourcing reclaimed wood takes lead time but the embodied carbon is essentially zero." },
   ],
 };
 
@@ -180,10 +229,10 @@ const BASE_CARBON = 31926;
 const BASE_RIS = 51;
 const MILESTONES = [
   { pct: 0,  label: "Standard" },
-  { pct: 8,  label: "Better"   },
-  { pct: 16, label: "Good"     },
-  { pct: 25, label: "Great"    },
-  { pct: 35, label: "Excellent" },
+  { pct: 15, label: "Better"   },
+  { pct: 20, label: "Good"     },
+  { pct: 35, label: "Great"    },
+  { pct: 50, label: "Excellent" },
 ];
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
@@ -194,7 +243,9 @@ function effectiveColor(key: string, swaps: Record<string, number>): ZoneColor {
   const effectiveRIS = zone.ris + zone.swaps[idx].rd;
   if (effectiveRIS >= 60) return "green";
   if (effectiveRIS >= 45) return "amber";
-  return "red";
+  // Any applied swap on a red zone promotes at least to amber;
+  // amber zones hold their color when the improvement is modest.
+  return zone.color === "red" ? "amber" : zone.color;
 }
 
 function computeCarbon(swaps: Record<string, number>): number {
@@ -223,10 +274,10 @@ function risImpactLabel(color: ZoneColor): string {
 }
 
 function buildLevel(savePct: number): string {
-  if (savePct >= 35) return "Excellent";
-  if (savePct >= 25) return "Great";
-  if (savePct >= 16) return "Good";
-  if (savePct >= 8)  return "Better";
+  if (savePct >= 50) return "Excellent";
+  if (savePct >= 35) return "Great";
+  if (savePct >= 20) return "Good";
+  if (savePct >= 15) return "Better";
   return "Standard";
 }
 
@@ -297,6 +348,10 @@ export default function Benchmark2000() {
   const [selected, setSelected] = useState<string | null>(null);
   const [swaps, setSwaps] = useState<Record<string, number>>({});
   const [learnMoreOpen, setLearnMoreOpen] = useState(false);
+  const scoreboardRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [panelTop, setPanelTop] = useState(0);
+  const [panelLeft, setPanelLeft] = useState(0);
 
   const carbon = computeCarbon(swaps);
   const savePct = computeSavePct(carbon);
@@ -304,7 +359,7 @@ export default function Benchmark2000() {
   const hotspots = hotspotCount(swaps);
   const baseHotspots = Object.keys(ZONES).filter(k => ZONES[k].color === "red").length;
   const resolved = baseHotspots - hotspots;
-  const barPct = Math.min(savePct / 35 * 100, 100);
+  const barPct = Math.min(savePct / 50 * 100, 100);
 
   const animCarbon = useAnimatedNumber(carbon);
   const animRIS = useAnimatedNumber(ris);
@@ -341,8 +396,22 @@ export default function Benchmark2000() {
 
   const hasAnySwap = Object.keys(swaps).length > 0;
 
+  useEffect(() => {
+    function measure() {
+      if (scoreboardRef.current) {
+        setPanelTop(scoreboardRef.current.getBoundingClientRect().bottom);
+      }
+      if (panelRef.current) {
+        setPanelLeft(panelRef.current.getBoundingClientRect().left);
+      }
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#1a2e1f", color: "#f5f2ec" }}>
+    <div className="h-screen flex flex-col overflow-hidden" style={{ backgroundColor: "#1a2e1f", color: "#f5f2ec" }}>
       <SEO
         title="Benchmark 2000 — Interactive Carbon Simulator"
         description="Explore how material choices affect embodied carbon in a 2,000 sq ft Northern Michigan home. EC3-verified baseline of 31,926 kg CO₂e."
@@ -399,7 +468,7 @@ export default function Benchmark2000() {
               {MILESTONES.map(m => (
                 <div key={m.pct} style={{
                   position: "absolute",
-                  left: `${m.pct / 35 * 100}%`,
+                  left: `${m.pct / 50 * 100}%`,
                   top: -3, width: 2, height: 12,
                   background: savePct >= m.pct ? "#c17f24" : "rgba(255,255,255,0.2)",
                   borderRadius: 1,
@@ -413,7 +482,7 @@ export default function Benchmark2000() {
               {MILESTONES.map(m => (
                 <div key={m.pct} style={{
                   position: "absolute",
-                  left: `${m.pct / 35 * 100}%`,
+                  left: `${m.pct / 50 * 100}%`,
                   transform: "translateX(-50%)",
                   fontSize: "0.65rem",
                   color: savePct >= m.pct ? "#c17f24" : "rgba(245,242,236,0.35)",
@@ -429,7 +498,7 @@ export default function Benchmark2000() {
         </div>
 
         {/* ── SCOREBOARD ── */}
-        <div style={{
+        <div ref={scoreboardRef} style={{
           display: "flex", gap: "0.85rem",
           padding: "0.7rem 2.5rem",
           borderBottom: "1px solid rgba(255,255,255,0.07)",
@@ -488,12 +557,12 @@ export default function Benchmark2000() {
           flex: 1, minHeight: 0,
           display: "flex",
           padding: "0.75rem 2.5rem 1rem",
-          gap: 0,
+          gap: "3%",
           overflow: "hidden",
         }}>
 
           {/* House area */}
-          <div style={{ flex: "0 0 60%", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+          <div style={{ flex: "0 0 55%", position: "relative", overflow: "hidden", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
             <div style={{ position: "relative", flex: 1, minHeight: 0 }}>
               <img
                 src="/images/benchmark2000-house.png"
@@ -523,8 +592,10 @@ export default function Benchmark2000() {
                       style={{ cursor: "pointer", transition: "fill-opacity 0.18s, stroke-opacity 0.18s" }}
                       onClick={() => selectZone(key)}
                       onMouseEnter={e => {
-                        (e.target as SVGPathElement).style.fillOpacity = "0.18";
-                        (e.target as SVGPathElement).style.strokeOpacity = "0.6";
+                        if (!isActive) {
+                          (e.target as SVGPathElement).style.fillOpacity = "0.18";
+                          (e.target as SVGPathElement).style.strokeOpacity = "0.6";
+                        }
                       }}
                       onMouseLeave={e => {
                         (e.target as SVGPathElement).style.fillOpacity = isActive ? "0.28" : "0";
@@ -546,7 +617,7 @@ export default function Benchmark2000() {
                   : "rgba(22,163,74,0.9)";
                 return (
                   <button
-                    key={key}
+                    key={`${key}-${color}`}
                     onClick={() => selectZone(key)}
                     style={{
                       position: "absolute",
@@ -577,13 +648,12 @@ export default function Benchmark2000() {
           </div>
 
           {/* Panel */}
-          <div style={{
-            flex: "0 0 40%",
-            padding: "0 0 0 1.75rem",
+          <div ref={panelRef} style={{
+            flex: 1,
+            padding: 0,
             display: "flex",
             flexDirection: "column",
-            overflowY: "auto",
-            maxHeight: "calc(100vh - 255px)",
+            overflow: "hidden",
             minHeight: 0,
           }}>
             {/* Empty state */}
@@ -623,181 +693,6 @@ export default function Benchmark2000() {
               </div>
             )}
 
-            {/* Zone detail */}
-            {selected && (() => {
-              const zone = ZONES[selected];
-              const appliedIdx = swaps[selected];
-              const applied = appliedIdx !== undefined ? zone.swaps[appliedIdx] : null;
-              const curCarbon = zone.carbon + (applied ? applied.delta : 0);
-              const curRIS = zone.ris + (applied ? applied.rd : 0);
-              const sharePct = Math.round(curCarbon / BASE_CARBON * 100);
-              const perSqft = (curCarbon / zone.sqft).toFixed(1);
-              const feedback = appliedIdx !== undefined ? (SWAP_FEEDBACK[selected]?.[appliedIdx] ?? null) : null;
-              const color = zoneColors[selected];
-              const chipColor = color === "green" ? { bg: "rgba(22,163,74,0.18)", text: "#4ade80", border: "rgba(22,163,74,0.35)" }
-                : color === "amber" ? { bg: "rgba(193,127,36,0.18)", text: "#fbbf24", border: "rgba(193,127,36,0.35)" }
-                : { bg: "rgba(220,38,38,0.18)", text: "#f87171", border: "rgba(220,38,38,0.35)" };
-              const next = nextBestZone(selected, swaps);
-
-              return (
-                <div style={{ display: "flex", flexDirection: "column", gap: 0, flexShrink: 0 }}>
-                  {/* Title row */}
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.75rem" }}>
-                    <div>
-                      <div style={{ fontSize: "1.2rem", fontWeight: 700, color: "#f5f2ec" }}>{zone.name}</div>
-                      <div style={{ display: "flex", gap: "1rem", marginTop: "0.25rem" }}>
-                        <span style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.5)" }}>
-                          <strong style={{ color: "#f5f2ec" }}>{curCarbon.toLocaleString()} kg</strong> CO₂e
-                        </span>
-                        <span style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.5)" }}>
-                          <strong style={{ color: "#f5f2ec" }}>{sharePct}%</strong> of total
-                        </span>
-                      </div>
-                    </div>
-                    <div style={{
-                      padding: "3px 10px", borderRadius: 20, fontSize: "0.75rem", fontWeight: 700,
-                      background: chipColor.bg, color: chipColor.text, border: `1px solid ${chipColor.border}`,
-                      flexShrink: 0, marginTop: 2,
-                    }}>
-                      RIS {curRIS}
-                    </div>
-                  </div>
-
-                  {/* Compact data row */}
-                  <div style={{ fontSize: "0.74rem", color: "rgba(245,242,236,0.72)", marginBottom: "0.55rem" }}>
-                    Per sq ft: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{perSqft} kg</strong>
-                    {" · "}
-                    Quantity: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.sqft.toLocaleString()} sq ft</strong>
-                    {" · "}
-                    Confidence: <strong style={{ color: "#f5f2ec", fontWeight: 600 }}>{zone.confidence}</strong>
-                  </div>
-
-                  {/* Learn More — kept in the title area so it's never clipped */}
-                  <div style={{ marginBottom: "0.75rem", textAlign: "right" }}>
-                    <button
-                      onClick={() => setLearnMoreOpen(true)}
-                      style={{
-                        background: "none", border: "none", padding: 0,
-                        fontSize: "0.69rem", color: "rgba(245,242,236,0.35)",
-                        cursor: "pointer", textDecoration: "underline",
-                        letterSpacing: "0.01em",
-                      }}
-                    >
-                      Learn more
-                    </button>
-                  </div>
-
-                  {/* Why This Matters */}
-                  <div style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.55)", lineHeight: 1.65, marginBottom: "0.75rem" }}>
-                    {zone.whyMatters}
-                  </div>
-
-                  {/* Insight */}
-                  <div style={{
-                    fontSize: "0.82rem", lineHeight: 1.65, color: "rgba(245,242,236,0.72)",
-                    background: "rgba(255,255,255,0.04)", borderRadius: 8,
-                    padding: "0.8rem 0.95rem", borderLeft: "3px solid #c17f24",
-                    marginBottom: "1rem",
-                  }}>
-                    {zone.insight}
-                  </div>
-
-                  {/* Swaps */}
-                  <div style={{ fontSize: "0.65rem", textTransform: "uppercase", letterSpacing: "0.08em", color: "rgba(245,242,236,0.4)", marginBottom: "0.35rem" }}>
-                    Material Swaps
-                  </div>
-                  <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.4)", marginBottom: "0.5rem" }}>
-                    {zone.contractorNote}
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    {zone.swaps.map((sw, i) => {
-                      const isOn = swaps[selected] === i;
-                      return (
-                        <div key={i} style={{
-                          background: isOn ? "rgba(74,222,128,0.07)" : "rgba(255,255,255,0.05)",
-                          border: `1px solid ${isOn ? "rgba(74,222,128,0.3)" : "rgba(255,255,255,0.09)"}`,
-                          borderRadius: 9,
-                          padding: "0.8rem 0.9rem",
-                          transition: "border-color 0.2s, background 0.2s",
-                        }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.3rem" }}>
-                            <span style={{ fontSize: "0.84rem", fontWeight: 600, color: "#f5f2ec" }}>{sw.name}</span>
-                            <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#4ade80" }}>
-                              {sw.delta > 0 ? "+" : ""}{sw.delta.toLocaleString()} kg
-                            </span>
-                          </div>
-                          <div style={{ fontSize: "0.75rem", color: "rgba(245,242,236,0.5)", marginBottom: "0.55rem", lineHeight: 1.5 }}>
-                            {sw.desc}
-                          </div>
-                          <button
-                            onClick={() => toggleSwap(selected, i)}
-                            style={{
-                              padding: "4px 13px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 600,
-                              cursor: "pointer", letterSpacing: "0.02em",
-                              background: isOn ? "rgba(74,222,128,0.2)" : "#c17f24",
-                              color: isOn ? "#4ade80" : "#1a2e1f",
-                              border: isOn ? "1px solid rgba(74,222,128,0.4)" : "none",
-                              transition: "background 0.15s",
-                            }}
-                          >
-                            {isOn ? "✓ Applied — Undo" : "Try Swap"}
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* Feedback */}
-                  {feedback && (
-                    <div style={{
-                      marginTop: "0.65rem", padding: "0.55rem 0.8rem", borderRadius: 7, fontSize: "0.74rem", lineHeight: 1.45,
-                      background: feedback.tone === "green" ? "rgba(74,222,128,0.07)" : "rgba(193,127,36,0.08)",
-                      border: `1px solid ${feedback.tone === "green" ? "rgba(74,222,128,0.2)" : "rgba(193,127,36,0.25)"}`,
-                      color: feedback.tone === "green" ? "#86efac" : "#fbbf24",
-                    }}>
-                      {feedback.msg}
-                    </div>
-                  )}
-
-                  {/* Next best move */}
-                  {hasAnySwap && next && (
-                    <div
-                      onClick={() => selectZone(next)}
-                      style={{
-                        marginTop: "0.85rem", padding: "0.65rem 0.9rem",
-                        background: "rgba(193,127,36,0.07)",
-                        borderLeft: "3px solid rgba(193,127,36,0.5)",
-                        borderRadius: "0 7px 7px 0",
-                        fontSize: "0.77rem", color: "rgba(193,127,36,0.9)",
-                        lineHeight: 1.55, cursor: "pointer",
-                        transition: "background 0.15s",
-                      }}
-                      onMouseEnter={e => (e.currentTarget.style.background = "rgba(193,127,36,0.13)")}
-                      onMouseLeave={e => (e.currentTarget.style.background = "rgba(193,127,36,0.07)")}
-                    >
-                      <strong style={{ display: "block", fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: "0.2rem", opacity: 0.7 }}>
-                        Next best move
-                      </strong>
-                      {ZONES[next].name} — {Math.round(ZONES[next].carbon / BASE_CARBON * 100)}% of whole-house carbon. Click to compare options →
-                    </div>
-                  )}
-
-                  {/* Coach message when panel is open */}
-                  {!coach.showBtn && (
-                    <div style={{
-                      marginTop: "0.85rem", padding: "0.55rem 0.8rem",
-                      background: "rgba(193,127,36,0.05)",
-                      borderLeft: "2px solid rgba(193,127,36,0.3)",
-                      borderRadius: "0 6px 6px 0",
-                      fontSize: "0.72rem", color: "rgba(193,127,36,0.65)",
-                      lineHeight: 1.55,
-                    }}>
-                      {coach.text}
-                    </div>
-                  )}
-                </div>
-              );
-            })()}
           </div>
         </div>
       </div>
@@ -846,8 +741,7 @@ export default function Benchmark2000() {
       <div
         aria-hidden={!selected}
         style={{
-          position: "fixed", top: 0, right: 0, bottom: 0,
-          width: "min(420px, 88vw)",
+          position: "fixed", top: panelTop, left: panelLeft, right: 0, bottom: 0,
           background: "#1c3121",
           borderLeft: "1px solid rgba(255,255,255,0.13)",
           boxShadow: selected ? "-14px 0 48px rgba(0,0,0,0.5)" : "none",
@@ -855,11 +749,11 @@ export default function Benchmark2000() {
           transition: "transform 0.28s cubic-bezier(0.4,0,0.2,1)",
           zIndex: 200,
           display: "flex", flexDirection: "column",
-          overflowY: "auto",
-          padding: "1.35rem 1.5rem 2.5rem",
+          overflow: "hidden",
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
+        <div style={{ flex: 1, overflowY: "auto", padding: "1.35rem 1.5rem 2.5rem" }}>
         {selected && (() => {
           const zone = ZONES[selected];
           const appliedIdx = swaps[selected];
@@ -930,11 +824,6 @@ export default function Benchmark2000() {
                 {zone.note}
               </div>
 
-              {/* Why This Matters */}
-              <div style={{ fontSize: "0.78rem", color: "rgba(245,242,236,0.55)", lineHeight: 1.65, marginBottom: "0.75rem" }}>
-                {zone.whyMatters}
-              </div>
-
               {/* Insight — sentence per line */}
               <div style={{ fontSize: "0.8rem", color: "rgba(245,242,236,0.68)", lineHeight: 1.6, marginBottom: "1rem" }}>
                 {zone.insight.split('. ').map((sentence, i, arr) => (
@@ -946,6 +835,19 @@ export default function Benchmark2000() {
 
               {/* Divider */}
               <div style={{ height: 1, background: "rgba(255,255,255,0.08)", marginBottom: "0.8rem" }} />
+
+              {/* Active zone mini-header — sticky while scrolling swap cards */}
+              <div style={{
+                position: "sticky", top: 0, zIndex: 10,
+                background: "#1c3121",
+                padding: "0.4rem 0 0.5rem",
+                marginBottom: "0.3rem",
+                fontSize: "0.62rem", textTransform: "uppercase",
+                letterSpacing: "0.07em", color: "rgba(245,242,236,0.38)",
+                borderBottom: "1px solid rgba(255,255,255,0.06)",
+              }}>
+                {zone.name} · {curCarbon.toLocaleString()} kg CO₂e · {Math.round(curCarbon / BASE_CARBON * 100)}% of total · RIS {curRIS}
+              </div>
 
               {/* Swaps label + Learn more */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.3rem" }}>
@@ -981,11 +883,14 @@ export default function Benchmark2000() {
                       borderRadius: 9, padding: "0.7rem 0.8rem",
                       transition: "border-color 0.2s, background 0.2s",
                     }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.22rem" }}>
+                      <div style={{ marginBottom: "0.15rem" }}>
                         <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "#f5f2ec" }}>{sw.name}</span>
-                        <span style={{ fontSize: "0.79rem", fontWeight: 700, color: "#4ade80" }}>
-                          {sw.delta > 0 ? "+" : ""}{sw.delta.toLocaleString()} kg
+                      </div>
+                      <div style={{ fontSize: "0.72rem", marginBottom: "0.3rem" }}>
+                        <span style={{ fontWeight: 700, color: "#4ade80" }}>
+                          {sw.delta > 0 ? "+" : ""}{sw.delta.toLocaleString()} kg CO₂e
                         </span>
+                        {sw.costDelta && <span style={{ color: "rgba(245,242,236,0.42)" }}>{" · "}{sw.costDelta}</span>}
                       </div>
                       <div style={{ fontSize: "0.72rem", color: "rgba(245,242,236,0.48)", marginBottom: "0.45rem", lineHeight: 1.45 }}>
                         {sw.desc}
@@ -1041,6 +946,7 @@ export default function Benchmark2000() {
             </>
           );
         })()}
+        </div>
       </div>
 
       <MinimalFooter />
