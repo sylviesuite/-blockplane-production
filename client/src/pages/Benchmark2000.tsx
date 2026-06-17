@@ -388,7 +388,21 @@ function useAnimatedNumber(value: number, decimals = 0): string {
 // ── MAIN COMPONENT ─────────────────────────────────────────────────────────────
 export default function Benchmark2000() {
   const [selected, setSelected] = useState<string | null>(null);
-  const [swaps, setSwaps] = useState<Record<string, number>>({});
+  const [swaps, setSwaps] = useState<Record<string, number>>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("swaps");
+    if (!raw) return {};
+    const result: Record<string, number> = {};
+    for (const part of raw.split(",")) {
+      const [key, idxStr] = part.split(":");
+      const idx = parseInt(idxStr, 10);
+      if (key && key in ZONES && !isNaN(idx) && idx >= 0 && idx < ZONES[key].swaps.length) {
+        result[key] = idx;
+      }
+    }
+    return result;
+  });
+  const [copied, setCopied] = useState(false);
   const [learnMoreOpen, setLearnMoreOpen] = useState(false);
   const scoreboardRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -425,6 +439,22 @@ export default function Benchmark2000() {
   function resetAll() {
     setSwaps({});
     setSelected(null);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("swaps");
+    window.history.replaceState(null, "", url.toString());
+  }
+
+  function shareLink() {
+    const url = new URL(window.location.href);
+    url.search = "";
+    const entries = Object.entries(swaps);
+    if (entries.length > 0) {
+      url.searchParams.set("swaps", entries.map(([k, v]) => `${k}:${v}`).join(","));
+    }
+    navigator.clipboard.writeText(url.toString()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   }
 
   function startWithFoundation() {
@@ -483,17 +513,38 @@ export default function Benchmark2000() {
           <h1 style={{ fontSize: "1.4rem", fontWeight: 700, color: "#c17f24", letterSpacing: "-0.02em", whiteSpace: "nowrap", margin: 0 }}>
             Benchmark 2000
           </h1>
-          <button
-            onClick={resetAll}
-            style={{
-              padding: "3px 10px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
-              letterSpacing: "0.04em", textTransform: "uppercase", cursor: "pointer",
-              background: "transparent", color: "#c17f24", border: "1px solid rgba(193,127,36,0.5)",
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
+            <button
+              onClick={resetAll}
+              style={{
+                padding: "3px 10px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
+                letterSpacing: "0.04em", textTransform: "uppercase", cursor: "pointer",
+                background: "transparent", color: "#c17f24", border: "1px solid rgba(193,127,36,0.5)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Reset
+            </button>
+            <button
+              onClick={shareLink}
+              style={{
+                padding: "3px 10px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
+                letterSpacing: "0.04em", textTransform: "uppercase", cursor: "pointer",
+                background: "transparent", color: "rgba(245,242,236,0.6)", border: "1px solid rgba(245,242,236,0.2)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Share
+            </button>
+            <span style={{
+              fontSize: "0.65rem", color: "#22c55e", fontWeight: 600,
+              opacity: copied ? 1 : 0,
+              transition: "opacity 0.4s",
               whiteSpace: "nowrap",
-            }}
-          >
-            Reset
-          </button>
+            }}>
+              Link copied!
+            </span>
+          </div>
           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
             <div style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.07em", color: "rgba(245,242,236,0.4)" }}>
               Build Better
