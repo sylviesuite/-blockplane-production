@@ -457,6 +457,169 @@ export default function Benchmark2000() {
     });
   }
 
+  async function exportPDF() {
+    const { default: JsPDF } = await import("jspdf");
+    const doc = new JsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const W = 210;
+    const mg = 16;
+    const cW = W - mg * 2;
+    let y = 0;
+
+    // Header band
+    doc.setFillColor(26, 46, 31);
+    doc.rect(0, 0, W, 26, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.setTextColor(193, 127, 36);
+    doc.text("BENCHMARK 2000", mg, 11);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(210, 205, 195);
+    doc.text("Interactive Carbon Simulator  ·  by BlockPlane", mg, 19);
+    const dateStr = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    doc.text(`Generated ${dateStr}`, W - mg, 19, { align: "right" });
+
+    y = 34;
+
+    // Stats row
+    const c2 = mg + cW * 0.34, c3 = mg + cW * 0.57, c4 = mg + cW * 0.78;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(6.5);
+    doc.setTextColor(160, 160, 160);
+    doc.text("WHOLE-HOUSE CARBON", mg, y);
+    doc.text("RIS SCORE", c2, y);
+    doc.text("BUILD LEVEL", c3, y);
+    doc.text("REDUCTION", c4, y);
+    y += 6;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(26, 46, 31);
+    doc.text(`${carbon.toLocaleString()}`, mg, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(110, 110, 110);
+    doc.text("kg CO₂e", mg, y + 4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(26, 46, 31);
+    doc.text(`${Math.round(ris)}`, c2, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(110, 110, 110);
+    doc.text(risRating(ris), c2, y + 4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(26, 46, 31);
+    doc.text(buildLevel(savePct), c3, y);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.setTextColor(26, 46, 31);
+    doc.text(`${savePct.toFixed(1)}%`, c4, y);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(110, 110, 110);
+    doc.text("vs. baseline", c4, y + 4);
+
+    y += 16;
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.25);
+    doc.line(mg, y, W - mg, y);
+    y += 8;
+
+    // Applied swaps
+    const appliedEntries = Object.entries(swaps);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(130, 130, 130);
+    doc.text(`APPLIED SWAPS (${appliedEntries.length})`, mg, y);
+    y += 5;
+
+    if (appliedEntries.length === 0) {
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(8.5);
+      doc.setTextColor(160, 160, 160);
+      doc.text("No swaps applied — this report reflects the baseline build.", mg, y);
+      y += 8;
+    } else {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(6.5);
+      doc.setTextColor(190, 190, 190);
+      doc.text("ZONE", mg, y);
+      doc.text("SWAP", mg + 44, y);
+      doc.text("CARBON DELTA", W - mg, y, { align: "right" });
+      y += 3.5;
+      doc.setDrawColor(235, 235, 235);
+      doc.setLineWidth(0.15);
+      doc.line(mg, y, W - mg, y);
+      y += 4.5;
+
+      for (const [key, idx] of appliedEntries) {
+        const zone = ZONES[key];
+        const sw = zone.swaps[idx];
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8.5);
+        doc.setTextColor(26, 46, 31);
+        doc.text(zone.name, mg, y);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(70, 70, 70);
+        doc.text(doc.splitTextToSize(sw.name, 82), mg + 44, y);
+        doc.setFont("helvetica", "bold");
+        const dc = sw.delta < 0 ? [22, 163, 74] : [200, 70, 70];
+        doc.setTextColor(dc[0], dc[1], dc[2]);
+        doc.text(`${sw.delta > 0 ? "+" : ""}${sw.delta.toLocaleString()} kg CO₂e`, W - mg, y, { align: "right" });
+        y += 6.5;
+      }
+
+      const totalDelta = appliedEntries.reduce((t, [k, i]) => t + ZONES[k].swaps[i].delta, 0);
+      doc.setDrawColor(220, 220, 220);
+      doc.setLineWidth(0.25);
+      doc.line(mg, y, W - mg, y);
+      y += 5;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8.5);
+      doc.setTextColor(110, 110, 110);
+      doc.text("TOTAL REDUCTION", mg, y);
+      const tc = totalDelta < 0 ? [22, 163, 74] : [200, 70, 70];
+      doc.setTextColor(tc[0], tc[1], tc[2]);
+      doc.text(`${totalDelta > 0 ? "+" : ""}${totalDelta.toLocaleString()} kg CO₂e`, W - mg, y, { align: "right" });
+      y += 8;
+    }
+
+    y += 2;
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.25);
+    doc.line(mg, y, W - mg, y);
+    y += 8;
+
+    // EC3 baseline disclosure
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(7.5);
+    doc.setTextColor(140, 140, 140);
+    doc.text("BASELINE DISCLOSURE", mg, y);
+    y += 5;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(150, 150, 150);
+    const disc = "Baseline of 31,926 kg CO₂e is sourced from EC3 (Embodied Carbon in Construction Calculator) data for a 2,000 sq ft single-family home in Northern Michigan. Zone-level carbon values are EPD-based estimates assembled for design exploration. This report is not a substitute for a full Life Cycle Assessment (LCA) performed by a qualified professional.";
+    const discLines = doc.splitTextToSize(disc, cW);
+    doc.text(discLines, mg, y);
+    y += discLines.length * 3.8 + 6;
+
+    // Footer
+    doc.setFillColor(245, 242, 236);
+    doc.rect(0, 283, W, 14, "F");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6.5);
+    doc.setTextColor(160, 150, 130);
+    doc.text("blockplanemetric.com  ·  Benchmark 2000  ·  For educational and design exploration purposes only", W / 2, 292, { align: "center" });
+
+    doc.save("benchmark2000-export.pdf");
+  }
+
   function startWithFoundation() {
     setSelected("foundation");
   }
@@ -535,6 +698,17 @@ export default function Benchmark2000() {
               }}
             >
               Share
+            </button>
+            <button
+              onClick={exportPDF}
+              style={{
+                padding: "3px 10px", borderRadius: 6, fontSize: "0.68rem", fontWeight: 600,
+                letterSpacing: "0.04em", textTransform: "uppercase", cursor: "pointer",
+                background: "transparent", color: "rgba(245,242,236,0.6)", border: "1px solid rgba(245,242,236,0.2)",
+                whiteSpace: "nowrap",
+              }}
+            >
+              Export PDF
             </button>
             <span style={{
               fontSize: "0.65rem", color: "#22c55e", fontWeight: 600,
