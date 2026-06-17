@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Redirect, Route, Switch } from "wouter";
+import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -31,7 +31,7 @@ import BetaSignup from "./pages/BetaSignup";
 import TermsOfService from "./pages/TermsOfService";
 import HowItWorks from "./pages/HowItWorks";
 import CarbonCalculator from "./pages/CarbonCalculator";
-import Benchmark from "./pages/Benchmark";
+import Benchmark2000 from "./pages/Benchmark2000";
 import MyProjects from "./pages/MyProjects";
 import FrontierPage from "./pages/FrontierPage";
 import ComparePage from "./pages/ComparePage";
@@ -40,8 +40,13 @@ import AuthGate from "./components/AuthGate";
 import OnboardingModal from "./components/OnboardingModal";
 import AnonWelcomeModal from "./components/AnonWelcomeModal";
 import FootprintOnboarding from "./components/FootprintOnboarding";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "./contexts/AuthContext";
+
+function BenchmarkRedirect() {
+  useEffect(() => { window.location.replace("/benchmark2000"); }, []);
+  return null;
+}
 
 function OnboardingGate() {
   const { user } = useAuth();
@@ -99,7 +104,8 @@ function Router() {
       <Route path="/assistant" component={Assistant} />
       <Route path={"/impact"} component={KPIDashboard} />
       <Route path="/calculator" component={CarbonCalculator} />
-      <Route path="/benchmark" component={Benchmark} />
+      <Route path="/benchmark" component={BenchmarkRedirect} />
+      <Route path="/benchmark2000" component={Benchmark2000} />
       <Route path="/materials/:id" component={MaterialDetailEnhanced} />
       <Route path="/projects">
         {() => <AuthGate redirect><ProjectAnalysis /></AuthGate>}

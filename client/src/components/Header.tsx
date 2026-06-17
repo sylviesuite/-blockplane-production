@@ -43,7 +43,7 @@ export function Header() {
               Analysis
             </span>
           </Link>
-          <Link href="/benchmark">
+          <Link href="/benchmark2000">
             <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
               Benchmark 2000
             </span>

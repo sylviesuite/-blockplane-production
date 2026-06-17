@@ -59,7 +59,21 @@
       "PowerShell(Get-Process *)",
       "PowerShell(Get-Item *)",
       "Bash(Find \"C:\\\\Users\\\\steve\\\\dev\\\\-blockplane-production\" -type f \\\\\\( -name \"routes.ts\" -o -name \"routes.js\" -o -name \"*routes*\" \\\\\\) ! -path \"*/node_modules/*\")",
-      "Bash(Expand-Archive *)"
+      "Bash(Expand-Archive *)",
+      "Bash(git remote *)",
+      "Bash(Test-Path *)",
+      "Bash(Get-ChildItem -Recurse -Directory)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(netlify status *)",
+      "Bash(npx netlify *)",
+      "PowerShell($env:RENDER_API_KEY; [System.Environment]::GetEnvironmentVariable\\(\"RENDER_API_KEY\", \"User\"\\); [System.Environment]::GetEnvironmentVariable\\(\"RENDER_API_KEY\", \"Machine\"\\))",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(r.get\\('category',''\\)\\) for r in data[:3]]\")",
+      "Bash(npx supabase *)",
+      "Bash(npm uninstall *)",
+      "Skill(run)",
+      "Bash(netlify api *)",
+      "Bash(python -c ' *)",
+      "Bash(netlify builds:list --site-id=c5f296c2-72e6-4bb8-b6b1-1fbffb25c4ec)"
     ]
   }
 }

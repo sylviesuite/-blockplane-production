@@ -17,6 +17,13 @@
   status = 200
   force  = true
 
+# Redirect old /benchmark route to new canonical URL
+[[redirects]]
+  from   = "/benchmark"
+  to     = "/benchmark2000"
+  status = 301
+  force  = true
+
 # SPA fallback — all routes serve index.html, client-side router takes over
 [[redirects]]
   from   = "/*"
