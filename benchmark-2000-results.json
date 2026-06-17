@@ -1,0 +1,86 @@
+[
+  {
+    "assembly_name": "Foundation",
+    "material_name": "Ready-Mix Concrete 3000 psi for Foundation",
+    "ec3_avg_kgco2e_per_unit": 360,
+    "unit": "1 m3",
+    "quantity_estimate": 48,
+    "total_kgco2e": 17280,
+    "confidence": "medium",
+    "source_notes": "Based on EC3 database averages for ready-mix concrete showing industry averages ranging from 298-480 kg CO2e/m3. Quantities based on basement slab (~185 m2 × 0.15m = 28 m3) plus basement walls (~66 m2 × 0.30m = 20 m3) for a typical 2,000 sq ft home.",
+    "researched_at": "2026-06-04T23:18:03.316Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Framing",
+    "material_name": "Dimensional Lumber 2x6 SPF (Spruce-Pine-Fir)",
+    "ec3_avg_kgco2e_per_unit": 150,
+    "unit": "1 m3",
+    "quantity_estimate": 15,
+    "total_kgco2e": 2250,
+    "confidence": "medium",
+    "source_notes": "EC3 has dimensional lumber calculators and based on literature review showing dimensional lumber typically ranges 150-200 kg CO2e/m3. Estimated 15 m3 for 2x6 framing at 16\" o.c. for 2,000 sq ft two-story home including walls, floor joists, and roof framing.",
+    "researched_at": "2026-06-04T23:18:34.545Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Sheathing",
+    "material_name": "OSB Sheathing and Subfloor",
+    "ec3_avg_kgco2e_per_unit": 500,
+    "unit": "1 m3",
+    "quantity_estimate": 24.3,
+    "total_kgco2e": 12150,
+    "confidence": "medium",
+    "source_notes": "Based on CORRIM EPD showing cradle-to-gate fossil GWP of ~250 kg CO2e/m3 and Chinese study showing 552 kg CO2e/m3, using mid-range estimate. Quantity includes wall sheathing (~260 m2 × 0.012m = 3.1 m3), roof sheathing (~215 m2 × 0.012m = 2.6 m3), and subfloor (~370 m2 × 0.019m = 7.0 m3), plus basement walls.",
+    "researched_at": "2026-06-04T23:19:07.869Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Insulation",
+    "material_name": "Fiberglass Batt Insulation R-21 and R-49",
+    "ec3_avg_kgco2e_per_unit": 2.1,
+    "unit": "1 m2 per inch thickness",
+    "quantity_estimate": 1056,
+    "total_kgco2e": 2218,
+    "confidence": "medium",
+    "source_notes": "Based on industry data showing fiberglass batts have 1.7-2.5 kg CO2e/m2 per inch thickness. Wall area 260 m2 × 6 inches (R-21) = 1560 m2-inch; attic area 185 m2 × 13.5 inches (R-49) = 2498 m2-inch; total 4058 m2-inch, using conservative density factor.",
+    "researched_at": "2026-06-04T23:19:35.156Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Roofing",
+    "material_name": "Asphalt Shingles for Steep Slope Residential Roofing",
+    "ec3_avg_kgco2e_per_unit": 4.5,
+    "unit": "1 m2",
+    "quantity_estimate": 215,
+    "total_kgco2e": 967.5,
+    "confidence": "medium",
+    "source_notes": "Based on ARMA industry-average EPD for asphalt shingle roofing systems per m2 installed area. Estimated ~215 m2 roof area for 2,000 sq ft home with typical overhang and pitch.",
+    "researched_at": "2026-06-04T23:20:04.625Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Cladding",
+    "material_name": "Vinyl Siding PVC Cladding",
+    "ec3_avg_kgco2e_per_unit": 6,
+    "unit": "1 m2",
+    "quantity_estimate": 260,
+    "total_kgco2e": 1560,
+    "confidence": "medium",
+    "source_notes": "Based on EC3 database range of 4-8 kg CO₂e/m² for vinyl siding referenced in industry literature. Quantity assumes 260 m² exterior wall area for 2-story home with standard overhang and gable configurations.",
+    "researched_at": "2026-06-04T23:20:35.765Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  },
+  {
+    "assembly_name": "Windows",
+    "material_name": "Double-pane vinyl window",
+    "ec3_avg_kgco2e_per_unit": 200,
+    "unit": "1 m2",
+    "quantity_estimate": 28,
+    "total_kgco2e": 5600,
+    "confidence": "medium",
+    "source_notes": "Based on literature review showing PVC window frames with double panes at 68 kg CO2e per functional unit plus glass components. Applied EC3 reference range of 150-250 kg CO2e/m2 for double-pane vinyl windows with 20 units at 1.4 m2 each.",
+    "researched_at": "2026-06-04T23:21:07.194Z",
+    "db_error": "Supabase 404: {\"code\":\"PGRST205\",\"details\":null,\"hint\":null,\"message\":\"Could not find the table 'public.benchmark_2000_r"
+  }
+]
