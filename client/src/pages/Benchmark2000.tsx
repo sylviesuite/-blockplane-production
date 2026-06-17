@@ -536,6 +536,25 @@ export default function Benchmark2000() {
                 </div>
               ))}
             </div>
+            {/* Progress tracking line */}
+            {(() => {
+              const current = [...MILESTONES].reverse().find(m => savePct >= m.pct)!;
+              const next = MILESTONES.find(m => m.pct > savePct);
+              if (!next) {
+                return (
+                  <div style={{ fontSize: "0.65rem", color: "#22c55e", marginTop: "0.35rem", transition: "color 0.3s" }}>
+                    Excellent — you've reached the highest tier for embodied carbon reduction.
+                  </div>
+                );
+              }
+              const needed = (next.pct - savePct).toFixed(1);
+              return (
+                <div style={{ fontSize: "0.65rem", color: "rgba(245,242,236,0.45)", marginTop: "0.35rem", transition: "color 0.3s" }}>
+                  You're at <span style={{ color: "#c17f24", fontWeight: 600 }}>{current.label}</span>
+                  {" · "}{needed}% more to reach <span style={{ color: "rgba(245,242,236,0.7)", fontWeight: 600 }}>{next.label}</span>
+                </div>
+              );
+            })()}
           </div>
         </div>
 
