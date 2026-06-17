@@ -270,12 +270,14 @@ const SWAP_FEEDBACK: Record<string, SwapFeedback[]> = {
 const BASE_CARBON = 31926;
 const BASE_RIS = 51;
 const MILESTONES = [
-  { pct: 0,  label: "Standard" },
-  { pct: 15, label: "Better"   },
-  { pct: 20, label: "Good"     },
-  { pct: 35, label: "Great"    },
-  { pct: 50, label: "Excellent" },
+  { pct: 0,  label: "Standard"  },
+  { pct: 8,  label: "Better"    },
+  { pct: 16, label: "Good"      },
+  { pct: 25, label: "Great"     },
+  { pct: 35, label: "Excellent" },
 ];
+// Single source of truth for the bar scale — always the last milestone's threshold.
+const MILESTONE_MAX = MILESTONES[MILESTONES.length - 1].pct;
 
 // ── HELPERS ────────────────────────────────────────────────────────────────────
 function effectiveColor(key: string, swaps: Record<string, number>): ZoneColor {
@@ -315,12 +317,8 @@ function risImpactLabel(color: ZoneColor): string {
   return "High-impact";
 }
 
-function buildLevel(savePct: number): string {
-  if (savePct >= 50) return "Excellent";
-  if (savePct >= 35) return "Great";
-  if (savePct >= 20) return "Good";
-  if (savePct >= 15) return "Better";
-  return "Standard";
+function buildLevel(pct: number): string {
+  return [...MILESTONES].reverse().find(m => pct >= m.pct)!.label;
 }
 
 function hotspotCount(swaps: Record<string, number>): number {
@@ -415,7 +413,12 @@ export default function Benchmark2000() {
   const hotspots = hotspotCount(swaps);
   const baseHotspots = Object.keys(ZONES).filter(k => ZONES[k].color === "red").length;
   const resolved = baseHotspots - hotspots;
-  const barPct = Math.min(savePct / 50 * 100, 100);
+  const barPct = Math.min(savePct / MILESTONE_MAX * 100, 100);
+
+  const fastestPathZone = Object.entries(ZONES)
+    .filter(([k]) => swaps[k] === undefined)
+    .map(([, z]) => ({ name: z.name, best: Math.min(...z.swaps.map(s => s.delta)) }))
+    .sort((a, b) => a.best - b.best)[0]?.name ?? null;
 
   const animCarbon = useAnimatedNumber(carbon);
   const animRIS = useAnimatedNumber(ris);
@@ -735,7 +738,7 @@ export default function Benchmark2000() {
               {MILESTONES.map(m => (
                 <div key={m.pct} style={{
                   position: "absolute",
-                  left: `${m.pct / 50 * 100}%`,
+                  left: `${m.pct / MILESTONE_MAX * 100}%`,
                   top: -3, width: 2, height: 12,
                   background: savePct >= m.pct ? "#c17f24" : "rgba(255,255,255,0.2)",
                   borderRadius: 1,
@@ -749,7 +752,7 @@ export default function Benchmark2000() {
               {MILESTONES.map(m => (
                 <div key={m.pct} style={{
                   position: "absolute",
-                  left: `${m.pct / 50 * 100}%`,
+                  left: `${m.pct / MILESTONE_MAX * 100}%`,
                   transform: "translateX(-50%)",
                   fontSize: "0.65rem",
                   color: savePct >= m.pct ? "#c17f24" : "rgba(245,242,236,0.35)",
@@ -763,20 +766,35 @@ export default function Benchmark2000() {
             </div>
             {/* Progress tracking line */}
             {(() => {
-              const current = [...MILESTONES].reverse().find(m => savePct >= m.pct)!;
               const next = MILESTONES.find(m => m.pct > savePct);
+              const dim = "rgba(245,242,236,0.45)";
+              const gold = "#c17f24";
+              const bright = "rgba(245,242,236,0.75)";
               if (!next) {
                 return (
                   <div style={{ fontSize: "0.65rem", color: "#22c55e", marginTop: "0.35rem", transition: "color 0.3s" }}>
-                    Excellent — you've reached the highest tier for embodied carbon reduction.
+                    <span style={{ fontWeight: 600 }}>Excellent</span>
+                    {" vs. Benchmark 2000 baseline · "}
+                    <span style={{ fontWeight: 600 }}>{savePct.toFixed(1)}%</span>
+                    {" reduction achieved"}
                   </div>
                 );
               }
               const needed = (next.pct - savePct).toFixed(1);
+              const tier = buildLevel(savePct);
               return (
-                <div style={{ fontSize: "0.65rem", color: "rgba(245,242,236,0.45)", marginTop: "0.35rem", transition: "color 0.3s" }}>
-                  You're at <span style={{ color: "#c17f24", fontWeight: 600 }}>{current.label}</span>
-                  {" · "}{needed}% more to reach <span style={{ color: "rgba(245,242,236,0.7)", fontWeight: 600 }}>{next.label}</span>
+                <div style={{ fontSize: "0.65rem", color: dim, marginTop: "0.35rem", transition: "color 0.3s" }}>
+                  <span style={{ color: gold, fontWeight: 600 }}>{tier}</span>
+                  {" · "}
+                  <span style={{ color: bright, fontWeight: 600 }}>{savePct.toFixed(1)}%</span>
+                  {" reduction achieved · "}
+                  <span style={{ color: bright }}>{needed}%</span>
+                  {" to "}
+                  <span style={{ color: bright, fontWeight: 600 }}>{next.label}</span>
+                  {fastestPathZone && <>
+                    {" · Fastest path: "}
+                    <span style={{ color: gold }}>{fastestPathZone}</span>
+                  </>}
                 </div>
               );
             })()}
