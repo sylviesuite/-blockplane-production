@@ -415,6 +415,7 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
       description: data.description ?? null,
       data_quality_score: confidenceToScore(data.confidenceLevel),
       source: data.source ? data.source.slice(0, 255) : null,
+      score_confidence: data.confidenceLevel === "High" ? "verified" : "estimated",
     }),
   });
 
@@ -500,6 +501,71 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
 }
 
 // ---------------------------------------------------------------------------
+// On-demand carbon estimation (called from user-facing "Estimate for me" flow)
+// ---------------------------------------------------------------------------
+
+export async function estimateCarbonForDescription(input: {
+  name: string;
+  category: string;
+  description?: string;
+}): Promise<{ carbonValue: number; functionalUnit: string; reasoning: string }> {
+  const apiKey = process.env.CLAUDE_API_KEY;
+  if (!apiKey) throw new Error("CLAUDE_API_KEY not set");
+
+  const prompt = `Estimate the embodied carbon (cradle-to-gate, kg CO₂e per functional unit) for the following building material. Base your estimate on published EPDs, ICE Database, ATHENA, or widely accepted industry averages.
+
+Material name: ${input.name}
+Category: ${input.category}
+${input.description ? `Description: ${input.description}` : ""}
+
+Return ONLY a valid JSON object — no markdown, no code fences, no explanation:
+{
+  "carbonValue": <number, kg CO₂e per functional unit>,
+  "functionalUnit": <"sq ft" | "linear ft" | "cubic yard" | "cubic ft" | "each" | "gallon">,
+  "reasoning": <one sentence explaining what data source or method the estimate is based on>
+}
+
+Use imperial functional units. Prefer "sq ft" for area-based materials, "linear ft" for dimensional lumber/framing, "each" for equipment/fixtures.`;
+
+  const res = await fetch(CLAUDE_API_URL, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: AGENT_MODEL,
+      max_tokens: 512,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`Claude API ${res.status}: ${errText.slice(0, 200)}`);
+  }
+
+  const data: any = await res.json();
+  const textBlock = (data.content ?? []).find((c: any) => c.type === "text");
+  const text = textBlock?.text ?? "";
+
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error("Could not parse AI response");
+
+  const parsed = JSON.parse(match[0]);
+  if (typeof parsed.carbonValue !== "number" || parsed.carbonValue <= 0) {
+    throw new Error("Invalid carbon estimate returned");
+  }
+
+  return {
+    carbonValue: parsed.carbonValue,
+    functionalUnit: parsed.functionalUnit || "sq ft",
+    reasoning: parsed.reasoning || "AI-estimated based on industry data",
+  };
+}
+
+// ---------------------------------------------------------------------------
 // Single-material targeted research (used by the admin approval flow)
 // ---------------------------------------------------------------------------
 
@@ -549,7 +615,7 @@ export async function researchAndInsertSingleMaterial(submission: {
         description: submission.description ?? "",
         manufacturer: submission.manufacturer ?? "",
         region: "Northern Michigan",
-        source: submission.source ?? "Community submission",
+        source: submission.source ?? "User submission",
         confidenceLevel: "Low",
         a1a3: submission.carbonValue * 0.9,
         a4: submission.carbonValue * 0.1,

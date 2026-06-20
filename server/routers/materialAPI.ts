@@ -15,11 +15,12 @@
 
 import { router, publicProcedure } from "../_core/trpc";
 import { z } from "zod";
-import { 
-  getAllMaterials, 
-  getMaterialById, 
-  getMaterialsByCategory 
+import {
+  getAllMaterials,
+  getMaterialById,
+  getMaterialsByCategory
 } from "../db";
+import { estimateCarbonForDescription } from "../agents/materialResearchAgent";
 
 /**
  * Material search/filter input schema
@@ -380,6 +381,19 @@ export const materialAPIRouter = router({
           confidence: rec.material.confidenceLevel,
         };
       });
+    }),
+
+  /**
+   * AI carbon estimation — returns an estimate without persisting anything
+   */
+  estimateCarbon: publicProcedure
+    .input(z.object({
+      name: z.string().min(2).max(255),
+      category: z.string().min(1).max(100),
+      description: z.string().max(1000).optional(),
+    }))
+    .mutation(async ({ input }) => {
+      return await estimateCarbonForDescription(input);
     }),
 
   /**
