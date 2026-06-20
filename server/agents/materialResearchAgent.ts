@@ -1,4 +1,3 @@
-import { searchEPDs } from "../services/ec3Client";
 
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const AGENT_MODEL = "claude-sonnet-4-20250514";
@@ -435,27 +434,10 @@ async function insertMaterial(data: MaterialData): Promise<{ inserted: boolean; 
   const wasNew = Array.isArray(inserted) && inserted.length > 0;
   const c1c4 = safeNum(data.c1c4);
 
-  // Try EC3 enrichment — prefer verified EPD data over Claude web-search estimate
-  let carbonTotal = safeNum(data.totalCarbon);
-  let carbonA1a3 = safeNum(data.a1a3);
-  let carbonSource = (data.source ?? "Web research").slice(0, 255);
-  let carbonVerification = confidenceToVerification(data.confidenceLevel);
-
-  try {
-    const ec3 = await searchEPDs(data.name, data.category);
-    if (ec3.lowestCarbon !== null) {
-      carbonTotal = ec3.lowestCarbon;
-      carbonA1a3 = ec3.lowestCarbon;
-      carbonSource = (ec3.epdId
-        ? `EC3:${ec3.epdId} — ${ec3.epdName ?? data.name}`
-        : `EC3 — ${ec3.epdName ?? data.name}`
-      ).slice(0, 255);
-      carbonVerification = "third_party";
-      console.log(`[MaterialResearchAgent] EC3 enriched "${data.name}": ${carbonTotal} kg CO₂e (${ec3.epdName ?? "unknown EPD"})`);
-    }
-  } catch (e: any) {
-    console.warn(`[MaterialResearchAgent] EC3 lookup skipped for "${data.name}": ${e.message}`);
-  }
+  const carbonTotal = safeNum(data.totalCarbon);
+  const carbonA1a3 = safeNum(data.a1a3);
+  const carbonSource = (data.source ?? "Web research").slice(0, 255);
+  const carbonVerification = confidenceToVerification(data.confidenceLevel);
 
   await supabaseRest("/rest/v1/carbon_footprints", {
     method: "POST",

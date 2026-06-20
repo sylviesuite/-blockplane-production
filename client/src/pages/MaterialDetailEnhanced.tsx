@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -14,6 +15,8 @@ import {
   TrendingDown,
   DollarSign,
   Clock,
+  Loader2,
+  ShieldCheck,
 } from "lucide-react";
 import { Link } from "wouter";
 import { Header } from "@/components/Header";
@@ -24,6 +27,19 @@ import { FlagMaterialButton } from "@/components/FlagMaterialButton";
 import { useAuth } from "@/contexts/AuthContext";
 import SEO from "@/components/SEO";
 import { Helmet } from "react-helmet-async";
+
+interface Ec3CheckResult {
+  matchFound: boolean;
+  ec3?: {
+    lowestGwp: number;
+    unit: string | null;
+    epdName: string | null;
+    manufacturer: string | null;
+    verificationStatus: string | null;
+    resultCount: number;
+  } | null;
+  attribution: string;
+}
 
 const forest = "#1a2e1f";
 const amber  = "#c17f24";
@@ -121,6 +137,29 @@ export default function MaterialDetailEnhanced() {
     { materialId: materialId!, maxResults: 3 },
     { enabled: !!materialId },
   );
+
+  const [ec3Loading, setEc3Loading] = useState(false);
+  const [ec3Result, setEc3Result] = useState<Ec3CheckResult | null>(null);
+  const [ec3Error, setEc3Error] = useState<string | null>(null);
+
+  async function handleEc3Check() {
+    if (!materialId) return;
+    setEc3Loading(true);
+    setEc3Result(null);
+    setEc3Error(null);
+    try {
+      const res = await fetch(`/api/materials/${encodeURIComponent(materialId)}/ec3-check`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? "Verification failed.");
+      }
+      setEc3Result(await res.json());
+    } catch (err: any) {
+      setEc3Error(err?.message ?? "EC3 verification unavailable. Please try again later.");
+    } finally {
+      setEc3Loading(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -428,6 +467,88 @@ export default function MaterialDetailEnhanced() {
                         No EPD sources documented yet
                       </p>
                     )}
+
+                {/* EC3 live verification */}
+                <div className="border-t border-border pt-3 mt-2">
+                  {!ec3Result && !ec3Error && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleEc3Check}
+                      disabled={ec3Loading}
+                      className="w-full"
+                    >
+                      {ec3Loading ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                          Checking EC3…
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-3.5 h-3.5 mr-1.5" />
+                          Verify against EC3
+                        </>
+                      )}
+                    </Button>
+                  )}
+
+                  {ec3Error && (
+                    <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-sm">
+                      <p className="font-medium text-amber-800">No EC3 data found for this material</p>
+                      <p className="text-xs text-amber-600 mt-1">{ec3Error}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleEc3Check}
+                        className="mt-2 text-xs h-7"
+                      >
+                        Try again
+                      </Button>
+                    </div>
+                  )}
+
+                  {ec3Result && !ec3Result.matchFound && (
+                    <div className="rounded-lg bg-slate-50 border border-slate-200 p-3 text-sm">
+                      <p className="font-medium text-slate-700">No EC3 data found for this material</p>
+                      <p className="text-xs text-slate-500 mt-1">
+                        No matching EPDs were returned from Building Transparency for this material.
+                      </p>
+                      <p className="text-[10px] text-slate-400 mt-2">{ec3Result.attribution}</p>
+                    </div>
+                  )}
+
+                  {ec3Result?.matchFound && ec3Result.ec3 && (
+                    <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-3 text-sm space-y-1.5">
+                      <div className="flex items-center gap-1.5">
+                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                        <p className="font-semibold text-emerald-800">EC3 match found</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+                        <span className="text-muted-foreground">Lowest GWP</span>
+                        <span className="font-medium">
+                          {ec3Result.ec3.lowestGwp.toFixed(2)} {ec3Result.ec3.unit ?? "kg CO₂e"}
+                        </span>
+                        {ec3Result.ec3.epdName && (
+                          <>
+                            <span className="text-muted-foreground">EPD</span>
+                            <span className="font-medium truncate">{ec3Result.ec3.epdName}</span>
+                          </>
+                        )}
+                        {ec3Result.ec3.manufacturer && (
+                          <>
+                            <span className="text-muted-foreground">Manufacturer</span>
+                            <span className="font-medium truncate">{ec3Result.ec3.manufacturer}</span>
+                          </>
+                        )}
+                        <span className="text-muted-foreground">Results</span>
+                        <span className="font-medium">{ec3Result.ec3.resultCount} EPDs</span>
+                      </div>
+                      <p className="text-[10px] text-emerald-600 pt-1 border-t border-emerald-200">
+                        {ec3Result.attribution}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
