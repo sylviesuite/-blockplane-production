@@ -1,9 +1,6 @@
 import type { Application, Request, Response } from "express";
 import { searchEPDs } from "../services/ec3Client";
 
-const SUPABASE_URL = process.env.SUPABASE_URL!;
-const SUPABASE_KEY = process.env.SUPABASE_ANON_KEY!;
-
 async function handleEc3Check(req: Request, res: Response) {
   const { id } = req.params;
   if (!id) {
@@ -11,10 +8,17 @@ async function handleEc3Check(req: Request, res: Response) {
     return;
   }
 
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    res.status(500).json({ error: "Server configuration error." });
+    return;
+  }
+
   try {
-    const url = `${SUPABASE_URL}/rest/v1/materials?id=eq.${encodeURIComponent(id)}&select=name,category&limit=1`;
+    const url = `${supabaseUrl}/rest/v1/materials?id=eq.${encodeURIComponent(id)}&select=name,category&limit=1`;
     const matRes = await fetch(url, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+      headers: { apikey: supabaseKey, Authorization: `Bearer ${supabaseKey}` },
     });
     if (!matRes.ok) {
       res.status(502).json({ error: "Failed to look up material." });
