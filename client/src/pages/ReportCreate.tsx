@@ -93,9 +93,11 @@ export default function ReportCreate() {
       if (!reportId) throw new Error("Report created but no ID returned.");
 
       setStep("generating");
-      const res = await fetch("/api/reports/generate-data", {
+      const apiBase = import.meta.env.VITE_API_URL ?? "";
+      const res = await fetch(`${apiBase}/api/reports/generate-data`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ reportId }),
       });
 
