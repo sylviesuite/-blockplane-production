@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 
 export default function Signup() {
   const [, navigate] = useLocation();
+  const utils = trpc.useUtils();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +19,7 @@ export default function Signup() {
         setError(null);
         // Show confirmation message — handled by isSuccess + requiresConfirmation below
       } else {
-        navigate("/");
+        utils.auth.me.invalidate().then(() => navigate("/"));
       }
     },
     onError: (err) => setError(err.message),

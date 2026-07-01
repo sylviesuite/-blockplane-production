@@ -13,8 +13,9 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
+  const utils = trpc.useUtils();
   const login = trpc.auth.login.useMutation({
-    onSuccess: () => navigate(from),
+    onSuccess: () => utils.auth.me.invalidate().then(() => navigate(from)),
     onError: (err) => setError(err.message),
   });
 
