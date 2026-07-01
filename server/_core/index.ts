@@ -23,6 +23,7 @@ import { registerFlagMaterialRoutes } from "../routes/flagMaterial";
 import { registerIncompleteMaterialsRoutes } from "../routes/incompleteMaterials";
 import { registerCompareInsightRoutes } from "../routes/compareInsight";
 import { registerEc3Routes } from "../routes/ec3";
+import { registerReportGenerateRoutes } from "../routes/reportGenerate";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -84,6 +85,7 @@ async function startServer() {
   registerIncompleteMaterialsRoutes(app);
   registerCompareInsightRoutes(app);
   registerEc3Routes(app);
+  registerReportGenerateRoutes(app);
 
   // Diagnostic endpoint — checks env vars and Supabase reachability
   app.get("/api/diag", async (req, res) => {

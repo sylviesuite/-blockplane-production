@@ -17,6 +17,7 @@ import { supplierRouter } from './routers/supplier';
 import { materialAPIRouter } from './routers/materialAPI';
 import { benchmarkRouter } from './routers/benchmark';
 import { projectsRouter } from './routers/projects';
+import { reportsRouter } from './routers/reports';
 import { selectRelevantMemories } from './ai/memoryGate';
 
 const MEMORY_BEHAVIOR_RULE =
@@ -57,12 +58,10 @@ export const appRouter = router({
           });
           throw err;
         }
-        await upsertUserRow({ openId: result.user.id, email: result.user.email, name: input.name });
         if (result.access_token) {
           await setSessionCookie(ctx.res, ctx.req, result.user.id, input.name, result.user.email);
           return { success: true, requiresConfirmation: false } as const;
         }
-        // Email confirmation enabled in Supabase — account created, session deferred
         return { success: true, requiresConfirmation: true } as const;
       }),
 
@@ -253,6 +252,9 @@ export const appRouter = router({
 
   // User-saved projects (Material Browser / Benchmark snapshots)
   projects: projectsRouter,
+
+  // Client reports (saved configs only — EC3 data fetched live at generation time)
+  reports: reportsRouter,
 
   // Material recommendations
   recommendations: router({
