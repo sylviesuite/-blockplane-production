@@ -34,6 +34,7 @@ import CarbonCalculator from "./pages/CarbonCalculator";
 import Benchmark2000 from "./pages/Benchmark2000";
 import MyProjects from "./pages/MyProjects";
 import ReportCreate from "./pages/ReportCreate";
+import ReportHistory from "./pages/ReportHistory";
 import FrontierPage from "./pages/FrontierPage";
 import ComparePage from "./pages/ComparePage";
 import Pricing from "./pages/Pricing";
@@ -116,6 +117,9 @@ function Router() {
       </Route>
       <Route path="/reports/new">
         {() => <AuthGate redirect><ReportCreate /></AuthGate>}
+      </Route>
+      <Route path="/reports">
+        {() => <AuthGate redirect><ReportHistory /></AuthGate>}
       </Route>
       <Route path="/admin">
         {() => <AuthGate redirect><AdminDashboard /></AuthGate>}

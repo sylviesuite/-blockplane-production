@@ -73,6 +73,11 @@ export function Header() {
                   My Projects
                 </span>
               </Link>
+              <Link href="/reports">
+                <span style={{ color: `${cream}cc` }} className="hover:text-white cursor-pointer transition-colors">
+                  Reports
+                </span>
+              </Link>
               <button
                 onClick={logout}
                 style={{ color: `${cream}cc` }}
