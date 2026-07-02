@@ -116,7 +116,7 @@ export default function ReportCreate() {
           generatedAt: data.generatedAt,
           materials: data.materials as ClientReportMaterial[],
         },
-        `${title.trim().replace(/\s+/g, "-").toLowerCase()}-report`
+        `${title.trim().replace(/\s+/g, "-").toLowerCase()}`
       );
 
       setStep("done");
