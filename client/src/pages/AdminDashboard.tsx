@@ -635,9 +635,13 @@ function SubmissionsTab() {
               {sub.source && (
                 <span>
                   <span className="font-medium">Source:</span>{' '}
-                  <a href={sub.source} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate max-w-xs inline-block align-bottom">
-                    {sub.source}
-                  </a>
+                  {sub.source.startsWith('http') ? (
+                    <a href={sub.source} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline truncate max-w-xs inline-block align-bottom">
+                      {sub.source}
+                    </a>
+                  ) : (
+                    sub.source
+                  )}
                 </span>
               )}
               {sub.submitter_email && <span><span className="font-medium">Submitter:</span> {sub.submitter_email}</span>}
