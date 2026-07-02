@@ -93,7 +93,7 @@ export default function ReportCreate() {
       if (!reportId) throw new Error("Report created but no ID returned.");
 
       setStep("generating");
-      const apiBase = import.meta.env.VITE_API_URL ?? "";
+      const apiBase = import.meta.env.VITE_API_URL ?? "https://blockplane-production.onrender.com";
       const res = await fetch(`${apiBase}/api/reports/generate-data`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
